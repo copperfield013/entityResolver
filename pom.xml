@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>cn.sowell.datacenter</groupId>
+	<artifactId>entityResolver</artifactId>
+	<version>0.10</version>
+	<packaging>jar</packaging>
+
+	<name>entityResolver</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<version.abcitem>3.2.8</version.abcitem>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+		<dependency>
+			<groupId>com.abc</groupId>
+			<artifactId>item</artifactId>
+			<version>${version.abcitem}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.sowell.copframe</groupId>
+			<artifactId>cpf-spring</artifactId>
+			<version>0.3.8</version>
+		</dependency>
+	</dependencies>
+	<distributionManagement>
+        <repository>
+        	<id>aliyun44-nexus</id>
+        	<url>http://139.196.123.44:32108/repository/nexus/</url>
+        </repository>
+    </distributionManagement>
+	<repositories>
+		<repository>
+			<id>nexus</id>
+			<name>nexus</name>
+			<url>http://139.196.123.44:32108/repository/nexus-group/</url>
+		</repository>
+	</repositories>
+	<build>
+		<finalName>entityResolver</finalName>
+		<plugins>
+			<!-- 指定jdk -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<!-- 要将源码放上去，需要加入这个插件 -->
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<attach>true</attach>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>            
+		</plugins>
+	</build>
+</project>
