@@ -12,6 +12,9 @@ import cn.sowell.copframe.utils.xml.XMLException;
 import cn.sowell.copframe.utils.xml.XmlNode;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
 import cn.sowell.datacenter.entityResolver.FieldService;
+import cn.sowell.datacenter.entityResolver.config.abst.Config;
+import cn.sowell.datacenter.entityResolver.config.abst.Entity;
+import cn.sowell.datacenter.entityResolver.config.abst.Module;
 
 public class XMLFusionConfigContextFactory extends AbstractFusionConfigContextFactory{
 
@@ -28,11 +31,11 @@ public class XMLFusionConfigContextFactory extends AbstractFusionConfigContextFa
 
 
 	private static Config toConfig(XmlNode xml) {
-		Config config = new Config();
+		TheConfig config = new TheConfig();
 		config.setModules(new LinkedHashSet<Module>());
 		List<XmlNode> eleModules = xml.getElements("module");
 		for (XmlNode eleModule : eleModules) {
-			Module module = new Module();
+			TheModule module = new TheModule();
 			module.setName(eleModule.getAttribute("name"));
 			module.setTitle(eleModule.getAttribute("title"));
 			
@@ -47,26 +50,26 @@ public class XMLFusionConfigContextFactory extends AbstractFusionConfigContextFa
 		return config;
 	}
 
-	private static void handleFunction(Module module, XmlNode eleModule) {
+	private static void handleFunction(TheModule module, XmlNode eleModule) {
 		XmlNode eFunctions = eleModule.getFirstElement("functions");
 		if(eFunctions != null) {
-			module.setFunctions(new Functions());
+			module.setFunctions(new TheFunctions());
 			List<XmlNode> eleFunctions = eFunctions.getElements("function");
 			for (XmlNode eFunction : eleFunctions) {
-				Function function = new Function();
+				TheFunction function = new TheFunction();
 				function.setName(eFunction.getAttribute("name"));
 				module.getFunctions().getFunctions().add(function);
 			}
 		}
 	}
 
-	private static void handleImports(Module module, XmlNode eleModule) {
+	private static void handleImports(TheModule module, XmlNode eleModule) {
 		XmlNode eImport = eleModule.getFirstElement("import");
 		if(eImport != null) {
-			module.setImport(new Import());
+			module.setImport(new TheImport());
 			List<XmlNode> eleComposites = eImport.getElements("composite");
 			for (XmlNode eComposite : eleComposites) {
-				Composite composite = new Composite();
+				TheComposite composite = new TheComposite();
 				composite.setName(eComposite.getAttribute("name"));
 				composite.setTitle(eComposite.getAttribute("title"));
 				composite.setEntityId(eComposite.getAttribute("entity-id"));
@@ -75,11 +78,11 @@ public class XMLFusionConfigContextFactory extends AbstractFusionConfigContextFa
 		}
 	}
 
-	private static void handleEntities(Module module, XmlNode eleModule) {
+	private static void handleEntities(TheModule module, XmlNode eleModule) {
 		module.setEntities(new LinkedHashSet<Entity>());
 		List<XmlNode> eleEntities = eleModule.getElements("entity");
 		for (XmlNode eleEntity : eleEntities) {
-			Entity entity = new Entity();
+			TheEntity entity = new TheEntity();
 			entity.setId(eleEntity.getAttribute("id"));
 			entity.setMappingName(eleEntity.getAttribute("mapping-name"));
 			entity.setDefault("true".equals(eleEntity.getAttribute("default")));

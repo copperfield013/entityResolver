@@ -13,6 +13,12 @@ import cn.sowell.datacenter.entityResolver.FusionContextConfig;
 import cn.sowell.datacenter.entityResolver.FusionContextConfigFactory;
 import cn.sowell.datacenter.entityResolver.FusionContextConfigImpl;
 import cn.sowell.datacenter.entityResolver.FusionContextConfigResolver;
+import cn.sowell.datacenter.entityResolver.config.abst.Composite;
+import cn.sowell.datacenter.entityResolver.config.abst.Config;
+import cn.sowell.datacenter.entityResolver.config.abst.Entity;
+import cn.sowell.datacenter.entityResolver.config.abst.Function;
+import cn.sowell.datacenter.entityResolver.config.abst.Functions;
+import cn.sowell.datacenter.entityResolver.config.abst.Module;
 
 public abstract class AbstractFusionConfigContextFactory implements FusionContextConfigFactory{
 	private Map<String, FusionContextConfig> configMap = new HashMap<String, FusionContextConfig>();

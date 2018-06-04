@@ -4,7 +4,7 @@
 
 	<groupId>cn.sowell.datacenter</groupId>
 	<artifactId>entityResolver</artifactId>
-	<version>0.10</version>
+	<version>0.20</version>
 	<packaging>jar</packaging>
 
 	<name>entityResolver</name>
@@ -12,7 +12,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version.abcitem>3.2.8</version.abcitem>
+		<version.abcitem>3.3.26.alphal</version.abcitem>
+		<version.hibernate>5.0.7.Final</version.hibernate>
 	</properties>
 
 	<dependencies>
@@ -28,8 +29,18 @@
 		</dependency>
 		<dependency>
 			<groupId>cn.sowell.copframe</groupId>
-			<artifactId>cpf-spring</artifactId>
-			<version>0.3.8</version>
+			<artifactId>cpf-dao</artifactId>
+			<version>0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>4.3.4.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>4.3.4.RELEASE</version>
 		</dependency>
 	</dependencies>
 	<distributionManagement>

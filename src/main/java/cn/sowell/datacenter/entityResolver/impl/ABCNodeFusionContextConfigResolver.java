@@ -1,6 +1,7 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -138,7 +139,7 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 				itemMap.put(prefix + item.getTitle(), item);
 			}
 		}
-		List<RelationNode> relations = node.getRelation();
+		Collection<RelationNode> relations = node.getRelation();
 		if(relations != null) {
 			for (RelationNode relation : relations) {
 				if(relationHandler != null) {
@@ -148,7 +149,7 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 			}
 		}
 		if(multipleHandler != null) {
-			List<MultiAttributeNode> multis = node.getMultiAttributes();
+			Collection<MultiAttributeNode> multis = node.getMultiAttributes();
 			for (MultiAttributeNode multi : multis) {
 				multipleHandler.accept(itemMap, new MultiAttributeHandlerParam(multi, prefix));
 			}
