@@ -6,6 +6,10 @@ public class FusionConfigException extends Exception {
 		super(msg);
 	}
 
+	public FusionConfigException(String msg, Throwable e) {
+		super(msg, e);
+	}
+
 	/**
 	 * 
 	 */

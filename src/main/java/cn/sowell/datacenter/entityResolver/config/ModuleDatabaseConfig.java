@@ -1,12 +1,16 @@
 package cn.sowell.datacenter.entityResolver.config;
 
 enum ModuleDatabaseConfig {
-	TABLE_MODULE("t_config_module"),
-	COLUMN_MODULE_ID("id"),
-	COLUMN_MODULE_NAME("c_name"),
-	COLUMN_MODULE_TITLE("c_title"),
-	COLUMN_MODULE_DISABLED("c_disabled"),
-	
+	TABLE_MODULE("t_config_module")
+	,COLUMN_MODULE_ID("id")
+	,COLUMN_MODULE_NAME("c_name")
+	,COLUMN_MODULE_TITLE("c_title")
+	,COLUMN_MODULE_DISABLED("c_disabled")
+	,COLUMN_MODULE_MAPPING_NAME("c_mapping_name")
+	,COLUMN_MODULE_CODE_NAME("c_code_name")
+	,COLUMN_MODULE_TITLE_NAME("c_title_name")
+	,COLUMN_MODULE_CREATE_TIME("create_time")
+	/*
 	TABLE_MODULE_ENTITY("t_config_module_entity"),
 	COLUMN_MODULE_ENTITY_ID("id"),
 	COLUMN_MODULE_ENTITY_ENTITY_ID("c_entity_id"),
@@ -27,7 +31,7 @@ enum ModuleDatabaseConfig {
 	COLUMN_MODULE_FUNCTION_ID("id"),
 	COLUMN_MODULE_FUNCTION_NAME("c_name"),
 	COLUMN_MODULE_FUNCTION_MODULE_ID("module_id"),
-	COLUMN_MODULE_FUNCTION_ARGUMENTS("c_arguments")
+	COLUMN_MODULE_FUNCTION_ARGUMENTS("c_arguments")*/
 	
 	;
 	

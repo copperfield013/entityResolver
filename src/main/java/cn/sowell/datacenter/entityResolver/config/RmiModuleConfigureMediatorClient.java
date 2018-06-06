@@ -3,7 +3,6 @@ package cn.sowell.datacenter.entityResolver.config;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 
 public class RmiModuleConfigureMediatorClient {

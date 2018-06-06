@@ -1,10 +1,7 @@
 package cn.sowell.datacenter.entityResolver.config.abst;
 
-import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
-public interface Config extends Serializable {
-
-	Set<Module> getModules();
-
+public interface Config {
+	List<Module> getModules();
 }

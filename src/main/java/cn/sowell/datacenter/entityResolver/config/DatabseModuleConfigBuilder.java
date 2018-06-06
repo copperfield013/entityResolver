@@ -20,7 +20,6 @@ public class DatabseModuleConfigBuilder implements ModuleConfigBuilder{
 	
 	
 		
-	@SuppressWarnings({ })
 	@Override
 	public Config getConfig() {
 		Session session = sessionFactory.getCurrentSession();

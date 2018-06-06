@@ -1,17 +1,12 @@
 package cn.sowell.datacenter.entityResolver.config;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.copframe.utils.FormatUtils;
-import cn.sowell.datacenter.entityResolver.config.abst.Composite;
-import cn.sowell.datacenter.entityResolver.config.abst.Entity;
 import cn.sowell.datacenter.entityResolver.config.abst.Module;
 import cn.sowell.datacenter.entityResolver.config.param.QueryModuleCriteria;
 
@@ -26,47 +21,34 @@ public class ModuleConfigDaoImpl implements ModuleConfigDao{
 	}
 	
 	@Override
-	public Module getModule(String moduleName) {
+	public DBModule getModule(String moduleName) {
 		QueryModuleCriteria criteria = new QueryModuleCriteria();
 		criteria.setModuleName(moduleName);
 		List<Module> modules = queryModules(criteria);
 		if(modules.size() > 0) {
-			return modules.get(0);
+			return (DBModule) modules.get(0);
+		}else if(modules.size() == 0){
+			return null;
+		}else {
+			throw new RuntimeException("通过[moduleName=" + moduleName + "]找到[" + modules.size() + "]条记录，不符合规范");
 		}
-		return null;
 	}
 
 	@Override
 	public List<Module> queryModules(QueryModuleCriteria criteria) {
 		Session session = sessionFactory.getCurrentSession();
 		DeferedParamQuery dQuery = dbQuery.getModuleQuery(criteria);
-		Set<Module> modules = dbQuery.queryModule(dQuery.createSQLQuery(session, false, null), session);
-		return new ArrayList<>(modules);
+		return dbQuery.queryModule(dQuery.createSQLQuery(session, false, null), session);
 	}
 
 	@Override
-	public Long createModule(TheModule module) {
+	public Long createModule(DBModule module) {
 		DeferedParamQuery dQuery = dbQuery.getCreateModuleQuery(module);
 		dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
 			.executeUpdate();
 		return getModuleId(module.getName());
 	}
 
-	@Override
-	public Long addEntity(DBEntity entity) {
-		DeferedParamQuery dQuery = dbQuery.getCreateEntityQuery(entity);
-		dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
-			.executeUpdate();
-		return getEntityId(entity.getId());
-			
-	}
-
-	@Override
-	public Long getEntityId(String entityId) {
-		DeferedParamQuery dQuery = dbQuery.getQueryEntityIdQuery(entityId);
-		return FormatUtils.toLong(dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
-				.uniqueResult());
-	}
 
 	@Override
 	public Long getModuleId(String moduleName) {
@@ -89,73 +71,20 @@ public class ModuleConfigDaoImpl implements ModuleConfigDao{
 				.executeUpdate();
 	}
 
-	@Override
-	public Entity getEntity(String entityId) {
-		SQLQuery query = dbQuery.getQueryEntityQuery(entityId, sessionFactory.getCurrentSession());
-		return (Entity) query.uniqueResult();
-	}
 
 	@Override
-	public void reassignMappingName(String entityId, String mappingName) {
-		DeferedParamQuery dQuery = dbQuery.getReassignMappingNameQuery(entityId, mappingName);
+	public void reassignMappingName(String moduleName, String mappingName) {
+		DeferedParamQuery dQuery = dbQuery.getReassignModuleMappingNameQuery(moduleName, mappingName);
 		dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
 				.executeUpdate();
 	}
 	
 	@Override
 	public void reassignMappingName(String entityId, String mappingName, String codeName, String titleName) {
-		DeferedParamQuery dQuery = dbQuery.getReassignMappingNameQuery(entityId, mappingName, codeName, titleName);
+		DeferedParamQuery dQuery = dbQuery.getReassignModuleMappingNameQuery(entityId, mappingName, codeName, titleName);
 		dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
 				.executeUpdate();
 	}
 
-	@Override
-	public int removeEntity(String entityId) {
-		DeferedParamQuery dQuery = dbQuery.getRemoveEntityQuery(entityId);
-		return dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
-				.executeUpdate();
-	}
-
-	@Override
-	public Entity getDefaultEntityOfEntitySiblings(String entityId) {
-		DeferedParamQuery dQuery = dbQuery.getDefaultEntityOfEntitySiblingsQuery(entityId);
-		return (Entity) dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
-				.uniqueResult();
-	}
-
-	@Override
-	public void changeEntityDefaultStatus(String entityId, boolean asDefault) {
-		DeferedParamQuery dQuery = dbQuery.getChangeEntityDefaultStatusQuery(entityId, asDefault);
-		dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
-				.executeUpdate();
-	}
-
-	@Override
-	public Composite getImportComposite(String entityId) {
-		DeferedParamQuery dQuery = dbQuery.getImportCompositeQuery(entityId);
-		return (Composite) dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
-				.uniqueResult();
-	}
-
-	@Override
-	public void addImportComposite(TheComposite composite) {
-		DeferedParamQuery dQuery = dbQuery.getAddImportCompositeQuery(composite);
-		dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
-				.executeUpdate();
-	}
-
-	@Override
-	public int retitleImportComposite(String entityId, String impTitle) {
-		DeferedParamQuery dQuery = dbQuery.getRetitleImportCompositeQuery(entityId, impTitle);
-		return dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
-			.executeUpdate();
-	}
-
-	@Override
-	public int removeImportComposite(String entityId) {
-		DeferedParamQuery dQuery = dbQuery.getRemoveImportCompositeQuery(entityId);
-		return dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
-			.executeUpdate();
-	}
 	
 }

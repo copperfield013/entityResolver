@@ -1,7 +1,7 @@
 package cn.sowell.datacenter.entityResolver.config;
 
 import java.io.IOException;
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +13,6 @@ import cn.sowell.copframe.utils.xml.XmlNode;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
 import cn.sowell.datacenter.entityResolver.FieldService;
 import cn.sowell.datacenter.entityResolver.config.abst.Config;
-import cn.sowell.datacenter.entityResolver.config.abst.Entity;
 import cn.sowell.datacenter.entityResolver.config.abst.Module;
 
 public class XMLFusionConfigContextFactory extends AbstractFusionConfigContextFactory{
@@ -32,70 +31,27 @@ public class XMLFusionConfigContextFactory extends AbstractFusionConfigContextFa
 
 	private static Config toConfig(XmlNode xml) {
 		TheConfig config = new TheConfig();
-		config.setModules(new LinkedHashSet<Module>());
+		config.setModules(new ArrayList<Module>());
 		List<XmlNode> eleModules = xml.getElements("module");
 		for (XmlNode eleModule : eleModules) {
 			TheModule module = new TheModule();
 			module.setName(eleModule.getAttribute("name"));
 			module.setTitle(eleModule.getAttribute("title"));
-			
-			handleEntities(module, eleModule);
-			handleImports(module, eleModule);
-			handleFunction(module, eleModule);
-			
-			
-			config.getModules().add(module);
-			
-		}
-		return config;
-	}
-
-	private static void handleFunction(TheModule module, XmlNode eleModule) {
-		XmlNode eFunctions = eleModule.getFirstElement("functions");
-		if(eFunctions != null) {
-			module.setFunctions(new TheFunctions());
-			List<XmlNode> eleFunctions = eFunctions.getElements("function");
-			for (XmlNode eFunction : eleFunctions) {
-				TheFunction function = new TheFunction();
-				function.setName(eFunction.getAttribute("name"));
-				module.getFunctions().getFunctions().add(function);
-			}
-		}
-	}
-
-	private static void handleImports(TheModule module, XmlNode eleModule) {
-		XmlNode eImport = eleModule.getFirstElement("import");
-		if(eImport != null) {
-			module.setImport(new TheImport());
-			List<XmlNode> eleComposites = eImport.getElements("composite");
-			for (XmlNode eComposite : eleComposites) {
-				TheComposite composite = new TheComposite();
-				composite.setName(eComposite.getAttribute("name"));
-				composite.setTitle(eComposite.getAttribute("title"));
-				composite.setEntityId(eComposite.getAttribute("entity-id"));
-				module.getImport().getComposites().add(composite);
-			}
-		}
-	}
-
-	private static void handleEntities(TheModule module, XmlNode eleModule) {
-		module.setEntities(new LinkedHashSet<Entity>());
-		List<XmlNode> eleEntities = eleModule.getElements("entity");
-		for (XmlNode eleEntity : eleEntities) {
-			TheEntity entity = new TheEntity();
-			entity.setId(eleEntity.getAttribute("id"));
-			entity.setMappingName(eleEntity.getAttribute("mapping-name"));
-			entity.setDefault("true".equals(eleEntity.getAttribute("default")));
-			XmlNode codeEle = eleEntity.getFirstElement("code"),
-					titleEle = eleEntity.getFirstElement("title");
+			module.setMappingName(eleModule.getAttribute("mapping-name"));
+			XmlNode codeEle = eleModule.getFirstElement("code"),
+					titleEle = eleModule.getFirstElement("title");
 			if(codeEle != null) {
-				entity.setCodeName(codeEle.getAttribute("name"));
+				module.setCodeName(codeEle.getAttribute("name"));
 			}
 			if(titleEle != null) {
-				entity.setTitleName(titleEle.getAttribute("name"));
+				module.setTitleName(titleEle.getAttribute("name"));
 			}
-			module.getEntities().add(entity);
+			if("disabled".equals(eleModule.getAttribute("disabled"))) {
+				module.setDisabled(true);
+			}
+			config.getModules().add(module);
 		}
+		return config;
 	}
 
 	@Override

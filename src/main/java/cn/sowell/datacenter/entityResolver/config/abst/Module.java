@@ -1,7 +1,6 @@
 package cn.sowell.datacenter.entityResolver.config.abst;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import cn.sowell.datacenter.entityResolver.config.ModuleConfigureMediator;
 import cn.sowell.datacenter.entityResolver.config.RemoteModuleConfigureMediator;
@@ -27,35 +26,28 @@ public interface Module extends Serializable {
 	String getTitle();
 
 	/**
-	 * 获得模块下的所有实体
+	 * abcnode配置名称
 	 * @return
 	 */
-	Set<Entity> getEntities();
+	String getMappingName();
 	
 	/**
-	 * 获得模块的默认实体。<br/>
-	 * 正常情况下，从系统获取的模块都有一个，且只有一个默认实体
+	 * 配置中获得实体编码的字段名
 	 * @return
 	 */
-	Entity getDefautEntity();
-
+	String getCodeName();
+	
+	/**
+	 * 配置中获得实体名称的字段名
+	 * @return
+	 */
+	String getTitleName();
+	
 	/**
 	 * 模块是否被禁用
 	 * @return
 	 */
 	boolean isDisabled();
-	
-	/**
-	 * 获得模块的导入配置
-	 * @return
-	 */
-	Import getImport();
-
-	/**
-	 * 获得模块的功能配置（0.x版本下，该方法的值获取值不可靠）
-	 * @return
-	 */
-	Functions getFunctions();
 	
 	
 }

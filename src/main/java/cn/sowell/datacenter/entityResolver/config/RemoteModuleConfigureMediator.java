@@ -4,9 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-import cn.sowell.datacenter.entityResolver.config.abst.Entity;
 import cn.sowell.datacenter.entityResolver.config.abst.Module;
-import cn.sowell.datacenter.entityResolver.config.param.AddEntityParam;
 import cn.sowell.datacenter.entityResolver.config.param.CreateModuleParam;
 import cn.sowell.datacenter.entityResolver.config.param.QueryModuleCriteria;
 
@@ -32,29 +30,20 @@ public interface RemoteModuleConfigureMediator extends Remote{
 	List<Module> queryModules(QueryModuleCriteria criteria) throws RemoteException;
 	
 	/**
-	 * 创建模块。用该方式创建的模块，会自动生成默认实体，但不会在导入功能中生成条线选项
-	 * @param moduleTitle
-	 * @param defMappingName
-	 */
-	void createModule(String moduleTitle, String defMappingName) throws RemoteException;
-	/**
-	 * 创建模块。用该方式创建的模块，会自动生成默认实体，同时在对应的导入功能中创建一个impTitle的选项
+	 * 创建模块
 	 * @param moduleTitle
 	 * @param defMappingName
 	 * @param impTitle
 	 */
-	void createModule(String moduleTitle, String defMappingName, String impTitle) throws RemoteException;
+	void createModule(String moduleTitle, String mappingName) throws RemoteException;
 	/**
 	 * 创建模块
 	 * @param param
-	 * @param moduleTitle	 <b>模块标题，必须指定</b>
-	 * @param defMappingName <b>模块默认的实体的对应配置名，必须指定，而且必须已经在abc中配置</b>
-	 * @param moduleName	  模块名，需要全局唯一，不指定时会自动生成10位的随机码
-	 * @param defEntityId	  默认模块的实体的id，需要全局唯一，不指定时会自动生成10位随机码
-	 * @param defCodeName	  模块默认实体的的编码字段名，不指定时会用”编码“来获取实体编码值
-	 * @param defTitleName	  模块默认实体的名称字段名，不指定时会用“姓名”来获取该名称字段值
-	 * @param defForImport	  模块默认实体是否用来导入，默认为false
-	 * @param impTitle		  用于显示在导入功能中作为导入条线的选项
+	 * @param moduleTitle	<b>模块标题，必须指定</b>
+	 * @param mappingName 	<b>模块对应配置名，必须指定，而且必须已经在abc中配置</b>
+	 * @param moduleName	模块名，需要全局唯一，不指定时会自动生成10位的随机码
+	 * @param codeName		模块对应配置的编码字段名，不指定时会用”编码“来获取实体编码值
+	 * @param titleName		模块对应配置的名称字段名，不指定时会用“姓名”来获取该名称字段值
 	 */
 	void createModule(CreateModuleParam param) throws RemoteException;
 	
@@ -80,83 +69,21 @@ public interface RemoteModuleConfigureMediator extends Remote{
 	 */
 	void removeModule(String moduleName) throws RemoteException;
 	
-	
 	/**
-	 * 
-	 * @param entityId
-	 * @return
-	 */
-	Entity getEntity(String entityId) throws RemoteException;
-	
-	/**
-	 * 添加模块实体
-	 * @param moduleName  模块名，必须指定
-	 * @param mappingName 添加的实体的对应配置名，必须指定，而且必须已经在abc中配置
-	 */
-	void addModuleEntity(String moduleName, String mappingName) throws RemoteException;
-	/**
-	 * 添加模块实体
-	 * 
-	 * @param param
-	 * @param moduleName	: <b>模块名，必须指定</b>
-	 * @param mappingName	: <b>添加的实体的对应配置名，必须指定，而且必须已经在abc中配置</b>
-	 * @param entityId		：添加的实体id，需要全局唯一，不指定时会自动生成10位随机码
-	 * @param codeName		: 添加的实体的的编码字段名，不指定时会用”编码“来获取实体编码值
-	 * @param titleName		: 添加的实体的名称字段名，不指定时会用“姓名”来获取该名称字段值
-	 * @param forImport		: 添加的实体是否用于导入，默认为false
-	 * @param impTitle		: 当forImport不设置或者为true时必须指定，用于显示在导入功能中作为导入条线的选项
-	 */
-	void addModuleEntity(AddEntityParam param) throws RemoteException;
-	
-	/**
-	 * 重新指定实体对应的配置
+	 * 重新指定模块对应的配置
 	 * 该方法不修改实体读取编码的字段名和名称字段名
 	 * 如果要修改编码字段和名称字段名，请调用方法{@link #reassignMappingName(String, String, String, String)}
 	 * @param entityId
 	 * @param mappingName
 	 */
-	void reassignMappingName(String entityId, String mappingName) throws RemoteException;
+	void reassignMappingName(String moduleName, String mappingName) throws RemoteException;
 	
 	/**
-	 * 重新指定实体对应的配置，并且修改实体的编码字段和名称字段
-	 * @param entityId
+	 * 重新指定模块对应的配置，并且修改实体的编码字段和名称字段
+	 * @param moduleName
 	 * @param mappingName
 	 * @param codeName
 	 * @param titleName
-	 * @throws RemoteException
 	 */
-	void reassignMappingName(String entityId, String mappingName, String codeName, String titleName) throws RemoteException;
-	
-	/**
-	 * 移除模块实体
-	 * @param entityId
-	 */
-	void removeEntity(String entityId) throws RemoteException;
-	
-	/**
-	 * 切换模块的默认实体
-	 * @param entityId
-	 */
-	void switchDefaultEntity(String entityId) throws RemoteException;
-	
-	/**
-	 * 添加模块导入条线
-	 * @param entityId 导入条线的实体id，必须是moduleName对应的模块内已经存在的实体，且（模块，实体）全局唯一
-	 * @param impTitle 用于显示在导入功能中作为导入条线的选项，必须指定
-	 */
-	void addModuleImportComposite(String entityId, String impTitle) throws RemoteException;
-	
-	/**
-	 * 重命名导入条线
-	 * @param entityId
-	 * @param impTitle
-	 */
-	void retitleModuleImport(String entityId, String impTitle) throws RemoteException;
-	
-	/**
-	 * 移除模块导入条线
-	 * @param entityId
-	 * @throws RemoteException 
-	 */
-	void removeModuleImport(String entityId) throws RemoteException;
+	void reassignMappingName(String moduleName, String mappingName, String codeName, String titleName) throws RemoteException;
 }

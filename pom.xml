@@ -4,7 +4,7 @@
 
 	<groupId>cn.sowell.datacenter</groupId>
 	<artifactId>entityResolver</artifactId>
-	<version>0.20</version>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 
 	<name>entityResolver</name>
@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>cn.sowell.copframe</groupId>
 			<artifactId>cpf-dao</artifactId>
-			<version>0.1</version>
+			<version>0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>

@@ -1,6 +1,5 @@
 package cn.sowell.datacenter.entityResolver.config;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.SessionFactory;
@@ -9,23 +8,24 @@ import cn.sowell.datacenter.entityResolver.FieldService;
 import cn.sowell.datacenter.entityResolver.FusionContextConfig;
 import cn.sowell.datacenter.entityResolver.FusionContextConfigFactory;
 import cn.sowell.datacenter.entityResolver.FusionContextConfigResolver;
+import cn.sowell.datacenter.entityResolver.config.abst.Module;
 
 public class DBFusionConfigContextFactory implements FusionContextConfigFactory{
 
 	private CommonFusionConfigContextFactory fFactory;
 	private boolean syncFlag = true;
-	private ModuleConfigBuilder configDao;
+	private ModuleConfigBuilder configBuilder;
 	private FieldService fieldService;
 	
 	
-	public synchronized void setConfigDao(ModuleConfigBuilder configDao) {
-		this.configDao = configDao;
+	public synchronized void setConfigBuilder(ModuleConfigBuilder configBuilder) {
+		this.configBuilder = configBuilder;
 	}
 	
 	public synchronized void setSessionFactory(SessionFactory sessionFactory) {
 		DatabaseQuery databaseConfig = new DatabaseQuery();
-		DatabseModuleConfigBuilder proxy = new DatabseModuleConfigBuilder(databaseConfig, sessionFactory);
-		setConfigDao(proxy);
+		DatabseModuleConfigBuilder builder = new DatabseModuleConfigBuilder(databaseConfig, sessionFactory);
+		setConfigBuilder(builder);
 	}
 	
 	public void setFieldService(FieldService fieldService) {
@@ -49,69 +49,40 @@ public class DBFusionConfigContextFactory implements FusionContextConfigFactory{
 	}
 	
 	private void syncFromDatabase() throws FusionConfigException {
-		fFactory = new CommonFusionConfigContextFactory(configDao.getConfig());
-		if(fieldService != null) {
-			fFactory.setFieldsGetter((module)->this.fieldService.getFieldDescriptions(module));
+		fFactory = new CommonFusionConfigContextFactory(configBuilder.getConfig());
+		if(this.fieldService != null) {
+			fFactory.setFieldsService(this.fieldService);
 		}
 	}
 
 	public synchronized void sync() {
 		syncFlag = true;
 	}
+
+	@Override
+	public FusionContextConfig getModuleConfig(String moduleName) {
+		return getFactory().getModuleConfig(moduleName);
+	}
 	
 	@Override
-	public FusionContextConfig getConfig(String configId) {
-		return getFactory().getConfig(configId);
+	public FusionContextConfig getModuleConfigDependended(String moduleName) {
+		return getFactory().getModuleConfigDependended(moduleName);
+	}
+	
+	@Override
+	public FusionContextConfigResolver getModuleResolver(String moduleName) {
+		return getFactory().getModuleResolver(moduleName);
 	}
 
 	@Override
-	public FusionContextConfig getFirstConfigByMappingName(String mappingName) {
-		return getFactory().getFirstConfigByMappingName(mappingName);
+	public Module getModule(String moduleName) {
+		return getFactory().getModule(moduleName);
 	}
 
 	@Override
-	public Set<FusionContextConfig> getConfigsByModule(String module) {
-		return getFactory().getConfigsByModule(module);
+	public Set<FusionContextConfig> getAllConfigs() {
+		return getFactory().getAllConfigs();
 	}
-
-	@Override
-	public String getDefaultConfigId(String module) {
-		return getFactory().getDefaultConfigId(module);
-	}
-
-	@Override
-	public FusionContextConfig getDefaultConfig(String module) {
-		return getFactory().getDefaultConfig(module);
-	}
-
-	@Override
-	public FusionContextConfigResolver getResolver(String configId) {
-		return getFactory().getResolver(configId);
-	}
-
-	@Override
-	public FusionContextConfigResolver getModuleDefaultResolver(String module) {
-		return getFactory().getModuleDefaultResolver(module);
-	}
-
-	@Override
-	public ModuleMeta getModuleMeta(String module) {
-		return getFactory().getModuleMeta(module);
-	}
-
-	@Override
-	public Map<String, ImportComposite> getModuleImportMap(String module) {
-		return getFactory().getModuleImportMap(module);
-	}
-
-	@Override
-	public FusionContextConfig getConfigDependented(String configId) {
-		return getFactory().getConfigDependented(configId);
-	}
-
-	@Override
-	public Set<FusionContextConfig> getAllDefaultConfig() {
-		return getFactory().getAllDefaultConfig();
-	}
+	
 
 }

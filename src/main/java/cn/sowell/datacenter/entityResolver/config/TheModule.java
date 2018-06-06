@@ -1,70 +1,49 @@
 package cn.sowell.datacenter.entityResolver.config;
 
-import java.util.Set;
-
-import cn.sowell.datacenter.entityResolver.config.abst.Entity;
-import cn.sowell.datacenter.entityResolver.config.abst.Functions;
-import cn.sowell.datacenter.entityResolver.config.abst.Import;
 import cn.sowell.datacenter.entityResolver.config.abst.Module;
 
 class TheModule implements Module {
 	private static final long serialVersionUID = 1177752285709607977L;
 	private String name;
 	private String title;
+	private String mappingName;
+	private String codeName;
+	private String titleName;
 	private boolean disabled;
-	private Set<Entity> entities;
-	private Import imp;
-	private Functions functions;
-	@Override
 	public String getName() {
 		return name;
 	}
-	void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
-	@Override
 	public String getTitle() {
 		return title;
 	}
-	void setTitle(String title) {
+	public void setTitle(String title) {
 		this.title = title;
 	}
-	@Override
-	public Set<Entity> getEntities() {
-		return entities;
+	public String getMappingName() {
+		return mappingName;
 	}
-	void setEntities(Set<Entity> entities) {
-		this.entities = entities;
+	public void setMappingName(String mappingName) {
+		this.mappingName = mappingName;
 	}
-	@Override
-	public Entity getDefautEntity() {
-		if(this.entities != null) {
-			for (Entity entity : entities) {
-				if(entity.isDefault()) {
-					return entity;
-				}
-			}
-		}
-		return null;
+	public String getCodeName() {
+		return codeName;
 	}
-	@Override
-	public Import getImport() {
-		return imp;
+	public void setCodeName(String codeName) {
+		this.codeName = codeName;
 	}
-	void setImport(Import imp) {
-		this.imp = imp;
+	public String getTitleName() {
+		return titleName;
 	}
-	@Override
-	public Functions getFunctions() {
-		return this.functions;
-	}
-	void setFunctions(Functions functions) {
-		this.functions = functions;
+	public void setTitleName(String titleName) {
+		this.titleName = titleName;
 	}
 	public boolean isDisabled() {
 		return disabled;
 	}
-	void setDisabled(boolean disabled) {
+	public void setDisabled(boolean disabled) {
 		this.disabled = disabled;
 	}
 }
