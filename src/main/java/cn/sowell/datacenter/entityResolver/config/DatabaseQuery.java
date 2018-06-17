@@ -81,7 +81,7 @@ class DatabaseQuery {
 				module.setTitle(mapWrapper.getString(ModuleDatabaseConfig.COLUMN_MODULE_TITLE.getValue()));
 				module.setDisabled(Integer.valueOf(1).equals(mapWrapper.getInteger(ModuleDatabaseConfig.COLUMN_MODULE_DISABLED.getValue())));
 				module.setMappingName(mapWrapper.getString(ModuleDatabaseConfig.COLUMN_MODULE_MAPPING_NAME.getValue()));
-				module.setCodeName(mapWrapper.getString(ModuleDatabaseConfig.COLUMN_MODULE_MAPPING_NAME.getValue()));
+				module.setCodeName(mapWrapper.getString(ModuleDatabaseConfig.COLUMN_MODULE_CODE_NAME.getValue()));
 				module.setTitleName(mapWrapper.getString(ModuleDatabaseConfig.COLUMN_MODULE_TITLE_NAME.getValue()));
 				return module;
 			}
@@ -140,8 +140,9 @@ class DatabaseQuery {
 	 */
 	public DeferedParamQuery getEnableModuleQuery(Long moduleId, boolean toEnable) {
 		String sql = "update " + ModuleDatabaseConfig.TABLE_MODULE 
-				+ " set " + ModuleDatabaseConfig.COLUMN_MODULE_DISABLED + " = :toEnable";
+				+ " set " + ModuleDatabaseConfig.COLUMN_MODULE_DISABLED + " = :toEnable where " + ModuleDatabaseConfig.COLUMN_MODULE_ID + " = :moduleId";
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
+		dQuery.setParam("moduleId", moduleId);
 		return dQuery.setParam("toEnable", toEnable? null: 1, StandardBasicTypes.INTEGER);
 	}
 

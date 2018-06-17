@@ -8,8 +8,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.abc.mapping.conf.MappingContainer;
-
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.datacenter.entityResolver.config.abst.Module;
 import cn.sowell.datacenter.entityResolver.config.param.CreateModuleParam;
@@ -75,7 +73,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 		}else {
 			assertModuleNameExist(param.getModuleName(), false, "模块名[" + param.getModuleName() + "]已存在");
 		}
-		assertMappingExists(param.getMappingName(), "创建的模块实体对应的配置[" + param.getMappingName() + "]不存在");
+		//assertMappingExists(param.getMappingName(), "创建的模块实体对应的配置[" + param.getMappingName() + "]不存在");
 	}
 	
 	/**
@@ -90,21 +88,6 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 		}
 	}
 
-	/**
-	 * 判断mappingName对应的配置名是否可用
-	 * @param defMappingName
-	 * @param message
-	 */
-	private void assertMappingExists(String defMappingName, String message) {
-		try {
-			if(MappingContainer.getABCNode(defMappingName) == null) {
-				throw new RuntimeException();
-			}
-		}catch(RuntimeException e) {
-			throw new IllegalArgumentException(message, e);
-		}
-	}
-	
 	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
 	public void createModule(String moduleTitle, String mappingName) {
@@ -118,7 +101,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 		DBModule module = new DBModule();
 		module.setTitle(param.getModuleTitle());
 		module.setName(param.getModuleName());
-		module.setMappingName(param.getModuleName());
+		module.setMappingName(param.getMappingName());
 		module.setCodeName(param.getCodeName());
 		module.setTitleName(param.getTitleName());
 		module.setDisabled(false);

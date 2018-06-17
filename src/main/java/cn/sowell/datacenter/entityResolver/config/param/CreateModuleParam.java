@@ -2,6 +2,8 @@ package cn.sowell.datacenter.entityResolver.config.param;
 
 import java.io.Serializable;
 
+import org.springframework.util.Assert;
+
 public class CreateModuleParam implements Serializable{
 	/**
 	 * 
@@ -34,6 +36,8 @@ public class CreateModuleParam implements Serializable{
 	private String titleName;
 	
 	public CreateModuleParam(String moduleTitle, String mappingName) {
+		Assert.hasText(moduleTitle);
+		Assert.hasText(mappingName);
 		this.moduleTitle = moduleTitle;
 		this.mappingName = mappingName;
 	}
