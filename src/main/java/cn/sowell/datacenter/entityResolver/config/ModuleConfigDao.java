@@ -22,5 +22,11 @@ public interface ModuleConfigDao {
 	void reassignMappingName(String entityId, String mappingName);
 
 	void reassignMappingName(String entityId, String mappingName, String codeName, String titleName);
+
+	void updateModulePropertyName(String moduleName, String codeName, String titleName);
+
+	void updateModuleCodeName(String moduleName, String codeName);
+
+	void updateModuleTitleName(String moduleName, String titleName);
 	
 }

@@ -151,6 +151,30 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 			cDao.reassignMappingName(moduleName, mappingName);
 		}
 	}
-
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
+	public void updateModulePropertyName(String moduleName, String codeName, String titleName) {
+		Assert.notNull(moduleName);
+		getModuleOrThrowException(moduleName);
+		cDao.updateModulePropertyName(moduleName, codeName, titleName);
+	}
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
+	public void updateModuleCodeName(String moduleName, String codeName) {
+		Assert.notNull(moduleName);
+		getModuleOrThrowException(moduleName);
+		cDao.updateModuleCodeName(moduleName, codeName);
+	}
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
+	public void updateModuleTitleName(String moduleName, String titleName) {
+		Assert.notNull(moduleName);
+		getModuleOrThrowException(moduleName);
+		cDao.updateModuleTitleName(moduleName, titleName);
+	}
+	
 }
 

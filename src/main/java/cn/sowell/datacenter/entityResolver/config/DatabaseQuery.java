@@ -178,5 +178,37 @@ class DatabaseQuery {
 		dQuery.setParam("moduleName", moduleName);
 		return dQuery;
 	}
+
+	public DeferedParamQuery getUpdateModulePropertyNameQuery(String moduleName, String codeName, String titleName) {
+		String sql = "update " + ModuleDatabaseConfig.TABLE_MODULE
+				+ " set " + ModuleDatabaseConfig.COLUMN_MODULE_CODE_NAME + " = :codeName "
+				+ " , " + ModuleDatabaseConfig.COLUMN_MODULE_TITLE_NAME + " = :titleName "
+				+ "where " + ModuleDatabaseConfig.COLUMN_MODULE_NAME + " = :moduleName";
+		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
+		dQuery.setParam("codeName", codeName, StandardBasicTypes.STRING);
+		dQuery.setParam("titleName", titleName, StandardBasicTypes.STRING);
+		dQuery.setParam("moduleName", moduleName);
+		return dQuery;
+	}
+
+	public DeferedParamQuery getUpdateModuleCodeNameQuery(String moduleName, String codeName) {
+		String sql = "update " + ModuleDatabaseConfig.TABLE_MODULE
+				+ " set " + ModuleDatabaseConfig.COLUMN_MODULE_CODE_NAME + " = :codeName "
+				+ "where " + ModuleDatabaseConfig.COLUMN_MODULE_NAME + " = :moduleName";
+		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
+		dQuery.setParam("codeName", codeName, StandardBasicTypes.STRING);
+		dQuery.setParam("moduleName", moduleName);
+		return dQuery;
+	}
+
+	public DeferedParamQuery getUpdateModuleTitleNameQuery(String moduleName, String titleName) {
+		String sql = "update " + ModuleDatabaseConfig.TABLE_MODULE
+				+ " set " + ModuleDatabaseConfig.COLUMN_MODULE_TITLE_NAME + " = :titleName "
+				+ "where " + ModuleDatabaseConfig.COLUMN_MODULE_NAME + " = :moduleName";
+		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
+		dQuery.setParam("titleName", titleName, StandardBasicTypes.STRING);
+		dQuery.setParam("moduleName", moduleName);
+		return dQuery;
+	}
 	
 }

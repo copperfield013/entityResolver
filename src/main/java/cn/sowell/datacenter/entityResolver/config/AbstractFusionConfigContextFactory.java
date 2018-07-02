@@ -5,8 +5,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.abc.mapping.conf.MappingContainer;
-
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
 import cn.sowell.datacenter.entityResolver.FusionContextConfig;
@@ -28,13 +26,13 @@ public abstract class AbstractFusionConfigContextFactory implements FusionContex
 			if(!TextUtils.hasText(module.getTitle())) {
 				throwException("module[name=" + module.getTitle() + "]的title不能为空");
 			}
-			try {
+			/*try {
 				if(MappingContainer.getABCNode(module.getMappingName()) == null) {
 					throwException("MappingContainer.getABCNode(module.getMappingName())返回null值");
 				}
 			} catch (Exception e) {
 				throw new FusionConfigException("无法根据mappingName[" + module.getMappingName() + "]获得abcNode", e);
-			}
+			}*/
 			moduleMap.put(module.getName(), module);
 			FusionContextConfigImpl cConfig = new FusionContextConfigImpl();
 			cConfig.setModule(module.getName());

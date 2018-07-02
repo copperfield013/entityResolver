@@ -86,5 +86,25 @@ public class ModuleConfigDaoImpl implements ModuleConfigDao{
 				.executeUpdate();
 	}
 
+	@Override
+	public void updateModulePropertyName(String moduleName, String codeName, String titleName) {
+		DeferedParamQuery dQuery = dbQuery.getUpdateModulePropertyNameQuery(moduleName, codeName, titleName);
+		dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
+				.executeUpdate();
+	}
+	
+	@Override
+	public void updateModuleCodeName(String moduleName, String codeName) {
+		DeferedParamQuery dQuery = dbQuery.getUpdateModuleCodeNameQuery(moduleName, codeName);
+		dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
+				.executeUpdate();
+	}
+	
+	@Override
+	public void updateModuleTitleName(String moduleName, String titleName) {
+		DeferedParamQuery dQuery = dbQuery.getUpdateModuleTitleNameQuery(moduleName, titleName);
+		dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
+				.executeUpdate();
+	}
 	
 }

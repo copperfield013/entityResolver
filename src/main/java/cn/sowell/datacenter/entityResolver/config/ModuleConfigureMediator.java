@@ -90,6 +90,17 @@ public interface ModuleConfigureMediator{
 	 */
 	void reassignMappingName(String moduleName, String mappingName, String codeName, String titleName);
 
+	/**
+	 * 更新模块对应的配置中的编码字段和名称字段
+	 * @param moduleName
+	 * @param codeName
+	 * @param titleName
+	 */
+	void updateModulePropertyName(String moduleName, String codeName, String titleName);
+
+	void updateModuleCodeName(String moduleName, String codeName);
+
+	void updateModuleTitleName(String moduleName, String titleName);
 	
 	
 	

@@ -9,8 +9,8 @@ import cn.sowell.datacenter.entityResolver.impl.ABCNodeFusionContextConfigResolv
 public class FusionContextConfigImpl implements FusionContextConfig{
 	private String mappingName;
 	private String module;
-	private String codeAttributeName = "code";
-	private String titleAttributeName = "name";
+	private String codeAttributeName = "唯一编码";
+	private String titleAttributeName = "姓名";
 	private FusionContextConfigResolver configResolver;
 	private boolean loadResolverFieldsFlag = false;
 	
