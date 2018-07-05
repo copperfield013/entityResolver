@@ -101,6 +101,11 @@ public interface ModuleConfigureMediator{
 	void updateModuleCodeName(String moduleName, String codeName);
 
 	void updateModuleTitleName(String moduleName, String titleName);
+
+	/**
+	 * 更新模块数据缓存
+	 */
+	void refresh();
 	
 	
 	

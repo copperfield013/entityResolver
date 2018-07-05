@@ -27,6 +27,16 @@ class DatabaseQuery {
 		return instance;
 	}
 
+	
+	public DeferedParamQuery getModuleQuery() {
+		String sql = "select m.* from @moduleTable m where m.@moduleId is not null order by m.@createTimeCol desc";
+		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
+		dQuery.setSnippet("moduleTable", ModuleDatabaseConfig.TABLE_MODULE.toString());
+		dQuery.setSnippet("moduleId", ModuleDatabaseConfig.COLUMN_MODULE_ID.toString());
+		dQuery.setSnippet("createTimeCol", ModuleDatabaseConfig.COLUMN_MODULE_CREATE_TIME.toString());
+		return dQuery;
+	}
+	
 	public DeferedParamQuery getModuleQuery(QueryModuleCriteria criteria) {
 		String sql = "select m.* from @moduleTable m where m.@moduleId is not null @moduleNameCriteria @disabledCriteria order by m.@createTimeCol desc";
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
@@ -210,5 +220,5 @@ class DatabaseQuery {
 		dQuery.setParam("moduleName", moduleName);
 		return dQuery;
 	}
-	
+
 }

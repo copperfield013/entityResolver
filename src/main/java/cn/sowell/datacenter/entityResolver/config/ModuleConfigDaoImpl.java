@@ -34,6 +34,14 @@ public class ModuleConfigDaoImpl implements ModuleConfigDao{
 		}
 	}
 
+	
+	@Override
+	public List<Module> queryModules() {
+		Session session = sessionFactory.getCurrentSession();
+		DeferedParamQuery dQuery = dbQuery.getModuleQuery();
+		return dbQuery.queryModule(dQuery.createSQLQuery(session, false, null), session);
+	}
+	
 	@Override
 	public List<Module> queryModules(QueryModuleCriteria criteria) {
 		Session session = sessionFactory.getCurrentSession();

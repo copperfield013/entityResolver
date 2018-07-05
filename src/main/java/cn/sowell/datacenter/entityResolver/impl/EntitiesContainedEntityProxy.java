@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.abc.mapping.entity.Entity;
-import com.abc.mapping.entity.RecordEntity;
+import com.abc.mapping.entity.RelationEntity;
 import com.abc.mapping.entity.SimpleEntity;
 
 import cn.sowell.copframe.utils.CollectionUtils;
@@ -63,7 +63,7 @@ public abstract class EntitiesContainedEntityProxy implements EntityProxy{
 		if(relProxies != null) {
 			return CollectionUtils.toList(relProxies, proxy->proxy);
 		}
-		List<RecordEntity> rels = getSourceEntity().getRelations(compositeName);
+		List<RelationEntity> rels = getSourceEntity().getRelations(compositeName);
 		if(rels != null) {
 			rels.forEach(rel->{
 				EntityProxy existEntity = compositeMap.get(rel.getEntity().getId());

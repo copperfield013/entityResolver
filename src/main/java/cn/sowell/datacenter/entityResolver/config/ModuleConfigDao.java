@@ -28,5 +28,7 @@ public interface ModuleConfigDao {
 	void updateModuleCodeName(String moduleName, String codeName);
 
 	void updateModuleTitleName(String moduleName, String titleName);
-	
+
+	List<Module> queryModules();
+
 }

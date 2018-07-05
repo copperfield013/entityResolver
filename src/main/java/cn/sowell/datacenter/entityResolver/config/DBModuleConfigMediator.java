@@ -1,12 +1,18 @@
 package cn.sowell.datacenter.entityResolver.config;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
+import com.beust.jcommander.internal.Lists;
 
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.datacenter.entityResolver.config.abst.Module;
@@ -19,6 +25,8 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 	SessionFactory sessionFactory;
 	ModuleConfigDao cDao;
 	
+	Map<String, Module> moduleMap = null;
+	
 	Logger logger = Logger.getLogger(DBModuleConfigMediator.class);
 	
 	public void setSessionFactory(SessionFactory sessionFactory) {
@@ -27,16 +35,62 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 		this.cDao = dao;
 	}
 	
+	
+	@Override
+	public void refresh() {
+		synchronized (this) {
+			if(moduleMap != null) {
+				synchronized (moduleMap) {
+					logger.debug("执行模块数据刷新，将把moduleMap置为null");
+					moduleMap = null;
+				}
+			}
+		}
+	}
+	
+	private Map<String, Module> getModuleMap(){
+		synchronized (this) {
+			if(moduleMap == null) {
+				logger.debug("开始加载模块数据...");
+				List<Module> modules = cDao.queryModules();
+				modules.forEach(module->{
+					putModuleMap(module.getName(), module);
+				});
+				logger.debug(moduleMap.keySet());
+				logger.debug("模块数据记载完成，共加载了" + modules.size() + "个模块");
+			}
+		}
+		return moduleMap;
+	}
+	
+	private void putModuleMap(String moduleName, Module module) {
+		synchronized (this) {
+			if(moduleMap == null) {
+				moduleMap = new LinkedHashMap<>();
+			}
+		}
+		synchronized (moduleMap) {
+			moduleMap.put(moduleName, module);
+		}
+	}
+	
+	private void reloadModuleToMap(String moduleName) {
+		logger.debug("开始重新加载模块[" + moduleName + "]到缓存");
+		putModuleMap(moduleName, cDao.getModule(moduleName));
+		logger.debug("模块[" + moduleName + "]重新加载完成");
+	}
+	
+	
 	@Transactional(propagation=Propagation.SUPPORTS)
 	@Override
 	public Module getModule(String moduleName) {
-		return cDao.getModule(moduleName);
+		return getModuleMap().get(moduleName);
 	}
 
 	
 	private DBModule getModuleOrThrowException(String moduleName) {
 		Assert.hasText(moduleName, "传入的moduleName不能为空");
-		DBModule module = cDao.getModule(moduleName);
+		DBModule module = (DBModule) getModule(moduleName);
 		if(module != null) {
 			return module;
 		}else {
@@ -47,13 +101,24 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 	@Transactional(propagation=Propagation.SUPPORTS)
 	@Override
 	public List<Module> queryModules() {
-		return cDao.queryModules(new QueryModuleCriteria());
+		return new ArrayList<>(getModuleMap().values());
 	}
 
 	@Transactional(propagation=Propagation.SUPPORTS)
 	@Override
 	public List<Module> queryModules(QueryModuleCriteria criteria) {
-		return cDao.queryModules(criteria);
+		if(TextUtils.hasText(criteria.getModuleName())) {
+			Module module = getModule(criteria.getModuleName());
+			if(!criteria.isFilterDisabled() || !module.isDisabled()) {
+				return Lists.newArrayList(module);
+			}
+		}else {
+			return queryModules().stream()
+				.filter(module->!criteria.isFilterDisabled() || !module.isDisabled())
+				.collect(Collectors.toList())
+				;
+		}
+		return Lists.newArrayList();
 	}
 	
 	private String uuid10() {
@@ -106,6 +171,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 		module.setTitleName(param.getTitleName());
 		module.setDisabled(false);
 		cDao.createModule(module);
+		reloadModuleToMap(module.getName());
 	}
 
 	
@@ -115,6 +181,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 	public void disableModule(String moduleName) {
 		DBModule module = getModuleOrThrowException(moduleName);
 		cDao.enableModule(module.getId(), false);
+		reloadModuleToMap(module.getName());
 	}
 
 	@Transactional(propagation=Propagation.REQUIRED)
@@ -122,6 +189,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 	public void enableModule(String moduleName) {
 		DBModule module = getModuleOrThrowException(moduleName);
 		cDao.enableModule(module.getId(), true);
+		reloadModuleToMap(module.getName());
 	}
 
 	@Transactional(propagation=Propagation.REQUIRED)
@@ -129,6 +197,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 	public void removeModule(String moduleName) {
 		DBModule module = getModuleOrThrowException(moduleName);
 		cDao.removeModule(module.getId());
+		reloadModuleToMap(module.getName());
 	}
 
 	
@@ -139,6 +208,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 		DBModule module = getModuleOrThrowException(moduleName);
 		if(!mappingName.equals(module.getMappingName())) {
 			cDao.reassignMappingName(moduleName, mappingName, codeName, titleName);
+			reloadModuleToMap(module.getName());
 		}
 	}
 
@@ -149,6 +219,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 		DBModule module = getModuleOrThrowException(moduleName);
 		if(!mappingName.equals(module.getMappingName())) {
 			cDao.reassignMappingName(moduleName, mappingName);
+			reloadModuleToMap(module.getName());
 		}
 	}
 	
@@ -158,6 +229,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 		Assert.notNull(moduleName);
 		getModuleOrThrowException(moduleName);
 		cDao.updateModulePropertyName(moduleName, codeName, titleName);
+		reloadModuleToMap(moduleName);
 	}
 	
 	@Transactional(propagation=Propagation.REQUIRED)
@@ -166,6 +238,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 		Assert.notNull(moduleName);
 		getModuleOrThrowException(moduleName);
 		cDao.updateModuleCodeName(moduleName, codeName);
+		reloadModuleToMap(moduleName);
 	}
 	
 	@Transactional(propagation=Propagation.REQUIRED)
@@ -174,6 +247,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 		Assert.notNull(moduleName);
 		getModuleOrThrowException(moduleName);
 		cDao.updateModuleTitleName(moduleName, titleName);
+		reloadModuleToMap(moduleName);
 	}
 	
 }
