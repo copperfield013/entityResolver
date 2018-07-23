@@ -11,12 +11,24 @@ import cn.sowell.datacenter.entityResolver.FusionContextConfig;
 import cn.sowell.datacenter.entityResolver.FusionContextConfigFactory;
 import cn.sowell.datacenter.entityResolver.FusionContextConfigImpl;
 import cn.sowell.datacenter.entityResolver.FusionContextConfigResolver;
+import cn.sowell.datacenter.entityResolver.UserCodeService;
 import cn.sowell.datacenter.entityResolver.config.abst.Config;
 import cn.sowell.datacenter.entityResolver.config.abst.Module;
 
 public abstract class AbstractFusionConfigContextFactory implements FusionContextConfigFactory{
 	private Map<String, FusionContextConfig> configMap = new HashMap<String, FusionContextConfig>();
 	private Map<String, Module> moduleMap = new HashMap<String, Module>();
+	private UserCodeService userCodeService;
+	private UserCodeService userCodeServiceProxy = new UserCodeService() {
+		@Override
+		public String getCurrentUserCode() {
+			if(userCodeService != null) {
+				return userCodeService.getCurrentUserCode();
+			}else {
+				return UserCodeService.super.getCurrentUserCode();
+			}
+		}
+	};
 	
 	protected AbstractFusionConfigContextFactory(Config config) throws FusionConfigException {
 		for (Module module : config.getModules()) {
@@ -43,10 +55,10 @@ public abstract class AbstractFusionConfigContextFactory implements FusionContex
 			if(TextUtils.hasText(module.getTitleName())) {
 				cConfig.setTitleAttributeName(module.getTitleName());
 			}
+			cConfig.setUserCodeService(userCodeServiceProxy);
 			configMap.put(module.getName(), cConfig);
 		}
 	}
-	
 	
 	protected abstract Set<FieldParserDescription> getFields(String module);
 
@@ -97,6 +109,11 @@ public abstract class AbstractFusionConfigContextFactory implements FusionContex
 	@Override
 	public Set<FusionContextConfig> getAllConfigs() {
 		return new LinkedHashSet<FusionContextConfig>(configMap.values());
+	}
+
+
+	public void setUserCodeService(UserCodeService userCodeService) {
+		this.userCodeService = userCodeService;
 	}
 
 }

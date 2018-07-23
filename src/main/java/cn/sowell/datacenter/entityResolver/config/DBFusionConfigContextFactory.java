@@ -8,6 +8,7 @@ import cn.sowell.datacenter.entityResolver.FieldService;
 import cn.sowell.datacenter.entityResolver.FusionContextConfig;
 import cn.sowell.datacenter.entityResolver.FusionContextConfigFactory;
 import cn.sowell.datacenter.entityResolver.FusionContextConfigResolver;
+import cn.sowell.datacenter.entityResolver.UserCodeService;
 import cn.sowell.datacenter.entityResolver.config.abst.Module;
 
 public class DBFusionConfigContextFactory implements FusionContextConfigFactory{
@@ -16,6 +17,7 @@ public class DBFusionConfigContextFactory implements FusionContextConfigFactory{
 	private boolean syncFlag = true;
 	private ModuleConfigBuilder configBuilder;
 	private FieldService fieldService;
+	private UserCodeService userCodeService;
 	
 	
 	public synchronized void setConfigBuilder(ModuleConfigBuilder configBuilder) {
@@ -53,6 +55,9 @@ public class DBFusionConfigContextFactory implements FusionContextConfigFactory{
 		if(this.fieldService != null) {
 			fFactory.setFieldsService(this.fieldService);
 		}
+		if(this.userCodeService != null) {
+			fFactory.setUserCodeService(this.userCodeService);
+		}
 	}
 
 	public synchronized void sync() {
@@ -82,6 +87,10 @@ public class DBFusionConfigContextFactory implements FusionContextConfigFactory{
 	@Override
 	public Set<FusionContextConfig> getAllConfigs() {
 		return getFactory().getAllConfigs();
+	}
+
+	public void setUserCodeService(UserCodeService userCodeService) {
+		this.userCodeService = userCodeService;
 	}
 	
 

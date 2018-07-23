@@ -13,7 +13,7 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 	private String titleAttributeName = "姓名";
 	private FusionContextConfigResolver configResolver;
 	private boolean loadResolverFieldsFlag = false;
-	
+	private UserCodeService userCodeService;
 	/* (non-Javadoc)
 	 * @see cn.sowell.datacenter.entityResolver.FusionContextConfig#getMappingName()
 	 */
@@ -90,6 +90,7 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 	public BizFusionContext createContext() {
 		BizFusionContext context = new BizFusionContext();
 		context.setMappingName(getMappingName());
+		context.setUserCode(userCodeService.getCurrentUserCode());
 		return context;
 	}
 	
@@ -109,5 +110,8 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 			return ((ABCNodeFusionContextConfigResolver)cr).getAllImportFields();
 		}
 		return null;
+	}
+	public void setUserCodeService(UserCodeService userCodeService) {
+		this.userCodeService = userCodeService;
 	}
 }
