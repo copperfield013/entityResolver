@@ -3,6 +3,8 @@ package cn.sowell.datacenter.entityResolver.impl;
 import java.util.Map;
 import java.util.Set;
 
+import com.abc.util.ValueType;
+
 import cn.sowell.copframe.utils.Assert;
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.datacenter.entityResolver.CEntityPropertyParser;
@@ -41,12 +43,12 @@ abstract class AbstractEntityPropertyParser implements CEntityPropertyParser {
 	}
 	
 	@Override
-	public String getFormatedProperty(String propertyName, String propType) {
+	public String getFormatedProperty(String propertyName, ValueType propType) {
 		return getFormatedProperty(propertyName, propType, null);
 	}
 	
 	@Override
-	public String getFormatedProperty(String propertyName, String propType, String format) {
+	public String getFormatedProperty(String propertyName, ValueType propType, String format) {
 		Object value = getProperty(propertyName, propType);
 		String result = null;
 		try {

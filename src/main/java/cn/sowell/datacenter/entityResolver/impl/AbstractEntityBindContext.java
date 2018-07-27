@@ -2,6 +2,7 @@ package cn.sowell.datacenter.entityResolver.impl;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -9,6 +10,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+
+import com.abc.util.ValueType;
 
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.utils.TextUtils;
@@ -19,6 +22,8 @@ import cn.sowell.datacenter.entityResolver.PropertyTranslator;
 import cn.sowell.datacenter.entityResolver.translator.StringDateTranslator;
 import cn.sowell.datacenter.entityResolver.translator.StringFloatTranslator;
 import cn.sowell.datacenter.entityResolver.translator.StringIntTranslator;
+import cn.sowell.datacenter.entityResolver.valsetter.FileValueSetter;
+import cn.sowell.datacenter.entityResolver.valsetter.PropertyValueSetter;
 
 public abstract class AbstractEntityBindContext implements EntityBindContext {
 	protected EntityProxy entity;
@@ -33,7 +38,7 @@ public abstract class AbstractEntityBindContext implements EntityBindContext {
 
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Object transfer(Object propValue, String dataType) {
+	private Object transfer(Object propValue, ValueType dataType) {
 		PropertyTranslator translator = getTranslator(propValue, dataType);
 		if(translator != null) {
 			return translator.transfer(propValue);
@@ -47,19 +52,28 @@ public abstract class AbstractEntityBindContext implements EntityBindContext {
 		return entity;
 	}
 	@SuppressWarnings("rawtypes")
-	static Map<PropertyTranslator, String> tranlastorMap = new HashMap<>();
+	static Map<PropertyTranslator, ValueType> tranlastorMap = new HashMap<>();
+	static Set<PropertyValueSetter> pvSetters = new HashSet<>();
 	static {
-		tranlastorMap.put(new StringDateTranslator(), "date");
-		tranlastorMap.put(new StringIntTranslator(), "int");
-		tranlastorMap.put(new StringFloatTranslator(), "float");
+		tranlastorMap.put(new StringDateTranslator(), ValueType.DATE);
+		tranlastorMap.put(new StringIntTranslator(), ValueType.INT);
+		tranlastorMap.put(new StringFloatTranslator(), ValueType.FLOAT);
 		
+		pvSetters.add(new FileValueSetter());
+		
+	}
+	
+	static PropertyValueSetter getValueSetter(String propName, Object val, EntityAttrElement eElement) {
+		return pvSetters.stream()
+				.filter(setter->setter.support(eElement.getDataType(), val))
+				.findFirst().orElse(null);
 	}
 	
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static PropertyTranslator getTranslator(Object propValue, String dataType) {
-		for (Entry<PropertyTranslator, String> entry : tranlastorMap.entrySet()) {
-			if(entry.getValue().equalsIgnoreCase(dataType)
+	private static PropertyTranslator getTranslator(Object propValue, ValueType dataType) {
+		for (Entry<PropertyTranslator, ValueType> entry : tranlastorMap.entrySet()) {
+			if(entry.getValue().equals(dataType)
 				&& entry.getKey().check(propValue)) {
 				return entry.getKey();
 			}
@@ -68,19 +82,30 @@ public abstract class AbstractEntityBindContext implements EntityBindContext {
 	}
 	
 	@Override
-	public Object getValue(String propName, String abctype) {
+	public Object getValue(String propName, ValueType abctype) {
 		EntityProxy proxy = getEntity();
 		return proxy.getTypeValue(propName, abctype);
 	}
 	
 	@Override
-	public void setValue(String propName, Object propValue) {
+	public PropertyValueBindReport setValue(String propName, Object propValue) {
+		CommonPropertyValueBindReport report = new CommonPropertyValueBindReport();
 		if(entity.preprocessValue(propName, propValue)) {
+			report.setValuePreprocessed(true);
 			EntityElement eElement = getEntityElement(propName);
+			report.setPropertyEntityElement(eElement);
 			if(filterEntityElement(eElement, propValue)) {
+				report.setEntittyElementFiltered(true);
 				if(eElement instanceof EntityAttrElement) {
 					Object val = transfer(propValue, ((EntityAttrElement) eElement).getDataType());
-					entity.putValue(propName, val);
+					report.setValueAsNull(val == null);
+					PropertyValueSetter setter = getValueSetter(propName, val, (EntityAttrElement) eElement);
+					if(setter != null) {
+						report.setPropertyValueSetter(setter);
+						setter.invoke(entity, propName, val, report);
+					}else {
+						entity.putValue(propName, val);
+					}
 				}else if(eElement instanceof EntityLabelElement) {
 					Set<String> labels = toLabelSet(propValue);
 					Set<String> subdomain = ((EntityLabelElement) eElement).getSubdomain();
@@ -102,8 +127,11 @@ public abstract class AbstractEntityBindContext implements EntityBindContext {
 				}
 			}
 		}
+		return report;
 		
 	}
+
+	
 
 	private Set<String> toLabelSet(Object propValue) {
 		Set<String> labels = new LinkedHashSet<String>();

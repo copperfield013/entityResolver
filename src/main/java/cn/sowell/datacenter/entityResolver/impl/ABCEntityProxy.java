@@ -1,6 +1,7 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
 import com.abc.mapping.entity.Entity;
+import com.abc.util.ValueType;
 
 import cn.sowell.datacenter.entityResolver.EntityProxy;
 
@@ -13,6 +14,12 @@ public class ABCEntityProxy extends EntitiesContainedEntityProxy {
 		this.entity = entity;
 	}
 
+	
+	@Override
+	public Object getTypeValue(String propName, ValueType abctype) {
+		return super.getTypeValue(propName, abctype);
+	}
+	
 	@Override
 	public void putValue(String propName, Object val) {
 		entity.putValue(propName, val);

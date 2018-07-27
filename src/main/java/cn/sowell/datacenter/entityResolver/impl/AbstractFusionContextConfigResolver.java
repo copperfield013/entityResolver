@@ -1,6 +1,7 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -21,6 +22,7 @@ import cn.sowell.datacenter.entityResolver.FusionContextConfigResolver;
 import cn.sowell.datacenter.entityResolver.ModuleEntityPropertyParser;
 import cn.sowell.datacenter.entityResolver.PropertyNamePartitions;
 import cn.sowell.datacenter.entityResolver.exception.UnsupportedEntityElementException;
+import cn.sowell.datacenter.entityResolver.impl.PropertyValueBindReport.PropertyType;
 
 public abstract class AbstractFusionContextConfigResolver implements FusionContextConfigResolver{
 	protected FusionContextConfig config;
@@ -50,48 +52,60 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	}
 	
 	
-	private Entity createEntity(Map<String, Object> map, boolean ignoreUnsupportedElement) {
+	private EntityComponent createEntity(Map<String, Object> map, boolean ignoreUnsupportedElement) {
 		Entity entity = new Entity(config.getMappingName());
 		EntityBindContext rootContext = buildRootContext(entity);
 		if(rootContext != null) {
-			map.forEach((propName, propValue)->{
+			boolean updatedFileProperty = false;
+			for (Entry<String, Object> entry : map.entrySet()) {
+				String propName = entry.getKey();
+				Object propValue = entry.getValue();
+				PropertyValueBindReport report = null;
 				try {
-					bindElement(rootContext, propName, propValue);
+					report = bindElement(rootContext, propName, propValue);
 				} catch (UnsupportedEntityElementException e) {
 					if(!ignoreUnsupportedElement) {
 						throw e;
 					}
 				}
-			});
+				if(!updatedFileProperty && report != null 
+						&& report.getPropertyType() == PropertyType.FILE) {
+					//修改过文件字段
+					updatedFileProperty = true;
+				}
+			}
 			((EntitiesContainedEntityProxy)rootContext.getEntity()).commit();
-			return entity;
+			boolean toCreate = entity.getStringValue(config.getCodeAttributeName()) == null;
+			CommonEntityComponent cEntity = new CommonEntityComponent(entity, toCreate);
+			cEntity.setSavedFile(updatedFileProperty);
+			return cEntity;
 		}
 		return null;
 	}
 	
 	@Override
-	public Entity createEntity(Map<String, Object> map) {
+	public EntityComponent createEntity(Map<String, Object> map) {
 		logger.debug("==============创建Entity");
-		Entity entity = createEntity(map, false);
+		EntityComponent entity = createEntity(map, false);
 		logger.debug(entity.toJson());
 		return entity;
 	}
 	
 	@Override
-	public Entity createEntityIgnoreUnsupportedElement(Map<String, Object> map) {
+	public EntityComponent createEntityIgnoreUnsupportedElement(Map<String, Object> map) {
 		return createEntity(map, true);
 	}
 	
 	
 
-	private void bindElement(EntityBindContext context, String propName, Object propValue) throws UnsupportedEntityElementException {
+	private PropertyValueBindReport bindElement(EntityBindContext context, String propName, Object propValue) throws UnsupportedEntityElementException {
 		String[] split = propName.split("\\.", 2);
 		String prefix = split[0];
 		if(split.length == 1) {
-			context.setValue(propName, propValue);
+			return context.setValue(propName, propValue);
 		}else {
 			EntityBindContext elementContext = context.getElement(new PropertyNamePartitions(prefix));
-			bindElement(elementContext, split[1], propValue);
+			return bindElement(elementContext, split[1], propValue);
 		}
 	}
 	
@@ -114,7 +128,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	
 	@Override
 	public String saveEntity(Map<String, Object> map, Consumer<BizFusionContext> consumer) {
-		BizFusionContext context = config.createContext();
+		BizFusionContext context = config.getCurrentContext();
 		context.setSource(FusionContext.SOURCE_COMMON);
 		if(consumer != null) {
 			consumer.accept(context);
@@ -125,10 +139,11 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	@Override
 	public String saveEntity(BizFusionContext context, Map<String, Object> map) {
 		Assert.notNull(context);
-		Entity entity = createEntity(map);
+		EntityComponent entity = createEntity(map);
 		if(entity != null) {
 			Integration integration=PanelFactory.getIntegration();
-			return integration.integrate(entity, context);
+			String code = integration.integrate(entity.getEntity(), context);
+			return code;
 		}
 		throw new RuntimeException("无法根据map创建Entity");
 	}

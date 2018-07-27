@@ -1,16 +1,18 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
+import com.abc.util.ValueType;
+
 import cn.sowell.datacenter.entityResolver.EntityElement;
 
 public class EntityAttrElement extends EntityElement{
-	private String dataType;
+	private ValueType dataType;
 
-	public String getDataType() {
+	public ValueType getDataType() {
 		return dataType;
 	}
 
-	public void setDataType(String dataType) {
-		this.dataType = dataType;
+	public void setDataType(ValueType valueType) {
+		this.dataType = valueType;
 	}
 
 }

@@ -2,6 +2,8 @@ package cn.sowell.datacenter.entityResolver;
 
 import java.util.Map;
 
+import com.abc.util.ValueType;
+
 import cn.sowell.copframe.utils.FormatUtils;
 
 public class FieldParserDescription {
@@ -20,8 +22,9 @@ public class FieldParserDescription {
 		return field.getTitle();
 	}
 	
-	public String getAbcType() {
-		return field.getAbcType();
+	public ValueType getAbcType() {
+		return ValueType.valueOf(field.getAbcType());
+		//return field.getAbcType();
 	}
 	
 	public String getFullKey() {

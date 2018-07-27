@@ -1,4 +1,9 @@
 package cn.sowell.datacenter.entityResolver;
+
+import com.abc.util.ValueType;
+
+import cn.sowell.datacenter.entityResolver.impl.PropertyValueBindReport;
+
 /**
  * 
  * @author Copperfield
@@ -10,8 +15,9 @@ public interface EntityBindContext {
 	 * 设置直接属性值
 	 * @param propName
 	 * @param propValue
+	 * @return 
 	 */
-	void setValue(String propName, Object propValue);
+	PropertyValueBindReport setValue(String propName, Object propValue);
 	
 	/**
 	 * 获得直接属性值
@@ -19,7 +25,7 @@ public interface EntityBindContext {
 	 * @param abcAttr
 	 * @return
 	 */
-	Object getValue(String propName, String abcAttr);
+	Object getValue(String propName, ValueType abcAttr);
 	
 	/**
 	 * 获得直接子节点

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.abc.mapping.entity.Entity;
+import com.abc.util.ValueType;
 
 import cn.sowell.copframe.utils.Assert;
 import cn.sowell.datacenter.entityResolver.EntityProxy;
@@ -59,7 +60,7 @@ public class RelationEntityProxy extends EntitiesContainedEntityProxy{
 	}
 	
 	@Override
-	public Object getTypeValue(String propName, String abctype) {
+	public Object getTypeValue(String propName, ValueType abctype) {
 		if(LABEL_KEY.equals(propName)) {
 			return getLabel();
 		}else {

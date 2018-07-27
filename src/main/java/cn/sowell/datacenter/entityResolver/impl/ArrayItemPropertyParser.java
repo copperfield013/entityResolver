@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 import org.springframework.util.Assert;
 
+import com.abc.util.ValueType;
+
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
 import cn.sowell.datacenter.entityResolver.ModuleEntityPropertyParser;
 
@@ -29,7 +31,7 @@ public class ArrayItemPropertyParser extends AbstractEntityPropertyParser{
 
 	@Override
 	public String getCode() {
-		return (String) getProperty(compositeName + "." + ABCNodeProxy.CODE_PROPERTY_NAME, "string");
+		return (String) getProperty(compositeName + "." + ABCNodeProxy.CODE_PROPERTY_NAME, ValueType.STRING);
 	}
 	
 	
@@ -41,7 +43,7 @@ public class ArrayItemPropertyParser extends AbstractEntityPropertyParser{
 	 * 当propertyName不以compositeName开头时，则强制添加compositeName
 	 */
 	@Override
-	public Object getProperty(String propertyName, String propType) {
+	public Object getProperty(String propertyName, ValueType propType) {
 		return moduleParser.getProperty(getFieldName(propertyName), propType);
 	}
 	

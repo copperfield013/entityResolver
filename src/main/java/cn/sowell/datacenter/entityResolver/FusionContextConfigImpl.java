@@ -83,11 +83,22 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 	public void setTitleAttributeName(String titleAttributeName) {
 		this.titleAttributeName = titleAttributeName;
 	}
+	
+	private ThreadLocal<BizFusionContext> fusionContextLocal = new ThreadLocal<>();
 	/* (non-Javadoc)
 	 * @see cn.sowell.datacenter.entityResolver.FusionContextConfig#createContext()
 	 */
 	@Override
-	public BizFusionContext createContext() {
+	public BizFusionContext getCurrentContext() {
+		if(fusionContextLocal.get() == null) {
+			fusionContextLocal.set(this.createNewContext());
+		}
+		return fusionContextLocal.get();
+		
+	}
+	
+	@Override
+	public BizFusionContext createNewContext() {
 		BizFusionContext context = new BizFusionContext();
 		context.setMappingName(getMappingName());
 		context.setUserCode(userCodeService.getCurrentUserCode());

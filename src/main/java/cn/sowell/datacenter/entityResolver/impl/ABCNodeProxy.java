@@ -9,6 +9,7 @@ import com.abc.mapping.node.AttributeNode;
 import com.abc.mapping.node.LabelNode;
 import com.abc.mapping.node.MultiAttributeNode;
 import com.abc.mapping.node.RelationNode;
+import com.abc.util.ValueType;
 
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.datacenter.entityResolver.EntityElement;
@@ -39,7 +40,7 @@ public class ABCNodeProxy {
 				AttributeNode codeNode = new AttributeNode();
 				codeNode.setName(CODE_PROPERTY_NAME);
 				codeNode.setAbcattrName(CODE_PROPERTY_NAME);
-				codeNode.setDatatype("string");
+				codeNode.setDatatype(ValueType.STRING);
 				return new ABCNodeProxy(codeNode);
 			}
 		}
@@ -166,6 +167,7 @@ public class ABCNodeProxy {
 			eElement.setAbcattr(node.getAbcNode().getAbcattr());
 			eElement.setTagName("relation");
 			eElement.setEntityName(node.getAbcNode().getTitle());
+			eElement.setFullAbcattrName(node.getFullAbcattrName());
 			eElement.setSubdomain(new HashSet<>(node.getLabelNode().getSubdomains()));
 			return eElement;
 		};

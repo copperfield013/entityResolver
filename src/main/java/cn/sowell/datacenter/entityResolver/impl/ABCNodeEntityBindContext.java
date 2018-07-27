@@ -81,7 +81,9 @@ public class ABCNodeEntityBindContext extends AbstractEntityBindContext {
 		}
 	}
 	
-	
+	public ABCNodeProxy getAbcNode() {
+		return this.node;
+	}
 	
 	
 	

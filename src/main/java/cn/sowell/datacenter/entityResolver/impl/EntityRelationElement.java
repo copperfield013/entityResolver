@@ -6,6 +6,7 @@ import cn.sowell.datacenter.entityResolver.EntityElement;
 
 public class EntityRelationElement extends EntityElement {
 	private String entityName;
+	private String fullAbcattrName;
 	private Set<String> subdomain;
 	public String getEntityName() {
 		return entityName;
@@ -22,5 +23,14 @@ public class EntityRelationElement extends EntityElement {
 	public void setSubdomain(Set<String> subdomain) {
 		this.subdomain = subdomain;
 	}
+
+	public String getFullAbcattrName() {
+		return fullAbcattrName;
+	}
+
+	public void setFullAbcattrName(String fullAbcattrName) {
+		this.fullAbcattrName = fullAbcattrName;
+	}
+
 	
 }
