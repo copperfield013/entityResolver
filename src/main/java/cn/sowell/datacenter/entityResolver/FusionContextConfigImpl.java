@@ -1,6 +1,10 @@
 package cn.sowell.datacenter.entityResolver;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+
+import org.springframework.util.Assert;
 
 import com.abc.application.BizFusionContext;
 
@@ -84,25 +88,35 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 		this.titleAttributeName = titleAttributeName;
 	}
 	
-	private ThreadLocal<BizFusionContext> fusionContextLocal = new ThreadLocal<>();
-	/* (non-Javadoc)
-	 * @see cn.sowell.datacenter.entityResolver.FusionContextConfig#createContext()
-	 */
+	
+	private ThreadLocal<Map<Object, BizFusionContext>> userFusionContextLocal = new ThreadLocal<>();
+	
 	@Override
-	public BizFusionContext getCurrentContext() {
-		if(fusionContextLocal.get() == null) {
-			fusionContextLocal.set(this.createNewContext());
-		}
-		return fusionContextLocal.get();
-		
+	public BizFusionContext createNewContext(Object userPrinciple) {
+		BizFusionContext context = new BizFusionContext();
+		context.setMappingName(getMappingName());
+		context.setUserCode(userCodeService.getUserCode(userPrinciple));
+		return context;
 	}
 	
 	@Override
-	public BizFusionContext createNewContext() {
-		BizFusionContext context = new BizFusionContext();
-		context.setMappingName(getMappingName());
-		context.setUserCode(userCodeService.getCurrentUserCode());
-		return context;
+	public BizFusionContext getCurrentContext(Object user) {
+		Assert.notNull(user);
+		Map<Object, BizFusionContext> map = null;
+		synchronized (userFusionContextLocal) {
+			map = userFusionContextLocal.get();
+			if(userFusionContextLocal.get() == null) {
+				map = new HashMap<>();
+				map.put(user, createNewContext(user));
+				userFusionContextLocal.set(map);
+			}
+		}
+		synchronized (map) {
+			if(!map.containsKey(user)) {
+				map.put(user, createNewContext(user));
+			}
+			return map.get(user);
+		}
 	}
 	
 	@Override

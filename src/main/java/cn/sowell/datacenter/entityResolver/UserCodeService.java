@@ -2,7 +2,8 @@ package cn.sowell.datacenter.entityResolver;
 
 public interface UserCodeService {
 
-	default String getCurrentUserCode() {
+	
+	default String getUserCode(Object userPrinciple) {
 		return null;
 	}
 

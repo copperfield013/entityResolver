@@ -28,7 +28,7 @@ public interface FusionContextConfigResolver {
 	 * @param consumer 保存实体前，对上下文进行的操作
 	 * @return 保存成功的entity的唯一编码
 	 */
-	String saveEntity(Map<String, Object> map, Consumer<BizFusionContext> consumer);
+	String saveEntity(Map<String, Object> map, Consumer<BizFusionContext> consumer, Object user);
 	
 	/**
 	 * 根据当前配置，解析生成Entity，并使用传入自定义的context， 保存Entity
@@ -43,7 +43,7 @@ public interface FusionContextConfigResolver {
 	 * @param entity
 	 * @return
 	 */
-	ModuleEntityPropertyParser createParser(Entity entity);
+	ModuleEntityPropertyParser createParser(Entity entity, Object user);
 	
 	/**
 	 * 
@@ -61,4 +61,5 @@ public interface FusionContextConfigResolver {
 	FieldConfigure getFieldConfigure(String fieldPath);
 	
 	boolean hasLoadFieldDescription();
+	
 }

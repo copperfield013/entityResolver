@@ -15,4 +15,5 @@ public interface PropertyValueGetContext {
 	String getCurrentPropertyPath();
 	FusionContextConfig getContextConfig();
 	EntityBindContext getParentEntityContext();
+	Object getUserPrinciple();
 }

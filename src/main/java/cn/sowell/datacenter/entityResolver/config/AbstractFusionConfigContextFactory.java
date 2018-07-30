@@ -21,11 +21,11 @@ public abstract class AbstractFusionConfigContextFactory implements FusionContex
 	private UserCodeService userCodeService;
 	private UserCodeService userCodeServiceProxy = new UserCodeService() {
 		@Override
-		public String getCurrentUserCode() {
+		public String getUserCode(Object userPrinciple) {
 			if(userCodeService != null) {
-				return userCodeService.getCurrentUserCode();
+				return userCodeService.getUserCode(userPrinciple);
 			}else {
-				return UserCodeService.super.getCurrentUserCode();
+				return UserCodeService.super.getUserCode(userPrinciple);
 			}
 		}
 	};

@@ -27,19 +27,22 @@ class CommonModuleEntityPropertyParser extends AbstractEntityPropertyParser impl
 	private FusionContextConfig config;
 	
 	private EntityBindContext context;
+	
+	private Object userPrinciple;
 
 	private List<ErrorInfomation> errors;
 	
 	
 	
 	
-	CommonModuleEntityPropertyParser(FusionContextConfig config, EntityBindContext context, Map<String, FieldParserDescription> fieldMap) {
+	CommonModuleEntityPropertyParser(FusionContextConfig config, EntityBindContext context, Map<String, FieldParserDescription> fieldMap, Object userPrinciple) {
 		super(fieldMap);
 		Assert.notNull(config);
 		Assert.notNull(context);
 		Assert.notNull(context.getEntity());
 		this.context = context;
 		this.config = config;
+		this.userPrinciple = userPrinciple;
 	}
 	
 	@Override
@@ -119,6 +122,7 @@ class CommonModuleEntityPropertyParser extends AbstractEntityPropertyParser impl
 				c.setFullPropertyKey(field.getFullKey());
 				c.setFullPropertyPath(propertyName);
 				c.setParentEntityContext(parentContext);
+				c.setUserPrinciple(userPrinciple);
 				return getter.invoke(c);
 			}
 		}
@@ -176,6 +180,7 @@ class CommonModuleEntityPropertyParser extends AbstractEntityPropertyParser impl
 		private EntityBindContext parentEntityContext;
 		private FusionContextConfig contextConfig;
 		private String currentPropertyPath;
+		private Object userPrinciple;
 
 		@Override
 		public ModuleEntityPropertyParser getParser() {
@@ -255,6 +260,15 @@ class CommonModuleEntityPropertyParser extends AbstractEntityPropertyParser impl
 
 		public void setParentEntityContext(EntityBindContext parentEntityContext) {
 			this.parentEntityContext = parentEntityContext;
+		}
+
+		@Override
+		public Object getUserPrinciple() {
+			return userPrinciple;
+		}
+
+		public void setUserPrinciple(Object userPrinciple) {
+			this.userPrinciple = userPrinciple;
 		}
 
 		

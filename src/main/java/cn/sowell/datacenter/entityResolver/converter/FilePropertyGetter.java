@@ -34,7 +34,7 @@ public class FilePropertyGetter implements PropertyValueGetter{
 	
 	@Override
 	public Object invoke(PropertyValueGetContext context) {
-		BizFusionContext fusionConext = context.getContextConfig().getCurrentContext();
+		BizFusionContext fusionConext = context.getContextConfig().getCurrentContext(context.getUserPrinciple());
 		Discoverer discoverer = PanelFactory.getDiscoverer(fusionConext);
 		String code = FormatUtils.toString(context.getCurrentContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME, ValueType.STRING));
 		AttriCoorinatePJ pj = new AttriCoorinatePJ();

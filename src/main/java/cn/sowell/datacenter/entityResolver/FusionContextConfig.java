@@ -20,20 +20,20 @@ public interface FusionContextConfig {
 
 	String getTitleAttributeName();
 
-	/**
-	 * 获得当前线程的BizFusionContext，在当前线程下，返回的对象都是同一个对象
-	 * @return
-	 */
-	BizFusionContext getCurrentContext();
+	
+	BizFusionContext getCurrentContext(Object user);
 	
 	/**
-	 * 创建并返回一个新的BizFusionContext对象
+	 * 
+	 * @param userPrinciple
 	 * @return
+	 * @see {@link UserCodeService#getUserCode(Object)}
 	 */
-	BizFusionContext createNewContext();
+	BizFusionContext createNewContext(Object userPrinciple);
 
 	Set<Label> getAllLabels();
 
 	Set<ImportCompositeField> getAllImportFields();
+
 
 }

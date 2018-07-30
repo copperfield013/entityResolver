@@ -110,12 +110,12 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	}
 	
 	@Override
-	public ModuleEntityPropertyParser createParser(Entity entity) {
+	public ModuleEntityPropertyParser createParser(Entity entity, Object user) {
 		if(this.fields == null) {
 			throw new RuntimeException("解析器没有初始化字段数据");
 		}else {
 			EntityBindContext rootContext = buildRootContext(entity);
-			CommonModuleEntityPropertyParser parser = new CommonModuleEntityPropertyParser(config, rootContext, getFullKeyFieldMap());
+			CommonModuleEntityPropertyParser parser = new CommonModuleEntityPropertyParser(config, rootContext, getFullKeyFieldMap(), user);
 			return parser ;
 		}
 	}
@@ -127,8 +127,8 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	}
 	
 	@Override
-	public String saveEntity(Map<String, Object> map, Consumer<BizFusionContext> consumer) {
-		BizFusionContext context = config.getCurrentContext();
+	public String saveEntity(Map<String, Object> map, Consumer<BizFusionContext> consumer, Object user) {
+		BizFusionContext context = config.getCurrentContext(user);
 		context.setSource(FusionContext.SOURCE_COMMON);
 		if(consumer != null) {
 			consumer.accept(context);
