@@ -25,11 +25,10 @@ public class ABCNodeEntityBindContext extends AbstractEntityBindContext {
 	Logger logger = Logger.getLogger(ABCNodeEntityBindContext.class);
 	
 	public ABCNodeEntityBindContext(ABCNode rootNode, Entity entity) {
-		this(new ABCNodeProxy(rootNode), new ABCEntityProxy(entity), null);
+		this(new ABCNodeProxy(rootNode), new ABCEntityProxy(entity));
 	}
 
-	public ABCNodeEntityBindContext(ABCNodeProxy thisNode, EntityProxy thisEntity,
-			ABCNodeEntityBindContext parent) {
+	public ABCNodeEntityBindContext(ABCNodeProxy thisNode, EntityProxy thisEntity) {
 		super(thisEntity);
 		this.node = thisNode;
 	}
@@ -50,7 +49,7 @@ public class ABCNodeEntityBindContext extends AbstractEntityBindContext {
 					//将子节点对象放到当前节点中
 					((EntitiesContainedEntityProxy) this.entity).putEntity(propName, eleEntity);
 				}
-				return new ABCNodeEntityBindContext(eleNode, eleEntity, this);
+				return new ABCNodeEntityBindContext(eleNode, eleEntity);
 			} catch (Exception e) {
 				throw new RuntimeException("获得子节点时发生错误", e);
 			}

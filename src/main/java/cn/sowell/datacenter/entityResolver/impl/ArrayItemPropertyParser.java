@@ -9,16 +9,15 @@ import org.springframework.util.Assert;
 import com.abc.util.ValueType;
 
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
-import cn.sowell.datacenter.entityResolver.ModuleEntityPropertyParser;
 
 public class ArrayItemPropertyParser extends AbstractEntityPropertyParser{
 
 	
-	private final ModuleEntityPropertyParser moduleParser;
+	private final AbstractEntityPropertyParser moduleParser;
 	private final String compositeName;
 	private final int itemIndex;
 
-	public ArrayItemPropertyParser(ModuleEntityPropertyParser moduleParser, String compositeName, 
+	public ArrayItemPropertyParser(AbstractEntityPropertyParser moduleParser, String compositeName, 
 			int itemIndex,
 			Map<String, FieldParserDescription> fieldMap) {
 		super(fieldMap);

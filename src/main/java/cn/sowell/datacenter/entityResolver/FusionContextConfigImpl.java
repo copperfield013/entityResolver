@@ -7,6 +7,8 @@ import java.util.Set;
 import org.springframework.util.Assert;
 
 import com.abc.application.BizFusionContext;
+import com.abc.application.RemovedFusionContext;
+import com.abc.panel.PanelFactory;
 
 import cn.sowell.datacenter.entityResolver.impl.ABCNodeFusionContextConfigResolver;
 
@@ -120,6 +122,15 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 	}
 	
 	@Override
+	public BizFusionContext createRelationContext(String relationName, Object userPrinciple) {
+		Assert.hasText(relationName);
+		BizFusionContext context = new BizFusionContext();
+		context.setMappingName(getMappingName() + "." + relationName);
+		context.setUserCode(userCodeService.getUserCode(userPrinciple));
+		return context;
+	}
+	
+	@Override
 	public Set<Label> getAllLabels() {
 		FusionContextConfigResolver cr = getConfigResolver();
 		if(cr instanceof ABCNodeFusionContextConfigResolver) {
@@ -139,4 +150,17 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 	public void setUserCodeService(UserCodeService userCodeService) {
 		this.userCodeService = userCodeService;
 	}
+	
+	@Override
+	public void removeEntity(String code, Object userPrinciple) {
+		Assert.hasText(code);
+		RemovedFusionContext appInfo=new RemovedFusionContext(code, userCodeService.getUserCode(userPrinciple), "list-delete" );
+		appInfo.setMappingName(getMappingName());
+		if(!PanelFactory.getIntegration().remove(appInfo)){
+			throw new RuntimeException("删除失败");
+		}
+	}
+	
+	
+	
 }

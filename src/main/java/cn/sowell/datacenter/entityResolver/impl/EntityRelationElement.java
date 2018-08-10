@@ -24,11 +24,11 @@ public class EntityRelationElement extends EntityElement {
 		this.subdomain = subdomain;
 	}
 
-	public String getFullAbcattrName() {
+	public String getFullTitle() {
 		return fullAbcattrName;
 	}
 
-	public void setFullAbcattrName(String fullAbcattrName) {
+	public void setFullTitle(String fullAbcattrName) {
 		this.fullAbcattrName = fullAbcattrName;
 	}
 

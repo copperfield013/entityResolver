@@ -34,7 +34,12 @@ public class FilePropertyGetter implements PropertyValueGetter{
 	
 	@Override
 	public Object invoke(PropertyValueGetContext context) {
-		BizFusionContext fusionConext = context.getContextConfig().getCurrentContext(context.getUserPrinciple());
+		BizFusionContext fusionConext;
+		if(context.getRelationName() != null) {
+			fusionConext = context.getContextConfig().createRelationContext(context.getRelationName(), context.getUserPrinciple());
+		}else {
+			fusionConext = context.getContextConfig().getCurrentContext(context.getUserPrinciple());
+		}
 		Discoverer discoverer = PanelFactory.getDiscoverer(fusionConext);
 		String code = FormatUtils.toString(context.getCurrentContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME, ValueType.STRING));
 		AttriCoorinatePJ pj = new AttriCoorinatePJ();
@@ -45,7 +50,7 @@ public class FilePropertyGetter implements PropertyValueGetter{
 			ABCNodeProxy node = ((ABCNodeEntityBindContext)context.getCurrentContext()).getAbcNode();
 			EntityElement entityElement = node.getEntityElement();
 			if(entityElement instanceof EntityRelationElement) {
-				pj.setMappingName(((EntityRelationElement) entityElement).getFullAbcattrName());
+				pj.setMappingName(((EntityRelationElement) entityElement).getFullTitle());
 			}else if(entityElement instanceof EntityMultiAttributeElement) {
 				String parentCode = FormatUtils.toString(context.getParentEntityContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME, ValueType.STRING));
 				pj.setRecordCode(parentCode);

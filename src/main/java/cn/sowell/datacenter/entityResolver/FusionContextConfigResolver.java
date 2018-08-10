@@ -7,6 +7,7 @@ import com.abc.application.BizFusionContext;
 import com.abc.mapping.entity.Entity;
 
 import cn.sowell.datacenter.entityResolver.impl.EntityComponent;
+import cn.sowell.datacenter.entityResolver.impl.RelationEntityPropertyParser;
 
 public interface FusionContextConfigResolver {
 	/**
@@ -44,6 +45,8 @@ public interface FusionContextConfigResolver {
 	 * @return
 	 */
 	ModuleEntityPropertyParser createParser(Entity entity, Object user);
+	
+	RelationEntityPropertyParser createRelationParser(Entity entity, String relationName, Object user);
 	
 	/**
 	 * 

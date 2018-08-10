@@ -167,7 +167,7 @@ public class ABCNodeProxy {
 			eElement.setAbcattr(node.getAbcNode().getAbcattr());
 			eElement.setTagName("relation");
 			eElement.setEntityName(node.getAbcNode().getTitle());
-			eElement.setFullAbcattrName(node.getFullAbcattrName());
+			eElement.setFullTitle(node.getFullTitle());
 			eElement.setSubdomain(new HashSet<>(node.getLabelNode().getSubdomains()));
 			return eElement;
 		};

@@ -121,6 +121,15 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	}
 	
 	
+	@Override
+	public RelationEntityPropertyParser createRelationParser(Entity entity, String relationName, Object user) {
+		if(this.fields == null) {
+			throw new RuntimeException("解析器没有初始化字段数据");
+		}else {
+			return new RelationEntityPropertyParser(config, relationName, getFullKeyFieldMap(), user, entity);
+		}
+	}
+	
 
 	private Map<String, FieldParserDescription> getFullKeyFieldMap() {
 		return CollectionUtils.toMap(this.fields, field->field.getFullKey());

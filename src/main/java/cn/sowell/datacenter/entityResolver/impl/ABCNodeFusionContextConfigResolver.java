@@ -34,7 +34,11 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 	
 	public ABCNodeFusionContextConfigResolver(FusionContextConfig config) {
 		super(config);
-		rootNode = MappingContainer.getABCNode(config.getMappingName());
+		try {
+			rootNode = MappingContainer.getABCNode(config.getMappingName());
+		} catch (Exception e) {
+			throw new RuntimeException("初始化ABC配置时发生错误[" + config.getMappingName() + "]", e);
+		}
 		if(rootNode == null) {
 			throw new RuntimeException("没有找到ABC配置[" + config.getMappingName() + "]");
 		}
@@ -168,8 +172,8 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 			itemMap.put(param.getPrefix() + param.getMultiAttributeNode().getTitle(), param.getMultiAttributeNode());
 		});
 		
-		return CollectionUtils.toSet(map.entrySet(), enitry->{
-			return new ImportCompositeField() {
+		return CollectionUtils.toSet(map.entrySet(), enitry->
+			new ImportCompositeField() {
 				
 				@Override
 				public boolean getIsMultipleField() {
@@ -201,8 +205,8 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 					
 				}
 				
-			};
-		});
+			}
+		);
 	}
 
 

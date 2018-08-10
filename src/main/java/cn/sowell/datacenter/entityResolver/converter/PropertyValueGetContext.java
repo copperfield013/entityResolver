@@ -3,10 +3,10 @@ package cn.sowell.datacenter.entityResolver.converter;
 import cn.sowell.datacenter.entityResolver.EntityBindContext;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
 import cn.sowell.datacenter.entityResolver.FusionContextConfig;
-import cn.sowell.datacenter.entityResolver.ModuleEntityPropertyParser;
+import cn.sowell.datacenter.entityResolver.impl.EntityPropertyParser;
 
 public interface PropertyValueGetContext {
-	ModuleEntityPropertyParser getParser();
+	EntityPropertyParser getParser();
 	EntityBindContext getRootContext();
 	FieldParserDescription getField();
 	String getFullPropertyKey();
@@ -16,4 +16,5 @@ public interface PropertyValueGetContext {
 	FusionContextConfig getContextConfig();
 	EntityBindContext getParentEntityContext();
 	Object getUserPrinciple();
+	String getRelationName();
 }
