@@ -70,7 +70,11 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 			}
 		}
 		synchronized (moduleMap) {
-			moduleMap.put(moduleName, module);
+			if(module == null) {
+				moduleMap.remove(moduleName);
+			}else {
+				moduleMap.put(moduleName, module);
+			}
 		}
 	}
 	
