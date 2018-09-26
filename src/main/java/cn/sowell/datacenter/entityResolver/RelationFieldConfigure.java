@@ -15,6 +15,11 @@ public class RelationFieldConfigure extends AbstractFieldConfigure<RelationNode>
 	public Set<String> getLabelDomain() throws UnconfiuredFusionException{
 		return getNode().getLabelNode().getSubdomains();
 	}
+	
+	public String getAbcNodeAbcAttr() {
+		RelationNode n = getNode();
+		return n.getAbcNode().getAbcattr();
+	}
 
 	@Override
 	public String getFieldType() {

@@ -44,7 +44,7 @@ public class RelationEntityPropertyParser extends EntityPropertyParser{
 			String suffix = propertyName.substring(relationName.length() + 1);
 			if(!suffix.isEmpty()) {
 				FieldParserDescription field = fieldMap.get(propertyName.replaceAll("\\[\\d+\\]", ""));
-				return super.getProperty(suffix, field, propType);
+				return super.getProperty(relationName, suffix, field, propType);
 			}
 		}
 		return null;

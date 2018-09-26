@@ -16,7 +16,9 @@ import com.abc.mapping.node.ABCNode;
 import com.abc.mapping.node.AttributeNode;
 import com.abc.mapping.node.LabelNode;
 import com.abc.mapping.node.MultiAttributeNode;
+import com.abc.mapping.node.NodeOpsType;
 import com.abc.mapping.node.RelationNode;
+import com.beust.jcommander.internal.Lists;
 
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.datacenter.entityResolver.EntityBindContext;
@@ -75,6 +77,7 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 		HashSet<Label> labels = new HashSet<Label>();
 		Map<String, LabelNode> nodeMap = getElements(rootNode, "", 
 				node->node.getLabels(), 
+				null,
 				(itemMap, param)->itemMap.put(param.getPrefix() + param.getRelationNode().getTitle(), param.getRelationNode().getLabelNode()), 
 				null);
 		CollectionUtils.appendTo(nodeMap.entrySet(), labels, node->{
@@ -116,6 +119,7 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 		
 	}
 	
+	@SuppressWarnings("unused")
 	private static class MultiAttributeHandlerParam{
 		final private MultiAttributeNode multiAttributeNode;
 		final private String prefix;
@@ -132,35 +136,63 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 		}
 	}
 	
+	private <T extends AttributeNode> Map<String, AttributeNode> getElements(MultiAttributeNode node, String prefix, Function<MultiAttributeNode, List<T>> multipleChildrenGetter){
+		Map<String, AttributeNode> itemMap = new LinkedHashMap<>();
+		if(multipleChildrenGetter != null) {
+			Collection<T> items = multipleChildrenGetter.apply(node);
+			if(items != null) {
+				for (AttributeNode item : items) {
+					itemMap.put(prefix + item.getTitle(), item);
+				}
+			}
+		}
+		return itemMap;
+	}
+	
+	@SuppressWarnings("unchecked")
 	private <T extends AttributeNode> Map<String, T> getElements(ABCNode node, String prefix, 
 			Function<ABCNode, List<T>> itemGetter, 
+			Function<MultiAttributeNode, List<T>> multipleChildrenGetter, 
 			BiConsumer<Map<String, T>, RelationHandlerParam> relationHandler, 
 			BiConsumer<Map<String, T>, MultiAttributeHandlerParam> multipleHandler) {
 		Map<String, T> itemMap = new LinkedHashMap<>();
-		List<T> items = itemGetter.apply(node);
-		if(items != null) {
-			for (T item : items) {
-				itemMap.put(prefix + item.getTitle(), item);
+		if(itemGetter != null) {
+			List<T> items = itemGetter.apply(node);
+			if(items != null) {
+				for (T item : items) {
+					itemMap.put(prefix + item.getTitle(), item);
+				}
 			}
 		}
-		Collection<RelationNode> relations = node.getRelation();
+		Collection<RelationNode> relations = ((ABCNode) node).getRelation();
 		if(relations != null) {
 			for (RelationNode relation : relations) {
 				if(relationHandler != null) {
 					relationHandler.accept(itemMap, new RelationHandlerParam(relation, prefix));
 				}
-				itemMap.putAll(getElements(relation.getAbcNode(), relation.getTitle() + ".", itemGetter, relationHandler, multipleHandler));
+				itemMap.putAll(getElements(relation.getAbcNode(), relation.getTitle() + ".", itemGetter, multipleChildrenGetter, relationHandler, multipleHandler));
 			}
 		}
-		if(multipleHandler != null) {
-			Collection<MultiAttributeNode> multis = node.getMultiAttributes();
-			for (MultiAttributeNode multi : multis) {
-				multipleHandler.accept(itemMap, new MultiAttributeHandlerParam(multi, prefix));
+		Collection<MultiAttributeNode> multiples = ((ABCNode) node).getMultiAttributes();
+		if(multiples != null && multipleChildrenGetter != null) {
+			for (MultiAttributeNode multiple : multiples) {
+				if(multipleHandler != null) {
+					multipleHandler.accept(itemMap, new MultiAttributeHandlerParam(multiple, prefix));
+				}
+				itemMap.putAll((Map<String, ? extends T>) getElements(multiple, prefix, multipleChildrenGetter));
 			}
 		}
 		return itemMap;
 	}
 
+	public Set<String> getAllRelationNames(){
+		Set<String> relationNames = new HashSet<String>();
+		getElements(rootNode, "", null, null, 
+			(itemMap, param)->relationNames.add(param.getPrefix() + param.getRelationNode().getTitle()), 
+			null);
+		return relationNames;
+	}
+	
 	public Set<ImportCompositeField> getAllImportFields() {
 		Set<String> relationNames = new HashSet<String>();
 		Map<String, AttributeNode> map = getElements(rootNode, "", node->{
@@ -168,16 +200,16 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 			nodes.addAll(node.getAttributes());
 			nodes.addAll(node.getLabels());
 			return nodes;
-		}, (itemMap, param)->relationNames.add(param.getPrefix() + param.getRelationNode().getTitle()), (itemMap, param)->{
-			itemMap.put(param.getPrefix() + param.getMultiAttributeNode().getTitle(), param.getMultiAttributeNode());
-		});
+		}, mnode->Lists.newArrayList(mnode.getAttributes()), 
+			(itemMap, param)->relationNames.add(param.getPrefix() + param.getRelationNode().getTitle()), 
+			null);
 		
-		return CollectionUtils.toSet(map.entrySet(), enitry->{
+		return CollectionUtils.toSet(map.entrySet(), entry->{
 			ImportCompositeField f = new ImportCompositeField() {
 				
 				@Override
 				public boolean getIsMultipleField() {
-					return enitry.getKey().contains(".");
+					return entry.getKey().contains(".");
 				}
 				
 				@Override
@@ -193,7 +225,7 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 				
 				@Override
 				public String getFieldName() {
-					return enitry.getKey();
+					return entry.getKey();
 				}
 				
 				@Override
@@ -209,6 +241,8 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 		});
 	}
 
-
+	public NodeOpsType getABCNodeAccess() {
+		return rootNode.getOpsType();
+	}
 }
 

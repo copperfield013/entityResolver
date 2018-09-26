@@ -26,10 +26,17 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 	protected EntityBindContext context;
 	
 	protected Object userPrinciple;
+	
+	protected Object propertyGetterArgument;
 
 	
 	
 	EntityPropertyParser(FusionContextConfig config, EntityBindContext context, Map<String, FieldParserDescription> fieldMap, Object userPrinciple) {
+		this(config, context, fieldMap, userPrinciple, null);
+	}
+	
+	EntityPropertyParser(FusionContextConfig config, EntityBindContext context,
+			Map<String, FieldParserDescription> fieldMap, Object userPrinciple, Object propertyGetterArgument) {
 		super(fieldMap);
 		Assert.notNull(config);
 		Assert.notNull(context);
@@ -37,8 +44,9 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 		this.context = context;
 		this.config = config;
 		this.userPrinciple = userPrinciple;
+		this.propertyGetterArgument = propertyGetterArgument;
 	}
-	
+
 	@Override
 	public String getCode() {
 		return (String) context.getValue("唯一编码", ValueType.STRING);
@@ -50,7 +58,7 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 		EntityBindContext thisContext = this.context;
 		for (int i = 0; i < names.length - 1; i++) {
 			PropertyNamePartitions namePartitions = new PropertyNamePartitions(names[i]);
-			thisContext = thisContext.getElement(namePartitions);
+			thisContext = thisContext.getElementAutoCreate(namePartitions);
 		}
 		try {
 			String name = names[names.length - 1];
@@ -77,7 +85,7 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 	
 	
 	
-	protected Object getProperty(String propertyName, FieldParserDescription field, ValueType propType) {
+	protected Object getProperty(String relationName, String propertyName, FieldParserDescription field, ValueType propType) {
 		Assert.hasText(propertyName);
 		String[] names = TextUtils.splitToArray(propertyName, "\\.");
 		EntityBindContext thisContext = this.context,
@@ -85,21 +93,15 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 		for (int i = 0; i < names.length - 1; i++) {
 			PropertyNamePartitions namePartitions = new PropertyNamePartitions(names[i]);
 			parentContext = thisContext;
-			thisContext = thisContext.getElement(namePartitions);
+			thisContext = thisContext.getElementAutoCreate(namePartitions);
 		}
 		//FieldParserDescription field = fieldMap.get(propertyName.replaceAll("\\[\\d+\\]", ""));
 		String propName = names[names.length - 1];
 		if(field != null) {
-			String replacedPropName = propName.replaceAll("\\[\\d+\\]", "");
-			String relationName = null;
-			if(!field.getFullKey().equals(replacedPropName)
-				&& field.getFullKey().endsWith("." + replacedPropName)) {
-				relationName = field.getFullKey().substring(0, field.getFullKey().length() - replacedPropName.length() - 1);
-			}
 			if(propType == null && field != null) {
 				propType = field.getAbcType();
 			}
-			PropertyValueGetter getter = getPropertyCGetter(field);
+			PropertyValueGetter getter = getPropertyCGetter(field, propertyGetterArgument);
 			if(getter != null) {
 				CommonPropertyGetContext c = new CommonPropertyGetContext();
 				c.setParser(this);
@@ -113,6 +115,8 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 				c.setParentEntityContext(parentContext);
 				c.setUserPrinciple(userPrinciple);
 				c.setRelationName(relationName);
+				c.setPropertyGetterArgument(propertyGetterArgument);
+				
 				return getter.invoke(c);
 			}
 		}
@@ -129,8 +133,8 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 			add(new FilePropertyGetter());
 		}
 	};
-	static PropertyValueGetter getPropertyCGetter(FieldParserDescription field) {
-		return converters.stream().filter(converter->converter.support(field)).findFirst().orElse(null);
+	static PropertyValueGetter getPropertyCGetter(FieldParserDescription field, Object propertyGetterArgument2) {
+		return converters.stream().filter(converter->converter.support(field, propertyGetterArgument2)).findFirst().orElse(null);
 	}
 
 
@@ -160,12 +164,14 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 		private String currentPropertyPath;
 		private Object userPrinciple;
 		private String relationName;
+		private Object propertyGetterArgument;
 
 		@Override
 		public EntityPropertyParser getParser() {
 			return this.parser;
 		}
 		
+
 		@Override
 		public EntityBindContext getRootContext() {
 			return this.rootContext;
@@ -258,6 +264,17 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 		public void setRelationName(String relationName) {
 			this.relationName = relationName;
 		}
+
+		@Override
+		public Object getPropertyGetterArgument() {
+			return propertyGetterArgument;
+		}
+
+
+		public void setPropertyGetterArgument(Object propertyGetterArgument) {
+			this.propertyGetterArgument = propertyGetterArgument;
+		}
+
 
 	}
 

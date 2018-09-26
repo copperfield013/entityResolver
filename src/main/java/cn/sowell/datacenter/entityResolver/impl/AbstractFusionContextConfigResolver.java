@@ -1,5 +1,7 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -9,7 +11,9 @@ import org.apache.log4j.Logger;
 
 import com.abc.application.BizFusionContext;
 import com.abc.application.FusionContext;
+import com.abc.dto.ErrorInfomation;
 import com.abc.mapping.entity.Entity;
+import com.abc.panel.Discoverer;
 import com.abc.panel.Integration;
 import com.abc.panel.PanelFactory;
 
@@ -51,29 +55,37 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 		return null;
 	}
 	
-	
+	private static final String PROP_FLAG = ".$$flag$$";
 	private EntityComponent createEntity(Map<String, Object> map, boolean ignoreUnsupportedElement) {
 		Entity entity = new Entity(config.getMappingName());
 		EntityBindContext rootContext = buildRootContext(entity);
 		if(rootContext != null) {
 			boolean updatedFileProperty = false;
+			Set<String> flagCompositeName = new HashSet<>();
 			for (Entry<String, Object> entry : map.entrySet()) {
 				String propName = entry.getKey();
 				Object propValue = entry.getValue();
-				PropertyValueBindReport report = null;
-				try {
-					report = bindElement(rootContext, propName, propValue);
-				} catch (UnsupportedEntityElementException e) {
-					if(!ignoreUnsupportedElement) {
-						throw e;
+				if(propName.endsWith(PROP_FLAG)) {
+					if("true".equals(propValue)) {
+						flagCompositeName.add(propName.substring(0, propName.length() - PROP_FLAG.length()));
+					}
+				}else {
+					PropertyValueBindReport report = null;
+					try {
+						report = bindElement(rootContext, propName, propValue);
+					} catch (UnsupportedEntityElementException e) {
+						if(!ignoreUnsupportedElement) {
+							throw e;
+						}
+					}
+					if(!updatedFileProperty && report != null 
+							&& report.getPropertyType() == PropertyType.FILE) {
+						//修改过文件字段
+						updatedFileProperty = true;
 					}
 				}
-				if(!updatedFileProperty && report != null 
-						&& report.getPropertyType() == PropertyType.FILE) {
-					//修改过文件字段
-					updatedFileProperty = true;
-				}
 			}
+			checkAndRemoveComposite(rootContext, flagCompositeName);
 			((EntitiesContainedEntityProxy)rootContext.getEntity()).commit();
 			boolean toCreate = entity.getStringValue(config.getCodeAttributeName()) == null;
 			CommonEntityComponent cEntity = new CommonEntityComponent(entity, toCreate);
@@ -83,6 +95,33 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 		return null;
 	}
 	
+	private void checkAndRemoveComposite(EntityBindContext rootContext, Set<String> flagCompositeNames) {
+		if(rootContext != null && flagCompositeNames != null) {
+			for (String compositeName : flagCompositeNames) {
+				String[] split = compositeName.split("\\.");
+				boolean toRemove = false;
+				EntityBindContext context = rootContext;
+				for (int i = 0; i < split.length; i++) {
+					context = context.getElementIfExists(new PropertyNamePartitions(split[i]));
+					if(context == null) {
+						toRemove = true;
+						break;
+					}
+				}
+				if(toRemove) {
+					context = rootContext;
+					for (int i = 0; i < split.length; i++) {
+						if(i == split.length - 1) {
+							context.removeAllComposite(split[i]);
+						}else {
+							context = context.getElementAutoCreate(new PropertyNamePartitions(split[i]));
+						}
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	public EntityComponent createEntity(Map<String, Object> map) {
 		logger.debug("==============创建Entity");
@@ -104,18 +143,25 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 		if(split.length == 1) {
 			return context.setValue(propName, propValue);
 		}else {
-			EntityBindContext elementContext = context.getElement(new PropertyNamePartitions(prefix));
+			EntityBindContext elementContext = context.getElementAutoCreate(new PropertyNamePartitions(prefix));
 			return bindElement(elementContext, split[1], propValue);
 		}
 	}
 	
 	@Override
-	public ModuleEntityPropertyParser createParser(Entity entity, Object user) {
+	public ModuleEntityPropertyParser createParser(Entity entity, Object user, Object propertyGetterArgument) {
 		if(this.fields == null) {
 			throw new RuntimeException("解析器没有初始化字段数据");
 		}else {
 			EntityBindContext rootContext = buildRootContext(entity);
-			CommonModuleEntityPropertyParser parser = new CommonModuleEntityPropertyParser(config, rootContext, getFullKeyFieldMap(), user);
+			CommonModuleEntityPropertyParser parser = new CommonModuleEntityPropertyParser(config, rootContext, getFullKeyFieldMap(), user, propertyGetterArgument);
+			//获得错误信息
+			if(parser.getCode() != null) {
+				BizFusionContext context = config.getCurrentContext(user);
+				Discoverer discoverer = PanelFactory.getDiscoverer(context);
+				List<ErrorInfomation> errors = discoverer.trackErrorInfos(parser.getCode());
+				parser.setErrors(errors);
+			}
 			return parser ;
 		}
 	}

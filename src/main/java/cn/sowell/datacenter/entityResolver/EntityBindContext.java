@@ -28,12 +28,23 @@ public interface EntityBindContext {
 	Object getValue(String propName, ValueType abcAttr);
 	
 	/**
-	 * 获得直接子节点
+	 * 获得直接子节点,如果子节点不存在，那么就创建一个
 	 * @param prefix
 	 * @return
 	 */
-	EntityBindContext getElement(PropertyNamePartitions namePartitions);
-
+	EntityBindContext getElementAutoCreate(PropertyNamePartitions namePartitions);
+	
+	/**
+	 * 获得直接子节点，如果子节点不存在，那么返回空
+	 * @param propName
+	 * @return
+	 */
+	EntityBindContext getElementIfExists(PropertyNamePartitions propName);
+	
 	EntityProxy getEntity();
+
+	void removeAllComposite(String compositeName);
+
+	
 	
 }

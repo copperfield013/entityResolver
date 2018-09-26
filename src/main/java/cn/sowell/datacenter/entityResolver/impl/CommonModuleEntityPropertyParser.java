@@ -18,13 +18,18 @@ class CommonModuleEntityPropertyParser extends EntityPropertyParser implements M
 	
 	
 	CommonModuleEntityPropertyParser(FusionContextConfig config, EntityBindContext context, Map<String, FieldParserDescription> fieldMap, Object userPrinciple) {
-		super(config, context, fieldMap, userPrinciple);
+		this(config, context, fieldMap, userPrinciple, null);
 	}
 	
+	public CommonModuleEntityPropertyParser(FusionContextConfig config, EntityBindContext context,
+			Map<String, FieldParserDescription> fieldMap, Object userPrinciple, Object propertyGetterArgument) {
+		super(config, context, fieldMap, userPrinciple, propertyGetterArgument);
+	}
+
 	@Override
 	public Object getProperty(String propertyName, ValueType propType) {
 		FieldParserDescription field = fieldMap.get(propertyName.replaceAll("\\[\\d+\\]", ""));
-		return getProperty(propertyName, field, propType);
+		return getProperty(null, propertyName, field, propType);
 	}
 	
 	@Override

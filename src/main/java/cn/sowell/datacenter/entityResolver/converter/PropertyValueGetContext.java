@@ -17,4 +17,5 @@ public interface PropertyValueGetContext {
 	EntityBindContext getParentEntityContext();
 	Object getUserPrinciple();
 	String getRelationName();
+	Object getPropertyGetterArgument();
 }

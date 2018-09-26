@@ -44,7 +44,7 @@ public interface FusionContextConfigResolver {
 	 * @param entity
 	 * @return
 	 */
-	ModuleEntityPropertyParser createParser(Entity entity, Object user);
+	ModuleEntityPropertyParser createParser(Entity entity, Object user, Object propertyGetterArgument);
 	
 	RelationEntityPropertyParser createRelationParser(Entity entity, String relationName, Object user);
 	
@@ -64,5 +64,4 @@ public interface FusionContextConfigResolver {
 	FieldConfigure getFieldConfigure(String fieldPath);
 	
 	boolean hasLoadFieldDescription();
-	
 }

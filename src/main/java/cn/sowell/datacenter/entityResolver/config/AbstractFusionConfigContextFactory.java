@@ -28,6 +28,11 @@ public abstract class AbstractFusionConfigContextFactory implements FusionContex
 				return UserCodeService.super.getUserCode(userPrinciple);
 			}
 		}
+
+		@Override
+		public void setUserCode(String userCode) {
+			
+		}
 	};
 	
 	protected AbstractFusionConfigContextFactory(Config config) throws FusionConfigException {

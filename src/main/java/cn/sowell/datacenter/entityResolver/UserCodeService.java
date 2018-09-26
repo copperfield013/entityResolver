@@ -8,5 +8,7 @@ public interface UserCodeService {
 	default String getUserCode(Object userPrinciple) {
 		return FormatUtils.toString(userPrinciple);
 	}
+	
+	void setUserCode(String userCode);
 
 }

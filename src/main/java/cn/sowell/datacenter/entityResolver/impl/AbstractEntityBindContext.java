@@ -11,6 +11,8 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import com.abc.mapping.entity.Entity;
+import com.abc.mapping.entity.SimpleEntity;
 import com.abc.util.ValueType;
 
 import cn.sowell.copframe.utils.FormatUtils;
@@ -97,7 +99,7 @@ public abstract class AbstractEntityBindContext implements EntityBindContext {
 			if(filterEntityElement(eElement, propValue)) {
 				report.setEntittyElementFiltered(true);
 				if(eElement instanceof EntityAttrElement) {
-					Object val = transfer(propValue, ((EntityAttrElement) eElement).getDataType());
+					Object val = transfer(propValue, ((EntityAttrElement) eElement).getDataType());	
 					report.setValueAsNull(val == null);
 					PropertyValueSetter setter = getValueSetter(propName, val, (EntityAttrElement) eElement);
 					if(setter != null) {
@@ -191,4 +193,17 @@ public abstract class AbstractEntityBindContext implements EntityBindContext {
 	 * @return
 	 */
 	protected abstract EntityElement getEntityElement(String propName);
+	
+	@Override
+	public void removeAllComposite(String compositeName) {
+		SimpleEntity source = getEntity().getEntity();
+		if(source instanceof Entity) {
+			EntityElement element = getEntityElement(compositeName);
+			if(element instanceof EntityMultiAttributeElement) {
+				((Entity) source).removeAllMultiAttrEntity(compositeName);
+			}else if(element instanceof EntityRelationElement) {
+				((Entity) source).removeAllRelationEntity(compositeName);
+			}
+		}
+	}
 }

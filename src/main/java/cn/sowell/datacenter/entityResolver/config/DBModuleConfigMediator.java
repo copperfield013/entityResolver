@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.beust.jcommander.internal.Lists;
+import com.beust.jcommander.internal.Maps;
 
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.datacenter.entityResolver.config.abst.Module;
@@ -56,11 +57,13 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 				modules.forEach(module->{
 					putModuleMap(module.getName(), module);
 				});
-				logger.debug(moduleMap.keySet());
+				if(moduleMap != null) {
+					logger.debug(moduleMap.keySet());
+				}
 				logger.debug("模块数据记载完成，共加载了" + modules.size() + "个模块");
 			}
 		}
-		return moduleMap;
+		return moduleMap == null? Maps.newHashMap(): moduleMap;
 	}
 	
 	private void putModuleMap(String moduleName, Module module) {

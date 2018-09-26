@@ -27,7 +27,7 @@ public class FilePropertyGetter implements PropertyValueGetter{
 	
 	
 	@Override
-	public boolean support(FieldParserDescription field) {
+	public boolean support(FieldParserDescription field, Object propertyGetterArgument) {
 		return field != null && ValueType.BYTES.equals(field.getAbcType());
 	}
 
@@ -40,27 +40,44 @@ public class FilePropertyGetter implements PropertyValueGetter{
 		}else {
 			fusionConext = context.getContextConfig().getCurrentContext(context.getUserPrinciple());
 		}
+		BytesInfoVO f = null ;
 		Discoverer discoverer = PanelFactory.getDiscoverer(fusionConext);
-		String code = FormatUtils.toString(context.getCurrentContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME, ValueType.STRING));
-		AttriCoorinatePJ pj = new AttriCoorinatePJ();
-		
-		pj.setRecordCode(code);
-		pj.setAttrName(context.getCurrentPropertyPath());
-		if(context.getCurrentContext() instanceof ABCNodeEntityBindContext) {
-			ABCNodeProxy node = ((ABCNodeEntityBindContext)context.getCurrentContext()).getAbcNode();
-			EntityElement entityElement = node.getEntityElement();
-			if(entityElement instanceof EntityRelationElement) {
-				pj.setMappingName(((EntityRelationElement) entityElement).getFullTitle());
-			}else if(entityElement instanceof EntityMultiAttributeElement) {
-				String parentCode = FormatUtils.toString(context.getParentEntityContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME, ValueType.STRING));
-				pj.setRecordCode(parentCode);
-				pj.setMultiAttrCode(code);
-				pj.setMultiAttrName(entityElement.getName());
+		if(context.getPropertyGetterArgument() instanceof Discoverer) {
+			try {
+				BytesInfoVO fx = context.getCurrentContext().getEntity().getEntity().getBytesInfoVO(context.getCurrentPropertyPath());
+				f = discoverer.trackBytesInfo(fx);
+			} catch (Exception e) {
+				logger.error("查询历史记录的文件字段时发生错误[" + context.getFullPropertyPath() + "]", e);
+			}
+		}else {
+			
+			String code = FormatUtils.toString(context.getCurrentContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME, ValueType.STRING));
+			AttriCoorinatePJ pj = new AttriCoorinatePJ();
+			
+			pj.setRecordCode(code);
+			pj.setAttrName(context.getCurrentPropertyPath());
+			if(context.getCurrentContext() instanceof ABCNodeEntityBindContext) {
+				ABCNodeProxy node = ((ABCNodeEntityBindContext)context.getCurrentContext()).getAbcNode();
+				EntityElement entityElement = node.getEntityElement();
+				if(entityElement instanceof EntityRelationElement) {
+					pj.setMappingName(((EntityRelationElement) entityElement).getFullTitle());
+				}else if(entityElement instanceof EntityMultiAttributeElement) {
+					String parentCode = FormatUtils.toString(context.getParentEntityContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME, ValueType.STRING));
+					pj.setRecordCode(parentCode);
+					pj.setMultiAttrCode(code);
+					pj.setMultiAttrName(entityElement.getName());
+				}
+			}
+			try {
+				f = discoverer.discoverBytesInfo(pj);
+			} catch (Exception e) {
+				logger.error("查询文件时发生错误[" + context.getFullPropertyPath() + "]", e);
 			}
 		}
 		
-		try {
-			BytesInfoVO file = discoverer.discoverBytesInfo(pj);
+		if(f != null) {
+			final BytesInfoVO file = f;
+			
 			if(file.getBody() != null) {
 				String fileCode = FormatUtils.coalesce(file.getCode(), TextUtils.uuid());
 				return new FileHaunt() {
@@ -92,8 +109,6 @@ public class FilePropertyGetter implements PropertyValueGetter{
 					
 				};
 			}
-		} catch (Exception e) {
-			logger.error("保存文件时发生错误[" + context.getFullPropertyPath() + "]", e);
 		}
 		return null;
 	}

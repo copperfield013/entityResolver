@@ -63,6 +63,13 @@ abstract class AbstractEntityPropertyParser implements CEntityPropertyParser {
 
 	@Override
 	public String getFormatedProperty(String propertyName) {
+		if(fieldMap != null) {
+			String fieldFullName = propertyName.replaceAll("\\[\\d+\\]", "");
+			FieldParserDescription field = fieldMap.get(fieldFullName);
+			if(field != null) {
+				return getFormatedProperty(propertyName, field.getAbcType());
+			}
+		}
 		return getFormatedProperty(propertyName, null);
 	}
 	

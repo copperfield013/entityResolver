@@ -4,7 +4,7 @@
 
 	<groupId>cn.sowell.datacenter</groupId>
 	<artifactId>entityResolver</artifactId>
-	<version>2.9</version>
+	<version>2.22</version>
 	<packaging>jar</packaging>
 
 	<name>entityResolver</name>
@@ -12,7 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version.abcitem>3.5.23.alphal</version.abcitem>
+		<version.abcitem>3.6.4.alphal</version.abcitem>
 		<version.hibernate>5.0.7.Final</version.hibernate>
 	</properties>
 
@@ -33,6 +33,11 @@
 			<version>0.6</version>
 		</dependency>
 		<dependency>
+			<groupId>org.lz4</groupId>
+			<artifactId>lz4-java</artifactId>
+			<version>1.4.1</version>
+		</dependency>
+		<dependency>
 			<groupId>cn.sowell.copframe</groupId>
 			<artifactId>cpf-spring</artifactId>
 			<version>0.3.15</version>
@@ -49,11 +54,11 @@
 		</dependency>
 	</dependencies>
 	<distributionManagement>
-        <repository>
-        	<id>aliyun44-nexus</id>
-        	<url>http://139.196.123.44:32108/repository/nexus/</url>
-        </repository>
-    </distributionManagement>
+		<repository>
+			<id>aliyun44-nexus</id>
+			<url>http://139.196.123.44:32108/repository/nexus/</url>
+		</repository>
+	</distributionManagement>
 	<repositories>
 		<repository>
 			<id>nexus</id>
@@ -88,7 +93,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>            
+			</plugin>
 		</plugins>
 	</build>
 </project>

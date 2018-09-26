@@ -35,7 +35,16 @@ public class ABCNodeEntityBindContext extends AbstractEntityBindContext {
 
 	
 	@Override
-	public EntityBindContext getElement(PropertyNamePartitions propName) {
+	public EntityBindContext getElementAutoCreate(PropertyNamePartitions propName) {
+		return getElement(propName, true);
+	}
+	
+	@Override
+	public EntityBindContext getElementIfExists(PropertyNamePartitions propName) {
+		return getElement(propName, false);
+	}
+	
+	private EntityBindContext getElement(PropertyNamePartitions propName, boolean autoCreate) {
 		Assert.isInstanceOf(EntitiesContainedEntityProxy.class, this.entity);
 		//获得子节点的信息对象
 		ABCNodeProxy eleNode = this.node.getElement(propName.getMainPartition());
@@ -44,10 +53,14 @@ public class ABCNodeEntityBindContext extends AbstractEntityBindContext {
 				//根据属性名获得子节点对象
 				EntityProxy eleEntity = getElementEntityProxy(propName);
 				if(eleEntity == null) {
-					//无法获得子节点时，创建一个子节点
-					eleEntity = eleNode.createElementEntity();
-					//将子节点对象放到当前节点中
-					((EntitiesContainedEntityProxy) this.entity).putEntity(propName, eleEntity);
+					if(autoCreate) {
+						//无法获得子节点时，创建一个子节点
+						eleEntity = eleNode.createElementEntity();
+						//将子节点对象放到当前节点中
+						((EntitiesContainedEntityProxy) this.entity).putEntity(propName, eleEntity);
+					}else {
+						return null;
+					}
 				}
 				return new ABCNodeEntityBindContext(eleNode, eleEntity);
 			} catch (Exception e) {
@@ -58,6 +71,7 @@ public class ABCNodeEntityBindContext extends AbstractEntityBindContext {
 			return null;
 		}
 	}
+	
 	
 	private EntityProxy getElementEntityProxy(PropertyNamePartitions namePartitions) {
 		List<EntityProxy> entities = ((EntitiesContainedEntityProxy) this.entity).getEntityElements(namePartitions.getMainPartition());

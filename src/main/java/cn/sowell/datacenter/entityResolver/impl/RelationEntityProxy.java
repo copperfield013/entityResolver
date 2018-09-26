@@ -56,7 +56,7 @@ public class RelationEntityProxy extends EntitiesContainedEntityProxy{
 			this.setLabel(String.valueOf(propValue));
 			return false;
 		}
-		return true;
+		return super.preprocessValue(propName, propValue);
 	}
 	
 	@Override

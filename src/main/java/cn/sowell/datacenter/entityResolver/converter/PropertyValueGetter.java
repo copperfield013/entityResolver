@@ -9,7 +9,7 @@ import cn.sowell.datacenter.entityResolver.FieldParserDescription;
  */
 public interface PropertyValueGetter {
 
-	boolean support(FieldParserDescription field);
+	boolean support(FieldParserDescription field, Object propertyGetterArgument);
 
 	Object invoke(PropertyValueGetContext context);
 

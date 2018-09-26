@@ -92,4 +92,5 @@ public abstract class EntitiesContainedEntityProxy implements EntityProxy{
 		return getSourceEntity();
 	}
 	protected abstract Entity getSourceEntity();
+	
 }
