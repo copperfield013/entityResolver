@@ -64,6 +64,8 @@ public class ArrayItemPropertyParser extends AbstractEntityPropertyParser{
 			return compositeName + "[" + this.itemIndex + "]" + "." + ABCNodeProxy.CODE_PROPERTY_NAME;
 		}else if(propertyName.endsWith("." + RelationEntityProxy.LABEL_KEY)){
 			return compositeName + "[" + this.itemIndex + "]" + "." + RelationEntityProxy.LABEL_KEY;
+		}else if(propertyName.endsWith("." + ABCNodeProxy.UPDATETIME_PROPERTY_NAME)){
+			return compositeName + "[" + this.itemIndex + "]" + "." + ABCNodeProxy.UPDATETIME_PROPERTY_NAME;
 		}else {
 			return null;
 		}

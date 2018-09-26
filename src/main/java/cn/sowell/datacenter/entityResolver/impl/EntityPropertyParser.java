@@ -1,9 +1,11 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 
 import com.abc.mapping.entity.Entity;
@@ -20,6 +22,27 @@ import cn.sowell.datacenter.entityResolver.converter.PropertyValueGetContext;
 import cn.sowell.datacenter.entityResolver.converter.PropertyValueGetter;
 
 public abstract class EntityPropertyParser extends AbstractEntityPropertyParser {
+
+	static Logger logger = Logger.getLogger(EntityPropertyParser.class);
+	
+	private static final Comparator<? super ArrayItemPropertyParser> UPDATE_TIME_ORDER = new Comparator<ArrayItemPropertyParser>() {
+
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Override
+		public int compare(ArrayItemPropertyParser o1, ArrayItemPropertyParser o2) {
+			try {
+				Object d1 = o1.getProperty("编辑时间");
+				Object d2 = o2.getProperty("编辑时间");
+				if(d1 instanceof Comparable) {
+					return ((Comparable) d1).compareTo(d2);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+			}
+			return 0;
+		}
+	};
 
 	protected FusionContextConfig config;
 	
@@ -80,6 +103,7 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 			}
 		} catch (Exception e) {
 		}
+		parsers.sort(UPDATE_TIME_ORDER);
 		return parsers;
 	}
 	

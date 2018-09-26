@@ -18,6 +18,8 @@ import cn.sowell.datacenter.entityResolver.EntityProxy;
 public class ABCNodeProxy {
 	public static final String CODE_PROPERTY_NAME = "唯一编码";
 
+	public static final String UPDATETIME_PROPERTY_NAME = "编辑时间";
+
 	private Object node;
 	
 	public ABCNodeProxy(Object node) {
