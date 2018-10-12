@@ -147,7 +147,12 @@ public abstract class AbstractEntityBindContext implements EntityBindContext {
 					labels.addAll(splitToSet(FormatUtils.toString(val)));
 				}
 			}else if(propValue instanceof String) {
-				labels.add((String) propValue);
+				String strval = (String) propValue;
+				if(strval.contains(",")) {
+					return toLabelSet(strval.split(","));
+				}else {
+					labels.add(strval);
+				}
 			}
 		}
 		return labels;

@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import org.apache.log4j.Logger;
+
 import com.abc.mapping.conf.MappingContainer;
 import com.abc.mapping.entity.Entity;
 import com.abc.mapping.node.ABCNode;
@@ -34,9 +36,13 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 
 	private ABCNode rootNode;
 	
+	static Logger logger = Logger.getLogger(ABCNodeFusionContextConfigResolver.class);
+	
+	
 	public ABCNodeFusionContextConfigResolver(FusionContextConfig config) {
 		super(config);
 		try {
+			logger.debug("加载模块[" + config.getModule() + "]的abcnode配置");
 			rootNode = MappingContainer.getABCNode(config.getMappingName());
 		} catch (Exception e) {
 			throw new RuntimeException("初始化ABC配置时发生错误[" + config.getMappingName() + "]", e);
