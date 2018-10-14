@@ -11,6 +11,8 @@ public class PropertyFormatFactory {
 	private PropertyFormat fileHauntPropertyFormat = new FileHauntPropertyFormat();
 	private PropertyFormat datetimeFormat = new DatePropertyFormat("yyyy-MM-dd HH:mm:ss");
 	private PropertyFormat dateFormat = new DatePropertyFormat("yyyy-MM-dd");
+	@SuppressWarnings("unused")
+	private PropertyFormat yearMonthFormat = new DatePropertyFormat("yyyy-MM");
 	public PropertyFormat getFormat(Object value, ValueType propType, String format) {
 		if(value instanceof FileHaunt) {
 			return fileHauntPropertyFormat;
@@ -22,7 +24,9 @@ public class PropertyFormatFactory {
 				}else {
 					if(ValueType.DATETIME.equals(propType)) {
 						return datetimeFormat;
-					}else {
+					}/*else if(){
+						return yearMonthFormat;
+					}*/else {
 						return dateFormat;
 					}
 				}
