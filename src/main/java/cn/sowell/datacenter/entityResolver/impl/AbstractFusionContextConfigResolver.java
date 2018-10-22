@@ -19,6 +19,7 @@ import com.abc.panel.PanelFactory;
 
 import cn.sowell.copframe.utils.Assert;
 import cn.sowell.copframe.utils.CollectionUtils;
+import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.datacenter.entityResolver.EntityBindContext;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
 import cn.sowell.datacenter.entityResolver.FusionContextConfig;
@@ -88,7 +89,8 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 			checkAndRemoveComposite(rootContext, flagCompositeName);
 			((EntitiesContainedEntityProxy)rootContext.getEntity()).commit();
 			boolean toCreate = entity.getStringValue(config.getCodeAttributeName()) == null;
-			CommonEntityComponent cEntity = new CommonEntityComponent(entity, toCreate);
+			boolean hasTitle = TextUtils.hasText(entity.getStringValue(config.getTitleAttributeName()));
+			CommonEntityComponent cEntity = new CommonEntityComponent(entity, toCreate, hasTitle);
 			cEntity.setSavedFile(updatedFileProperty);
 			return cEntity;
 		}

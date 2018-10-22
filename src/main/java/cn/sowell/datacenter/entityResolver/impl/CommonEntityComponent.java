@@ -9,12 +9,14 @@ public class CommonEntityComponent implements EntityComponent {
 	private final Entity principle;
 	private final boolean toCreate;
 	private boolean savedFile = false;
+	private final boolean hasTitle;
 	
-	public CommonEntityComponent(Entity principle, boolean toCreate) {
+	public CommonEntityComponent(Entity principle, boolean toCreate, boolean hasTitle) {
 		super();
 		Assert.notNull(principle);
 		this.principle = principle;
 		this.toCreate = toCreate;
+		this.hasTitle = hasTitle;
 	}
 
 	
@@ -48,5 +50,15 @@ public class CommonEntityComponent implements EntityComponent {
 		return this.savedFile;
 	}
 
+
+	@Override
+	public boolean isCreatable() {
+		return this.toCreate && this.hasTitle;
+	}
+
+	
+	public boolean hasTitle() {
+		return this.hasTitle;
+	}
 	
 }

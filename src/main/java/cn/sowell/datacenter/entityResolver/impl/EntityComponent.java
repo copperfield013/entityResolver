@@ -7,5 +7,6 @@ public interface EntityComponent {
 	boolean isToCreate();
 	boolean isToUpdate();
 	boolean isSavedFile();
+	boolean isCreatable();
 	String toJson();
 }
