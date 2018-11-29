@@ -15,6 +15,7 @@ import com.abc.dto.ErrorInfomation;
 import com.abc.mapping.entity.Entity;
 import com.abc.panel.Discoverer;
 import com.abc.panel.Integration;
+import com.abc.panel.IntegrationMsg;
 import com.abc.panel.PanelFactory;
 
 import cn.sowell.copframe.utils.Assert;
@@ -199,8 +200,15 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 		EntityComponent entity = createEntity(map);
 		if(entity != null) {
 			Integration integration=PanelFactory.getIntegration();
-			String code = integration.integrate(entity.getEntity(), context);
-			return code;
+			IntegrationMsg msg = integration.integrate(context, entity.getEntity());
+			if(msg.success()) {
+				logger.info("integrate实体成功");
+				logger.info(msg.toString());
+				return msg.getCode();
+			}else {
+				logger.error("integrate实体失败");
+				logger.info(msg.toString());
+			}
 		}
 		throw new RuntimeException("无法根据map创建Entity");
 	}

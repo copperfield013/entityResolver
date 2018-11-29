@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import com.abc.mapping.conf.MappingContainer;
 import com.abc.mapping.entity.Entity;
+import com.abc.mapping.exception.ABCNodeLoadException;
 import com.abc.mapping.node.ABCNode;
 import com.abc.mapping.node.AttributeNode;
 import com.abc.mapping.node.LabelNode;
@@ -30,6 +31,7 @@ import cn.sowell.datacenter.entityResolver.ImportCompositeField;
 import cn.sowell.datacenter.entityResolver.Label;
 import cn.sowell.datacenter.entityResolver.PropertyNamePartitions;
 import cn.sowell.datacenter.entityResolver.RelationFieldConfigure;
+import cn.sowell.datacenter.entityResolver.config.UnconfiuredFusionException;
 import cn.sowell.datacenter.entityResolver.impl.ABCNodeProxy.NodeSwitch;
 
 public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextConfigResolver{
@@ -44,6 +46,9 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 		try {
 			logger.debug("加载模块[" + config.getModule() + "]的abcnode配置");
 			rootNode = MappingContainer.getABCNode(config.getMappingName());
+		} catch (ABCNodeLoadException e) {
+			logger.error("模块[mappingName=" + config.getMappingName() + "]不存在或解析错误");
+			throw new UnconfiuredFusionException("模块[mappingName=" + config.getMappingName() + "]不存在或解析错误");
 		} catch (Exception e) {
 			throw new RuntimeException("初始化ABC配置时发生错误[" + config.getMappingName() + "]", e);
 		}

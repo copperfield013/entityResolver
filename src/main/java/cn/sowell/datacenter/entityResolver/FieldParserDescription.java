@@ -32,20 +32,23 @@ public class FieldParserDescription {
 	}
 	
 	public static final String INDEX_REPLACEMENT = "ARRAY_INDEX_REPLACEMENT";
-	public String getArrayFieldNameFormat() {
-		String suffix = field.getFullKey();
-		Composite composite = field.getComposite();
-		if(composite != null && composite.getIsArray() != null) {
-			String compositeName = composite.getName();
-			if(field.getFullKey().startsWith(compositeName)) {
-				suffix = field.getFullKey().substring(compositeName.length());
-				if(!suffix.matches("^\\[\\d+\\].+$")) {
-					suffix = "[" + INDEX_REPLACEMENT + "]" + suffix;
-				}
-				suffix = compositeName + suffix;
+	public static String getArrayFieldNameFormat(String fieldName, String compositeName) {
+		String suffix = fieldName;
+		if(fieldName.startsWith(compositeName)) {
+			suffix = fieldName.substring(compositeName.length());
+			if(!suffix.matches("^\\[\\d+\\].+$")) {
+				suffix = "[" + INDEX_REPLACEMENT + "]" + suffix;
 			}
+			suffix = compositeName + suffix;
 		}
 		return suffix;
+	}
+	public String getArrayFieldNameFormat() {
+		Composite composite = field.getComposite();
+		if(composite != null && composite.getIsArray() != null) {
+			return getArrayFieldNameFormat(field.getFullKey(), composite.getName());
+		}
+		return field.getFullKey();
 	}
 	
 	public String getArrayFieldNameFormat(int index) {

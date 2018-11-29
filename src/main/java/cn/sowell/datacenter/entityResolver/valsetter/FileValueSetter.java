@@ -38,9 +38,9 @@ public class FileValueSetter implements PropertyValueSetter{
 		try {
 			report.setValueAsNull(file == null);
 			report.setPropertyType(PropertyType.FILE);
-			String suffixPropName = AttributeParter.getBytesSuffixCNName(propName),
-					sizePropName = AttributeParter.getBytesKBSizeCNName(propName),
-					fileNamePropName = AttributeParter.getBytesNameCNName(propName);
+			String suffixPropName = AttributeParter.getFileSuffixCNName(propName),
+					sizePropName = AttributeParter.getFileKBSizeCNName(propName),
+					fileNamePropName = AttributeParter.getFileNameCNName(propName);
 			entity.putValue(propName, file == null? null: file.getBytes());
 			entity.putValue(fileNamePropName, file == null? null: file.getFileName());
 			entity.putValue(suffixPropName, file == null? null: file.getSuffix());

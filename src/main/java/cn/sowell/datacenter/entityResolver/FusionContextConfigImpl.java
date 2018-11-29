@@ -8,6 +8,7 @@ import org.springframework.util.Assert;
 
 import com.abc.application.BizFusionContext;
 import com.abc.application.RemovedFusionContext;
+import com.abc.panel.IntegrationMsg;
 import com.abc.panel.PanelFactory;
 
 import cn.sowell.datacenter.entityResolver.impl.ABCNodeFusionContextConfigResolver;
@@ -156,7 +157,8 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 		Assert.hasText(code);
 		RemovedFusionContext appInfo=new RemovedFusionContext(code, userCodeService.getUserCode(userPrinciple), "list-delete" );
 		appInfo.setMappingName(getMappingName());
-		if(!PanelFactory.getIntegration().remove(appInfo)){
+		IntegrationMsg msg = PanelFactory.getIntegration().remove(appInfo);
+		if(!msg.success()){
 			throw new RuntimeException("删除失败");
 		}
 	}
