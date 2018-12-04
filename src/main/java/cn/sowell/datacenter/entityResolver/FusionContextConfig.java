@@ -3,10 +3,11 @@ package cn.sowell.datacenter.entityResolver;
 import java.util.Set;
 
 import com.abc.application.BizFusionContext;
+import com.abc.mapping.node.ABCNode;
 
 public interface FusionContextConfig {
 
-	String getMappingName();
+	Long getMappingId();
 
 	FusionContextConfigResolver getConfigResolver();
 
@@ -39,5 +40,8 @@ public interface FusionContextConfig {
 
 	BizFusionContext createRelationContext(String relationName, Object userPrinciple);
 
+	String getMappingName();
+	
+	ABCNode getRootNode();
 
 }

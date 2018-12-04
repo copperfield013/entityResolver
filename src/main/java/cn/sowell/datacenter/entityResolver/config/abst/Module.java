@@ -26,10 +26,10 @@ public interface Module extends Serializable {
 	String getTitle();
 
 	/**
-	 * abcnode配置名称
+	 * abcnode配置主键
 	 * @return
 	 */
-	String getMappingName();
+	Long getMappingId();
 	
 	/**
 	 * 配置中获得实体编码的字段名

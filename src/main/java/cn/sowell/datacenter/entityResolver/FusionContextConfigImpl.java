@@ -1,35 +1,55 @@
 package cn.sowell.datacenter.entityResolver;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 
 import com.abc.application.BizFusionContext;
 import com.abc.application.RemovedFusionContext;
+import com.abc.mapping.conf.MappingContainer;
+import com.abc.mapping.exception.ABCNodeLoadException;
+import com.abc.mapping.node.ABCNode;
 import com.abc.panel.IntegrationMsg;
 import com.abc.panel.PanelFactory;
 
+import cn.sowell.datacenter.entityResolver.config.UnconfiuredFusionException;
 import cn.sowell.datacenter.entityResolver.impl.ABCNodeFusionContextConfigResolver;
 
 public class FusionContextConfigImpl implements FusionContextConfig{
-	private String mappingName;
+	private final Long mappingId;
 	private String module;
 	private String codeAttributeName = "唯一编码";
 	private String titleAttributeName = "姓名";
 	private FusionContextConfigResolver configResolver;
 	private boolean loadResolverFieldsFlag = false;
 	private UserCodeService userCodeService;
+	private ABCNode rootNode;
+	
+	static Logger logger = Logger.getLogger(FusionContextConfigImpl.class);
 	/* (non-Javadoc)
 	 * @see cn.sowell.datacenter.entityResolver.FusionContextConfig#getMappingName()
 	 */
-	@Override
-	public String getMappingName() {
-		return mappingName;
+	
+	public FusionContextConfigImpl(Long mappingId) {
+		this.mappingId = mappingId;
+		try {
+			logger.debug("加载配置[mappingId=" + mappingId + "]");
+			this.rootNode = MappingContainer.getABCNode(BigInteger.valueOf(mappingId));
+		} catch (ABCNodeLoadException e) {
+			logger.error("配置[mappingId=" + mappingId + "]不存在或解析错误");
+			throw new UnconfiuredFusionException("配置[mappingId=" + mappingId + "]不存在或解析错误");
+		} catch (Exception e) {
+			throw new RuntimeException("初始化ABC配置时发生错误[mappingId=" + mappingId + "]", e);
+		}
 	}
-	public void setMappingName(String mappingName) {
-		this.mappingName = mappingName;
+	
+	@Override
+	public Long getMappingId() {
+		return mappingId;
 	}
 	/* (non-Javadoc)
 	 * @see cn.sowell.datacenter.entityResolver.FusionContextConfig#getConfigResolver()
@@ -163,6 +183,16 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 		}
 	}
 	
+	@Override
+	public String getMappingName() {
+		return rootNode.getTitle();
+	}
+	
+	
+	@Override
+	public ABCNode getRootNode() {
+		return rootNode;
+	}
 	
 	
 }

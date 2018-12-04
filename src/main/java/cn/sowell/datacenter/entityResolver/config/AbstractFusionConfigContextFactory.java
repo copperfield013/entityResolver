@@ -51,9 +51,8 @@ public abstract class AbstractFusionConfigContextFactory implements FusionContex
 				throw new FusionConfigException("无法根据mappingName[" + module.getMappingName() + "]获得abcNode", e);
 			}*/
 			moduleMap.put(module.getName(), module);
-			FusionContextConfigImpl cConfig = new FusionContextConfigImpl();
+			FusionContextConfigImpl cConfig = new FusionContextConfigImpl(module.getMappingId());
 			cConfig.setModule(module.getName());
-			cConfig.setMappingName(module.getMappingName());
 			if(TextUtils.hasText(module.getCodeName())) {
 				cConfig.setCodeAttributeName(module.getCodeName());
 			}

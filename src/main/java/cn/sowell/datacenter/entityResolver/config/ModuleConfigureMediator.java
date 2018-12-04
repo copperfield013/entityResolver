@@ -38,7 +38,7 @@ public interface ModuleConfigureMediator{
 	 * @param defMappingName
 	 * @param impTitle
 	 */
-	void createModule(String moduleTitle, String mappingName);
+	void createModule(String moduleTitle, Long mappingId);
 	/**
 	 * 创建模块
 	 * @param param
@@ -77,18 +77,18 @@ public interface ModuleConfigureMediator{
 	 * 该方法不修改实体读取编码的字段名和名称字段名
 	 * 如果要修改编码字段和名称字段名，请调用方法{@link #reassignMappingName(String, String, String, String)}
 	 * @param entityId
-	 * @param mappingName
+	 * @param mappingId
 	 */
-	void reassignMappingName(String moduleName, String mappingName);
+	void reassignMappingName(String moduleName, Long mappingId);
 	
 	/**
 	 * 重新指定模块对应的配置，并且修改实体的编码字段和名称字段
 	 * @param moduleName
-	 * @param mappingName
+	 * @param mappingId
 	 * @param codeName
 	 * @param titleName
 	 */
-	void reassignMappingName(String moduleName, String mappingName, String codeName, String titleName);
+	void reassignMappingName(String moduleName, Long mappingId, String codeName, String titleName);
 
 	/**
 	 * 更新模块对应的配置中的编码字段和名称字段
@@ -106,8 +106,8 @@ public interface ModuleConfigureMediator{
 	 * 更新模块数据缓存
 	 */
 	void refresh();
-	
-	
+
+
 	
 	
 }

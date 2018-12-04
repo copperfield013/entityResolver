@@ -138,7 +138,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 	 */
 	private void validate(CreateModuleParam param) {
 		Assert.hasText(param.getModuleTitle(), "moduleTitle为模块标题，必须指定");
-		Assert.hasText(param.getMappingName(), "module对应的mappingName不能为空，必须指定");
+		Assert.notNull(param.getMappingId(), "module对应的mappingName不能为空，必须指定");
 		if(!TextUtils.hasText(param.getModuleName())) {
 			param.setModuleName(uuid10());
 			logger.debug("创建的模块名为空，生成随机模块名[" + param.getModuleName() + "]");
@@ -162,8 +162,8 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 
 	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
-	public void createModule(String moduleTitle, String mappingName) {
-		createModule(new CreateModuleParam(moduleTitle, mappingName));
+	public void createModule(String moduleTitle, Long mappingId) {
+		createModule(new CreateModuleParam(moduleTitle, mappingId));
 	}
 
 	@Transactional(propagation=Propagation.REQUIRED)
@@ -173,7 +173,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 		DBModule module = new DBModule();
 		module.setTitle(param.getModuleTitle());
 		module.setName(param.getModuleName());
-		module.setMappingName(param.getMappingName());
+		module.setMappingId(param.getMappingId());
 		module.setCodeName(param.getCodeName());
 		module.setTitleName(param.getTitleName());
 		module.setDisabled(false);
@@ -210,22 +210,22 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 	
 	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
-	public void reassignMappingName(String moduleName, String mappingName, String codeName, String titleName) {
-		Assert.hasText(mappingName, "传入的mappingName参数为空");
+	public void reassignMappingName(String moduleName, Long mappingId, String codeName, String titleName) {
+		Assert.notNull(mappingId, "传入的mappingName参数为空");
 		DBModule module = getModuleOrThrowException(moduleName);
-		if(!mappingName.equals(module.getMappingName())) {
-			cDao.reassignMappingName(moduleName, mappingName, codeName, titleName);
+		if(!mappingId.equals(module.getMappingId())) {
+			cDao.reassignMappingId(moduleName, mappingId, codeName, titleName);
 			reloadModuleToMap(module.getName());
 		}
 	}
 
 	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
-	public void reassignMappingName(String moduleName, String mappingName) {
-		Assert.hasText(mappingName, "传入的mappingName参数为空");
+	public void reassignMappingName(String moduleName, Long mappingId) {
+		Assert.notNull(mappingId, "传入的mappingName参数为空");
 		DBModule module = getModuleOrThrowException(moduleName);
-		if(!mappingName.equals(module.getMappingName())) {
-			cDao.reassignMappingName(moduleName, mappingName);
+		if(!mappingId.equals(module.getMappingId())) {
+			cDao.reassignMappingId(moduleName, mappingId);
 			reloadModuleToMap(module.getName());
 		}
 	}

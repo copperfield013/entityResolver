@@ -8,8 +8,8 @@ import cn.sowell.datacenter.entityResolver.config.UnconfiuredFusionException;
 
 public class RelationFieldConfigure extends AbstractFieldConfigure<RelationNode>{
 
-	public RelationFieldConfigure(String mappingName, String absoluteName, RelationNode relationNode) {
-		super(mappingName, absoluteName, relationNode);
+	public RelationFieldConfigure(Long mappingId, String absoluteName, RelationNode relationNode) {
+		super(mappingId, absoluteName, relationNode);
 	}
 
 	public Set<String> getLabelDomain() throws UnconfiuredFusionException{

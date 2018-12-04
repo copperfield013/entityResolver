@@ -6,7 +6,7 @@ enum ModuleDatabaseConfig {
 	,COLUMN_MODULE_NAME("c_name")
 	,COLUMN_MODULE_TITLE("c_title")
 	,COLUMN_MODULE_DISABLED("c_disabled")
-	,COLUMN_MODULE_MAPPING_NAME("c_mapping_name")
+	,COLUMN_MODULE_MAPPING_ID("c_mapping_id")
 	,COLUMN_MODULE_CODE_NAME("c_code_name")
 	,COLUMN_MODULE_TITLE_NAME("c_title_name")
 	,COLUMN_MODULE_CREATE_TIME("create_time")

@@ -65,9 +65,9 @@ class RemoteModuleConfigureMediatorImpl extends UnicastRemoteObject implements R
 
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
 	@Override
-	public void createModule(String moduleTitle, String mappingName) throws RemoteException {
+	public void createModule(String moduleTitle, Long mappingId) throws RemoteException {
 		try {
-			moduleConfigMediator.createModule(moduleTitle, mappingName);
+			moduleConfigMediator.createModule(moduleTitle, mappingId);
 			this.syncStrategy.sync();
 		}catch (Exception e) {
 			throw new RemoteException("", e);
@@ -120,9 +120,9 @@ class RemoteModuleConfigureMediatorImpl extends UnicastRemoteObject implements R
 
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
 	@Override
-	public void reassignMappingName(String moduleName, String mappingName) throws RemoteException {
+	public void reassignMappingName(String moduleName, Long mappingId) throws RemoteException {
 		try {
-			moduleConfigMediator.reassignMappingName(moduleName, mappingName);
+			moduleConfigMediator.reassignMappingName(moduleName, mappingId);
 			this.syncStrategy.sync();
 		}catch (Exception e) {
 			throw new RemoteException("", e);
@@ -131,10 +131,10 @@ class RemoteModuleConfigureMediatorImpl extends UnicastRemoteObject implements R
 
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
 	@Override
-	public void reassignMappingName(String moduleName, String mappingName, String codeName, String titleName)
+	public void reassignMappingName(String moduleName, Long mappingId, String codeName, String titleName)
 			throws RemoteException {
 		try {
-			moduleConfigMediator.reassignMappingName(moduleName, mappingName, codeName, titleName);
+			moduleConfigMediator.reassignMappingName(moduleName, mappingId, codeName, titleName);
 			this.syncStrategy.sync();
 		}catch (Exception e) {
 			throw new RemoteException("", e);

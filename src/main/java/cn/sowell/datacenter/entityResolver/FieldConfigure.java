@@ -38,8 +38,8 @@ public interface FieldConfigure {
 	 */
 	String getAbcAttr();
 	/**
-	 * 配置名称
+	 * 配置主键
 	 * @return
 	 */
-	String getMappingName();
+	Long getMappingId();
 }

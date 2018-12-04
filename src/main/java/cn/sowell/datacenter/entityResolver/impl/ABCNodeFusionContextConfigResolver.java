@@ -12,9 +12,7 @@ import java.util.function.Function;
 
 import org.apache.log4j.Logger;
 
-import com.abc.mapping.conf.MappingContainer;
 import com.abc.mapping.entity.Entity;
-import com.abc.mapping.exception.ABCNodeLoadException;
 import com.abc.mapping.node.ABCNode;
 import com.abc.mapping.node.AttributeNode;
 import com.abc.mapping.node.LabelNode;
@@ -31,41 +29,33 @@ import cn.sowell.datacenter.entityResolver.ImportCompositeField;
 import cn.sowell.datacenter.entityResolver.Label;
 import cn.sowell.datacenter.entityResolver.PropertyNamePartitions;
 import cn.sowell.datacenter.entityResolver.RelationFieldConfigure;
-import cn.sowell.datacenter.entityResolver.config.UnconfiuredFusionException;
 import cn.sowell.datacenter.entityResolver.impl.ABCNodeProxy.NodeSwitch;
 
 public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextConfigResolver{
 
-	private ABCNode rootNode;
-	
 	static Logger logger = Logger.getLogger(ABCNodeFusionContextConfigResolver.class);
 	
 	
 	public ABCNodeFusionContextConfigResolver(FusionContextConfig config) {
 		super(config);
-		try {
-			logger.debug("加载模块[" + config.getModule() + "]的abcnode配置");
-			rootNode = MappingContainer.getABCNode(config.getMappingName());
-		} catch (ABCNodeLoadException e) {
-			logger.error("模块[mappingName=" + config.getMappingName() + "]不存在或解析错误");
-			throw new UnconfiuredFusionException("模块[mappingName=" + config.getMappingName() + "]不存在或解析错误");
-		} catch (Exception e) {
-			throw new RuntimeException("初始化ABC配置时发生错误[" + config.getMappingName() + "]", e);
+		if(config.getRootNode() == null) {
+			throw new RuntimeException("没有找到ABC配置[mappingId=" + config.getMappingId() + "]");
 		}
-		if(rootNode == null) {
-			throw new RuntimeException("没有找到ABC配置[" + config.getMappingName() + "]");
-		}
+	}
+	
+	ABCNode getRootNode(){
+		return this.config.getRootNode();
 	}
 
 	@Override
 	protected EntityBindContext buildRootContext(Entity entity) {
-		return new ABCNodeEntityBindContext(rootNode, entity);
+		return new ABCNodeEntityBindContext(getRootNode(), entity);
 	}
 	
 	@Override
 	public FieldConfigure getFieldConfigure(String fieldPath) {
 		StringBuffer absolutePath = new StringBuffer();
-		ABCNodeProxy fieldProxy = PropertyNamePartitions.split(fieldPath, new ABCNodeProxy(rootNode), (snippet, eleProxy)->{
+		ABCNodeProxy fieldProxy = PropertyNamePartitions.split(fieldPath, new ABCNodeProxy(getRootNode()), (snippet, eleProxy)->{
 			absolutePath.append(snippet.getPartitions().getMainPartition() + ".");
 			return eleProxy.getElement(snippet.getPartitions().getMainPartition());
 		});
@@ -76,7 +66,7 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 			return (FieldConfigure) fieldProxy.doByNodeSwitch(new NodeSwitch<Object>() {
 				@Override
 				public Object handlerWithNode(RelationNode node, Object arg) {
-					return new RelationFieldConfigure(config.getMappingName(), absolutePath.toString(), node);
+					return new RelationFieldConfigure(config.getMappingId(), absolutePath.toString(), node);
 				}
 			}, null);
 		}else {
@@ -86,7 +76,7 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 
 	public Set<Label> getAllLabels() {
 		HashSet<Label> labels = new HashSet<Label>();
-		Map<String, LabelNode> nodeMap = getElements(rootNode, "", 
+		Map<String, LabelNode> nodeMap = getElements(getRootNode(), "", 
 				node->node.getLabels(), 
 				null,
 				(itemMap, param)->itemMap.put(param.getPrefix() + param.getRelationNode().getTitle(), param.getRelationNode().getLabelNode()), 
@@ -198,7 +188,7 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 
 	public Set<String> getAllRelationNames(){
 		Set<String> relationNames = new HashSet<String>();
-		getElements(rootNode, "", null, null, 
+		getElements(getRootNode(), "", null, null, 
 			(itemMap, param)->relationNames.add(param.getPrefix() + param.getRelationNode().getTitle()), 
 			null);
 		return relationNames;
@@ -206,7 +196,7 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 	
 	public Set<ImportCompositeField> getAllImportFields() {
 		Set<String> relationNames = new HashSet<String>();
-		Map<String, AttributeNode> map = getElements(rootNode, "", node->{
+		Map<String, AttributeNode> map = getElements(getRootNode(), "", node->{
 			List<AttributeNode> nodes = new ArrayList<>();
 			nodes.addAll(node.getAttributes());
 			nodes.addAll(node.getLabels());
@@ -253,7 +243,7 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 	}
 
 	public NodeOpsType getABCNodeAccess() {
-		return rootNode.getOpsType();
+		return getRootNode().getOpsType();
 	}
 }
 

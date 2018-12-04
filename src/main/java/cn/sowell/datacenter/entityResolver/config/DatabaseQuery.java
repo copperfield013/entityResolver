@@ -90,7 +90,7 @@ class DatabaseQuery {
 				module.setName(mapWrapper.getString(ModuleDatabaseConfig.COLUMN_MODULE_NAME.getValue()));
 				module.setTitle(mapWrapper.getString(ModuleDatabaseConfig.COLUMN_MODULE_TITLE.getValue()));
 				module.setDisabled(Integer.valueOf(1).equals(mapWrapper.getInteger(ModuleDatabaseConfig.COLUMN_MODULE_DISABLED.getValue())));
-				module.setMappingName(mapWrapper.getString(ModuleDatabaseConfig.COLUMN_MODULE_MAPPING_NAME.getValue()));
+				module.setMappingId(mapWrapper.getLong(ModuleDatabaseConfig.COLUMN_MODULE_MAPPING_ID.getValue()));
 				module.setCodeName(mapWrapper.getString(ModuleDatabaseConfig.COLUMN_MODULE_CODE_NAME.getValue()));
 				module.setTitleName(mapWrapper.getString(ModuleDatabaseConfig.COLUMN_MODULE_TITLE_NAME.getValue()));
 				return module;
@@ -108,13 +108,13 @@ class DatabaseQuery {
 				+ ModuleDatabaseConfig.TABLE_MODULE 
 				+ "(" + ModuleDatabaseConfig.COLUMN_MODULE_NAME
 				+ "," + ModuleDatabaseConfig.COLUMN_MODULE_TITLE
-				+ "," + ModuleDatabaseConfig.COLUMN_MODULE_MAPPING_NAME
+				+ "," + ModuleDatabaseConfig.COLUMN_MODULE_MAPPING_ID
 				+ "," + ModuleDatabaseConfig.COLUMN_MODULE_CODE_NAME
 				+ "," + ModuleDatabaseConfig.COLUMN_MODULE_TITLE_NAME
 				+ "," + ModuleDatabaseConfig.COLUMN_MODULE_DISABLED
 				+ "," + ModuleDatabaseConfig.COLUMN_MODULE_CREATE_TIME
 				+ ") values(:moduleName, :moduleTitle, "
-				+ ":mappingName, :codeName, :titleName, "
+				+ ":mappingId, :codeName, :titleName, "
 				+ ":disabled, :createTime)";
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
 		if(module.getCreateTime() == null) {
@@ -122,7 +122,7 @@ class DatabaseQuery {
 		}
 		dQuery.setParam("moduleName", module.getName())
 			.setParam("moduleTitle", module.getTitle())
-			.setParam("mappingName", module.getMappingName())
+			.setParam("mappingId", module.getMappingId())
 			.setParam("codeName", module.getCodeName(), StandardBasicTypes.STRING)
 			.setParam("titleName", module.getTitleName(), StandardBasicTypes.STRING)
 			.setParam("disabled", module.isDisabled()? 1: null, StandardBasicTypes.INTEGER)
@@ -164,27 +164,27 @@ class DatabaseQuery {
 	}
 
 
-	public DeferedParamQuery getReassignModuleMappingNameQuery(String moduleName, String mappingName, String codeName,
+	public DeferedParamQuery getReassignModuleMappingIdQuery(String moduleName, Long mappingId, String codeName,
 			String titleName) {
 		String sql = "update " + ModuleDatabaseConfig.TABLE_MODULE
-				+ " set " + ModuleDatabaseConfig.COLUMN_MODULE_MAPPING_NAME + " = :mappingName"
+				+ " set " + ModuleDatabaseConfig.COLUMN_MODULE_MAPPING_ID + " = :mappingId"
 				+ ", " + ModuleDatabaseConfig.COLUMN_MODULE_CODE_NAME + " = :codeName"
 				+ ", " + ModuleDatabaseConfig.COLUMN_MODULE_TITLE_NAME + " = :titleName "
 				+ "where " + ModuleDatabaseConfig.COLUMN_MODULE_NAME + " = :moduleName";
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
-		dQuery.setParam("mappingName", mappingName);
+		dQuery.setParam("mappingId", mappingId);
 		dQuery.setParam("codeName", codeName, StandardBasicTypes.STRING);
 		dQuery.setParam("titleName", titleName, StandardBasicTypes.STRING);
 		dQuery.setParam("moduleName", moduleName);
 		return dQuery;
 	}
 
-	public DeferedParamQuery getReassignModuleMappingNameQuery(String moduleName, String mappingName) {
+	public DeferedParamQuery getReassignModuleMappingIdQuery(String moduleName, Long mappingId) {
 		String sql = "update " + ModuleDatabaseConfig.TABLE_MODULE
-				+ " set " + ModuleDatabaseConfig.COLUMN_MODULE_MAPPING_NAME + " = :mappingName"
+				+ " set " + ModuleDatabaseConfig.COLUMN_MODULE_MAPPING_ID + " = :mappingId"
 				+ "where " + ModuleDatabaseConfig.COLUMN_MODULE_NAME + " = :moduleName";
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
-		dQuery.setParam("mappingName", mappingName);
+		dQuery.setParam("mappingId", mappingId);
 		dQuery.setParam("moduleName", moduleName);
 		return dQuery;
 	}

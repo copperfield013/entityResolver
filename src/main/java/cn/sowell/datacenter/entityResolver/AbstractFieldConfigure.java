@@ -6,12 +6,12 @@ public abstract class AbstractFieldConfigure<T extends AttributeNode> implements
 	
 	private final T node;
 	private final String absoluteName;
-	private final String mappingName;
+	private final Long mappingId;
 
-	public AbstractFieldConfigure(String mappingName, String absoluteName, T relationNode) {
+	public AbstractFieldConfigure(Long mappingId, String absoluteName, T relationNode) {
 		this.absoluteName = absoluteName;
 		this.node = relationNode;
-		this.mappingName = mappingName;
+		this.mappingId = mappingId;
 	}
 
 	protected T getNode() {
@@ -44,8 +44,8 @@ public abstract class AbstractFieldConfigure<T extends AttributeNode> implements
 	}
 
 	@Override
-	public String getMappingName() {
-		return this.mappingName;
+	public Long getMappingId() {
+		return this.mappingId;
 	}
 	
 
