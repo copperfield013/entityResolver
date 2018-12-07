@@ -18,11 +18,12 @@ import com.abc.panel.PanelFactory;
 
 import cn.sowell.datacenter.entityResolver.config.UnconfiuredFusionException;
 import cn.sowell.datacenter.entityResolver.impl.ABCNodeFusionContextConfigResolver;
+import cn.sowell.datacenter.entityResolver.impl.ABCNodeProxy;
 
 public class FusionContextConfigImpl implements FusionContextConfig{
 	private final Long mappingId;
 	private String module;
-	private String codeAttributeName = "唯一编码";
+	private String codeAttributeName = ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL;
 	private String titleAttributeName = "姓名";
 	private FusionContextConfigResolver configResolver;
 	private boolean loadResolverFieldsFlag = false;

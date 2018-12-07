@@ -30,12 +30,12 @@ public class ArrayItemPropertyParser extends AbstractEntityPropertyParser{
 
 	@Override
 	public String getCode() {
-		return (String) getProperty(compositeName + "." + ABCNodeProxy.CODE_PROPERTY_NAME, ValueType.STRING);
+		return (String) getProperty(compositeName + "." + ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL, ValueType.STRING);
 	}
 	
 	
 	public String getCodeName() {
-		return compositeName + "[" + itemIndex + "]" + "." + ABCNodeProxy.CODE_PROPERTY_NAME;
+		return compositeName + "[" + itemIndex + "]" + "." + ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL;
 	}
 	
 	/**
@@ -60,8 +60,8 @@ public class ArrayItemPropertyParser extends AbstractEntityPropertyParser{
 		FieldParserDescription fieldDesc = fieldMap.get(propertyName);
 		if(fieldDesc != null) {
 			return fieldDesc.getArrayFieldNameFormat(this.itemIndex);
-		}else if(propertyName.endsWith("." + ABCNodeProxy.CODE_PROPERTY_NAME)){
-			return compositeName + "[" + this.itemIndex + "]" + "." + ABCNodeProxy.CODE_PROPERTY_NAME;
+		}else if(propertyName.endsWith("." + ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL)){
+			return compositeName + "[" + this.itemIndex + "]" + "." + ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL;
 		}else if(propertyName.endsWith("." + RelationEntityProxy.LABEL_KEY)){
 			return compositeName + "[" + this.itemIndex + "]" + "." + RelationEntityProxy.LABEL_KEY;
 		}else if(propertyName.endsWith("." + ABCNodeProxy.UPDATETIME_PROPERTY_NAME)){

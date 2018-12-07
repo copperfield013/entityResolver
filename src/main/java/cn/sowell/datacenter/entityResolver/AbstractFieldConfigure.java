@@ -40,7 +40,7 @@ public abstract class AbstractFieldConfigure<T extends AttributeNode> implements
 
 	@Override
 	public String getAbcAttr() {
-		return node.getAbcattrName();
+		return node.getAbcattr();
 	}
 
 	@Override

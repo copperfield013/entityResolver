@@ -9,6 +9,7 @@ import com.abc.mapping.node.AttributeNode;
 import com.abc.mapping.node.LabelNode;
 import com.abc.mapping.node.MultiAttributeNode;
 import com.abc.mapping.node.RelationNode;
+import com.abc.record.constant.AttributeMatedata;
 import com.abc.util.ValueType;
 
 import cn.sowell.copframe.utils.FormatUtils;
@@ -16,7 +17,8 @@ import cn.sowell.datacenter.entityResolver.EntityElement;
 import cn.sowell.datacenter.entityResolver.EntityProxy;
 
 public class ABCNodeProxy {
-	public static final String CODE_PROPERTY_NAME = "唯一编码";
+	public static final String CODE_NODE_NAME = AttributeMatedata.PCOL_RECORDCODE;
+	public static final String CODE_PROPERTY_NAME_NORMAL = "唯一编码";
 
 	public static final String UPDATETIME_PROPERTY_NAME = "编辑时间";
 
@@ -37,11 +39,11 @@ public class ABCNodeProxy {
 			return (ABCNodeProxy) ele;
 		}else if(ele != null) {
 			return new ABCNodeProxy(ele);
-		}else if(ABCNodeProxy.CODE_PROPERTY_NAME.equals(propertyName)){
+		}else if(ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL.equals(propertyName)){
 			if(node instanceof ABCNode || node instanceof MultiAttributeNode || node instanceof RelationNode) {
 				AttributeNode codeNode = new AttributeNode();
-				codeNode.setName(CODE_PROPERTY_NAME);
-				codeNode.setAbcattrName(CODE_PROPERTY_NAME);
+				codeNode.setName(CODE_PROPERTY_NAME_NORMAL);
+				codeNode.setAbcattr(CODE_NODE_NAME);
 				codeNode.setDatatype(ValueType.STRING);
 				return new ABCNodeProxy(codeNode);
 			}
@@ -138,7 +140,7 @@ public class ABCNodeProxy {
 		public Object handlerWithNode(AttributeNode node, Byte b) {
 			EntityAttrElement eElement = new EntityAttrElement();
 			eElement.setName(node.getTitle());
-			eElement.setAbcattr(node.getAbcattrName());
+			eElement.setAbcattr(node.getAbcattr());
 			eElement.setDataType(node.getDatatype());
 			eElement.setTagName("attribute");
 			return eElement;
@@ -148,7 +150,7 @@ public class ABCNodeProxy {
 		public Object handlerWithNode(LabelNode node, Byte b) {
 			EntityLabelElement eElement = new EntityLabelElement();
 			eElement.setName(node.getTitle());
-			eElement.setAbcattr(node.getAbcattrName());
+			eElement.setAbcattr(node.getAbcattr());
 			eElement.setSubdomain(new HashSet<>(node.getSubdomains()));
 			eElement.setTagName("label");
 			return eElement;
@@ -158,7 +160,7 @@ public class ABCNodeProxy {
 		public Object handlerWithNode(MultiAttributeNode node, Byte b) {
 			EntityMultiAttributeElement eElement = new EntityMultiAttributeElement();
 			eElement.setName(node.getTitle());
-			eElement.setAbcattr(node.getAbcattrName());
+			eElement.setAbcattr(node.getAbcattr());
 			eElement.setTagName("multiattribute");
 			return eElement;
 		}

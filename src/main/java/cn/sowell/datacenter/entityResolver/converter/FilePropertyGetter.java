@@ -51,7 +51,7 @@ public class FilePropertyGetter implements PropertyValueGetter{
 			}
 		}else {
 			
-			String code = FormatUtils.toString(context.getCurrentContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME, ValueType.STRING));
+			String code = FormatUtils.toString(context.getCurrentContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL, ValueType.STRING));
 			AttriCoorinatePJ pj = new AttriCoorinatePJ();
 			
 			pj.setRecordCode(code);
@@ -62,7 +62,7 @@ public class FilePropertyGetter implements PropertyValueGetter{
 				if(entityElement instanceof EntityRelationElement) {
 					pj.setMappingName(((EntityRelationElement) entityElement).getFullTitle());
 				}else if(entityElement instanceof EntityMultiAttributeElement) {
-					String parentCode = FormatUtils.toString(context.getParentEntityContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME, ValueType.STRING));
+					String parentCode = FormatUtils.toString(context.getParentEntityContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL, ValueType.STRING));
 					pj.setRecordCode(parentCode);
 					pj.setMultiAttrCode(code);
 					pj.setMultiAttrName(entityElement.getName());

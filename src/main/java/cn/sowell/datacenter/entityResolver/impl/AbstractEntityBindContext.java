@@ -171,7 +171,7 @@ public abstract class AbstractEntityBindContext implements EntityBindContext {
 
 
 	private boolean filterEntityElement(EntityElement eElement, Object propValue) {
-		if("唯一编码".equals(eElement.getAbcattr()) && propValue instanceof String && !TextUtils.hasText((String) propValue)) {
+		if(ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL.equals(eElement.getName()) && propValue instanceof String && !TextUtils.hasText((String) propValue)) {
 			return false;
 		}
 		if(eElement instanceof EntityAttrElement && propValue != null) {
