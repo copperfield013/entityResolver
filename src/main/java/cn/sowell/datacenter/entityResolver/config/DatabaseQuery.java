@@ -189,6 +189,20 @@ class DatabaseQuery {
 		return dQuery;
 	}
 
+	public DeferedParamQuery getUpdateModuleQuery(String moduleName, String title, String codeName, String titleName) {
+		String sql = "update " + ModuleDatabaseConfig.TABLE_MODULE
+				+ " set " + ModuleDatabaseConfig.COLUMN_MODULE_CODE_NAME + " = :codeName "
+				+ " , " + ModuleDatabaseConfig.COLUMN_MODULE_TITLE_NAME + " = :titleName "
+				+ " , " + ModuleDatabaseConfig.COLUMN_MODULE_TITLE + " = :title "
+				+ "where " + ModuleDatabaseConfig.COLUMN_MODULE_NAME + " = :moduleName";
+		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
+		dQuery.setParam("codeName", codeName, StandardBasicTypes.STRING);
+		dQuery.setParam("titleName", titleName, StandardBasicTypes.STRING);
+		dQuery.setParam("title", title, StandardBasicTypes.STRING);
+		dQuery.setParam("moduleName", moduleName);
+		return dQuery;
+	}
+	
 	public DeferedParamQuery getUpdateModulePropertyNameQuery(String moduleName, String codeName, String titleName) {
 		String sql = "update " + ModuleDatabaseConfig.TABLE_MODULE
 				+ " set " + ModuleDatabaseConfig.COLUMN_MODULE_CODE_NAME + " = :codeName "

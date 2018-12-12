@@ -107,6 +107,8 @@ public interface ModuleConfigureMediator{
 	 */
 	void refresh();
 
+	void updateModule(String moduleName, String moduleTitle, String codeName, String titleName);
+
 
 	
 	
