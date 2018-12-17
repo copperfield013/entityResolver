@@ -70,6 +70,10 @@ public class ArrayItemPropertyParser extends AbstractEntityPropertyParser{
 			return null;
 		}
 	}
+
+	public int getItemIndex() {
+		return this.itemIndex;
+	}
 	
 
 	
