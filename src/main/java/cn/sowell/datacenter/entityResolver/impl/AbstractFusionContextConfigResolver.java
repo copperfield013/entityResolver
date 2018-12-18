@@ -57,7 +57,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 		return null;
 	}
 	
-	private static final String PROP_FLAG = ".$$flag$$";
+	public static final String PROP_FLAG = ".$$flag$$";
 	private EntityComponent createEntity(Map<String, Object> map, boolean ignoreUnsupportedElement) {
 		Entity entity = new Entity(config.getMappingName());
 		EntityBindContext rootContext = buildRootContext(entity);
