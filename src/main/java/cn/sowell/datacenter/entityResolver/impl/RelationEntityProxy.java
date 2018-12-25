@@ -35,7 +35,7 @@ public class RelationEntityProxy extends EntitiesContainedEntityProxy{
 	public EntityProxy createEmptyEntity() {
 		Entity entity = new Entity(sourceEntity.getName());
 		RelationEntityProxy proxy = new RelationEntityProxy(entity);
-		proxy.setLabel(this.label);
+		proxy.setLabel(null);
 		copyEntities.add(proxy);
 		return proxy;
 	}
@@ -46,7 +46,7 @@ public class RelationEntityProxy extends EntitiesContainedEntityProxy{
 
 	public void setLabel(String label) {
 		this.label = label;
-		copyEntities.forEach(proxy->proxy.setLabel(label));
+		//copyEntities.forEach(proxy->proxy.setLabel(label));
 	}
 
 	@Override
