@@ -243,7 +243,8 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 	}
 
 	public NodeOpsType getABCNodeAccess() {
-		return getRootNode().getOpsType();
+		ABCNode node = getRootNode();
+		return node.getOpsType();
 	}
 }
 

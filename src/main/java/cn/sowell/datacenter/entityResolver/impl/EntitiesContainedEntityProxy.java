@@ -33,8 +33,10 @@ public abstract class EntitiesContainedEntityProxy implements EntityProxy{
 	public void commit() {
 		relationMap.forEach((propName, rels)->{
 			rels.forEach(rel->{
-				getSourceEntity().putRelationEntity(propName, rel.getLabel(), rel.getSourceEntity());
-				rel.commit();
+				if(rel.getLabel() != null && !rel.getLabel().trim().isEmpty()) {
+					getSourceEntity().putRelationEntity(propName, rel.getLabel(), rel.getSourceEntity());
+					rel.commit();
+				}
 			});
 		});
 		relationMap.clear();

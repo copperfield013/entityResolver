@@ -6,9 +6,11 @@ import com.abc.mapping.entity.Entity;
 import com.abc.mapping.entity.SimpleEntity;
 import com.abc.mapping.node.ABCNode;
 import com.abc.mapping.node.AttributeNode;
+import com.abc.mapping.node.IAttributeNode;
 import com.abc.mapping.node.LabelNode;
 import com.abc.mapping.node.MultiAttributeNode;
 import com.abc.mapping.node.RelationNode;
+import com.abc.mapping.node.impl.AttributeNodeImpl;
 import com.abc.record.constant.AttributeMatedata;
 import com.abc.util.ValueType;
 
@@ -41,7 +43,7 @@ public class ABCNodeProxy {
 			return new ABCNodeProxy(ele);
 		}else if(ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL.equals(propertyName)){
 			if(node instanceof ABCNode || node instanceof MultiAttributeNode || node instanceof RelationNode) {
-				AttributeNode codeNode = new AttributeNode();
+				IAttributeNode codeNode = new AttributeNodeImpl();
 				codeNode.setName(CODE_PROPERTY_NAME_NORMAL);
 				codeNode.setAbcattr(CODE_NODE_NAME);
 				codeNode.setDatatype(ValueType.STRING);
