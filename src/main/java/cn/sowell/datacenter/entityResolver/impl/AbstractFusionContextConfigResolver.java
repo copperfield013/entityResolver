@@ -1,5 +1,6 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -160,10 +161,11 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 			CommonModuleEntityPropertyParser parser = new CommonModuleEntityPropertyParser(config, rootContext, getFullKeyFieldMap(), user, propertyGetterArgument);
 			//获得错误信息
 			if(parser.getCode() != null) {
-				BizFusionContext context = config.getCurrentContext(user);
+				parser.setErrors(new ArrayList<ErrorInfomation>());
+				/*BizFusionContext context = config.getCurrentContext(user);
 				Discoverer discoverer = PanelFactory.getDiscoverer(context);
 				List<ErrorInfomation> errors = discoverer.trackErrorInfos(parser.getCode());
-				parser.setErrors(errors);
+				parser.setErrors(errors);*/
 			}
 			return parser ;
 		}
