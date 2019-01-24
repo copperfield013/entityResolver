@@ -2,7 +2,6 @@ package cn.sowell.datacenter.entityResolver.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -14,7 +13,6 @@ import com.abc.application.BizFusionContext;
 import com.abc.application.FusionContext;
 import com.abc.dto.ErrorInfomation;
 import com.abc.mapping.entity.Entity;
-import com.abc.panel.Discoverer;
 import com.abc.panel.Integration;
 import com.abc.panel.IntegrationMsg;
 import com.abc.panel.PanelFactory;

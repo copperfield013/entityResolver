@@ -3,6 +3,7 @@ package cn.sowell.datacenter.entityResolver.config;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.core.io.Resource;
@@ -58,6 +59,15 @@ public class XMLFusionConfigContextFactory extends AbstractFusionConfigContextFa
 	protected Set<FieldParserDescription> getFields(String module) {
 		if(fieldService != null) {
 			return fieldService.getFieldDescriptions(module);
+		}else {
+			return null;
+		}
+	}
+	
+	@Override
+	protected Map<String, Set<FieldParserDescription>> getFields(Set<String> moduleNames) {
+		if(fieldService != null) {
+			return fieldService.getFieldDescriptions(moduleNames);
 		}else {
 			return null;
 		}

@@ -1,5 +1,6 @@
 package cn.sowell.datacenter.entityResolver.config;
 
+import java.util.Map;
 import java.util.Set;
 
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
@@ -18,6 +19,14 @@ public class CommonFusionConfigContextFactory extends AbstractFusionConfigContex
 	protected Set<FieldParserDescription> getFields(String module) {
 		if(fieldService != null) {
 			return this.fieldService.getFieldDescriptions(module);
+		}
+		return null;
+	}
+	
+	@Override
+	protected Map<String, Set<FieldParserDescription>> getFields(Set<String> moduleNames) {
+		if(fieldService != null) {
+			return this.fieldService.getFieldDescriptions(moduleNames);
 		}
 		return null;
 	}

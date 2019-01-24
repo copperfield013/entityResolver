@@ -29,4 +29,6 @@ public interface FusionContextConfigFactory {
 
 	FusionContextConfig getModuleConfigDependended(String moduleName);
 
+	Set<FusionContextConfig> getAllConfigsLoaded();
+
 }

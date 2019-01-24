@@ -161,14 +161,6 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 		return null;
 	}
 	
-	@Override
-	public Set<ImportCompositeField> getAllImportFields() {
-		FusionContextConfigResolver cr = getConfigResolver();
-		if(cr instanceof ABCNodeFusionContextConfigResolver) {
-			return ((ABCNodeFusionContextConfigResolver)cr).getAllImportFields();
-		}
-		return null;
-	}
 	public void setUserCodeService(UserCodeService userCodeService) {
 		this.userCodeService = userCodeService;
 	}

@@ -64,4 +64,6 @@ public interface FusionContextConfigResolver {
 	FieldConfigure getFieldConfigure(String fieldPath);
 	
 	boolean hasLoadFieldDescription();
+	
+	boolean isEntityWritable();
 }

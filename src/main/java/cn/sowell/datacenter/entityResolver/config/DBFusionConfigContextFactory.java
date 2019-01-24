@@ -88,6 +88,11 @@ public class DBFusionConfigContextFactory implements FusionContextConfigFactory{
 	public Set<FusionContextConfig> getAllConfigs() {
 		return getFactory().getAllConfigs();
 	}
+	
+	@Override
+	public Set<FusionContextConfig> getAllConfigsLoaded() {
+		return getFactory().getAllConfigsLoaded();
+	}
 
 	public void setUserCodeService(UserCodeService userCodeService) {
 		this.userCodeService = userCodeService;

@@ -34,8 +34,6 @@ public interface FusionContextConfig {
 
 	Set<Label> getAllLabels();
 
-	Set<ImportCompositeField> getAllImportFields();
-
 	void removeEntity(String code, Object userPrinciple);
 
 	BizFusionContext createRelationContext(String relationName, Object userPrinciple);

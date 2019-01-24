@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
 import cn.sowell.datacenter.entityResolver.FusionContextConfig;
@@ -66,6 +68,7 @@ public abstract class AbstractFusionConfigContextFactory implements FusionContex
 	
 	protected abstract Set<FieldParserDescription> getFields(String module);
 
+	protected abstract Map<String, Set<FieldParserDescription>> getFields(Set<String> moduleNames);
 
 	private void throwException(String msg) throws FusionConfigException {
 		throw new FusionConfigException(msg);
@@ -114,7 +117,19 @@ public abstract class AbstractFusionConfigContextFactory implements FusionContex
 	public Set<FusionContextConfig> getAllConfigs() {
 		return new LinkedHashSet<FusionContextConfig>(configMap.values());
 	}
+	
+	@Override
+	public Set<FusionContextConfig> getAllConfigsLoaded() {
+		Set<FusionContextConfig> configs = getAllConfigs();
+		Set<FusionContextConfig> unloadResolverConfigs = configs.stream().filter(config->!config.hasLoadResolverFields()).collect(Collectors.toSet());
+		Map<String, Set<FieldParserDescription>> fieldsMap = getFields(CollectionUtils.toSet(unloadResolverConfigs, FusionContextConfig::getModule));
+		unloadResolverConfigs.forEach(config->{
+			config.loadResolver(fieldsMap.get(config.getModule()));
+		});
+		return configs;
+	}
 
+	
 
 	public void setUserCodeService(UserCodeService userCodeService) {
 		this.userCodeService = userCodeService;
