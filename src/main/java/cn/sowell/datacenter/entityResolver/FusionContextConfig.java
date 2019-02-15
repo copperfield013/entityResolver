@@ -42,4 +42,6 @@ public interface FusionContextConfig {
 	
 	ABCNode getRootNode();
 
+	boolean isStatistic();
+
 }
