@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.abc.mapping.node.RelationNode;
 
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.datacenter.entityResolver.config.UnconfiuredFusionException;
 
 public class RelationFieldConfigure extends AbstractFieldConfigure<RelationNode>{
@@ -24,6 +25,14 @@ public class RelationFieldConfigure extends AbstractFieldConfigure<RelationNode>
 	@Override
 	public String getFieldType() {
 		return FieldConfigure.RELATION_FILED_TYPE;
+	}
+	
+	public Long getRabcMappingId() {
+		RelationNode n = getNode();
+		if(n.getRabcNode() != null) {
+			return FormatUtils.toLong(n.getRabcNode().getRelABCNodeID());
+		}
+		return null;
 	}
 
 
