@@ -1,10 +1,12 @@
 package cn.sowell.datacenter.entityResolver;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
 
 import com.abc.application.BizFusionContext;
 import com.abc.mapping.entity.Entity;
+import com.abc.rrc.query.queryrecord.criteria.Criteria;
 
 import cn.sowell.datacenter.entityResolver.impl.EntityComponent;
 import cn.sowell.datacenter.entityResolver.impl.RelationEntityPropertyParser;
@@ -31,13 +33,19 @@ public interface FusionContextConfigResolver {
 	 */
 	String saveEntity(Map<String, Object> map, Consumer<BizFusionContext> consumer, Object user);
 	
+	String saveEntity(Map<String, Object> entityMap, Consumer<BizFusionContext> consumer, Object user,
+			Map<String, Collection<Criteria>> criteriasMap);
+	
 	/**
 	 * 根据当前配置，解析生成Entity，并使用传入自定义的context， 保存Entity
 	 * @param context
 	 * @param map
 	 * @return
 	 */
-	String saveEntity(BizFusionContext context, Map<String, Object> map);
+	String saveEntity(BizFusionContext context, Map<String, Object> map,
+			Map<String, Collection<Criteria>> criteriasMap);
+	
+	
 	
 	/**
 	 * 创建实体的字段解析器对象
@@ -66,4 +74,5 @@ public interface FusionContextConfigResolver {
 	boolean hasLoadFieldDescription();
 	
 	boolean isEntityWritable();
+	
 }

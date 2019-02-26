@@ -1,6 +1,7 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,6 +17,7 @@ import com.abc.mapping.entity.Entity;
 import com.abc.panel.Integration;
 import com.abc.panel.IntegrationMsg;
 import com.abc.panel.PanelFactory;
+import com.abc.rrc.query.queryrecord.criteria.Criteria;
 
 import cn.sowell.copframe.utils.Assert;
 import cn.sowell.copframe.utils.CollectionUtils;
@@ -191,13 +193,29 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 		if(consumer != null) {
 			consumer.accept(context);
 		}
-		return saveEntity(context, map);
+		return saveEntity(context, map, null);
 	}
 	
 	@Override
-	public String saveEntity(BizFusionContext context, Map<String, Object> map) {
+	public String saveEntity(Map<String, Object> entityMap, Consumer<BizFusionContext> consumer, Object user,
+			Map<String, Collection<Criteria>> criteriasMap) {
+		BizFusionContext context = config.getCurrentContext(user);
+		context.setSource(FusionContext.SOURCE_COMMON);
+		if(consumer != null) {
+			consumer.accept(context);
+		}
+		return saveEntity(context, entityMap, criteriasMap);
+	}
+	
+	@Override
+	public String saveEntity(BizFusionContext context, Map<String, Object> map, Map<String, Collection<Criteria>> criteriasMap) {
 		Assert.notNull(context);
 		EntityComponent entity = createEntity(map);
+		if(criteriasMap != null) {
+			criteriasMap.forEach((key, val)->{
+				entity.getEntity().putCriteria(key, val);
+			});
+		}
 		if(entity != null) {
 			Integration integration=PanelFactory.getIntegration();
 			IntegrationMsg msg = integration.integrate(context, entity.getEntity());

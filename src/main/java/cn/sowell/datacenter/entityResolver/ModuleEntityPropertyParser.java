@@ -23,6 +23,5 @@ public interface ModuleEntityPropertyParser extends CEntityPropertyParser{
 
 	List<ArrayItemPropertyParser> getCompositeArray(String compositeName);
 
-	
 
 }
