@@ -191,4 +191,10 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 	public boolean isStatistic() {
 		return PanelFactory.getStatGenerator().isStatEntity(rootNode.getAbcattr());
 	}
+	
+	@Override
+	public ModuleConfigStructure getConfigStructure() {
+		ModuleConfigStructure structure = ModuleConfigStructure.analyzeStructure(this);
+		return structure;
+	}
 }

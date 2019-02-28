@@ -74,5 +74,4 @@ public interface FusionContextConfigResolver {
 	boolean hasLoadFieldDescription();
 	
 	boolean isEntityWritable();
-	
 }
