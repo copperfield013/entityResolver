@@ -98,5 +98,10 @@ public class DBFusionConfigContextFactory implements FusionContextConfigFactory{
 		this.userCodeService = userCodeService;
 	}
 	
+	@Override
+	public ModuleConfigStructure getConfigStructure(String moduleName) {
+		return getFactory().getConfigStructure(moduleName);
+	}
+	
 
 }

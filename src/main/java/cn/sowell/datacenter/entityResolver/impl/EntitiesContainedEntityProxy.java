@@ -73,7 +73,7 @@ public abstract class EntitiesContainedEntityProxy implements EntityProxy{
 					entities.add(existEntity);
 				}else {
 					RelationEntityProxy relEntity = new RelationEntityProxy(rel.getEntity());
-					relEntity.setLabel(rel.getLabelValue());
+					relEntity.setLabel(rel.getRelationTypeName());
 					compositeMap.put(rel.getEntity().getId(), relEntity);
 					entities.add(relEntity);
 				}

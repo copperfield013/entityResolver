@@ -44,6 +44,4 @@ public interface FusionContextConfig {
 
 	boolean isStatistic();
 
-	ModuleConfigStructure getConfigStructure();
-
 }

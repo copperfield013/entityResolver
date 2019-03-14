@@ -1,6 +1,7 @@
 package cn.sowell.datacenter.entityResolver.config;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -129,10 +130,21 @@ public abstract class AbstractFusionConfigContextFactory implements FusionContex
 		return configs;
 	}
 
-	
-
 	public void setUserCodeService(UserCodeService userCodeService) {
 		this.userCodeService = userCodeService;
+	}
+	
+	@Override
+	public ModuleConfigStructure getConfigStructure(String moduleName) {
+		FusionContextConfig fusionContextConfig = getModuleConfig(moduleName);
+		if(fusionContextConfig != null) {
+			return ModuleConfigStructure.analyzeStructure(fusionContextConfig, getAllModule());
+		}
+		return null;
+	}
+	
+	private Set<Module> getAllModule() {
+		return new HashSet<>(moduleMap.values());
 	}
 
 }

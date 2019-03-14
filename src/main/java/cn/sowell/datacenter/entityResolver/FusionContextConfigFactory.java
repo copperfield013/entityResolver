@@ -2,6 +2,7 @@ package cn.sowell.datacenter.entityResolver;
 
 import java.util.Set;
 
+import cn.sowell.datacenter.entityResolver.config.ModuleConfigStructure;
 import cn.sowell.datacenter.entityResolver.config.abst.Module;
 
 public interface FusionContextConfigFactory {
@@ -30,5 +31,7 @@ public interface FusionContextConfigFactory {
 	FusionContextConfig getModuleConfigDependended(String moduleName);
 
 	Set<FusionContextConfig> getAllConfigsLoaded();
+
+	ModuleConfigStructure getConfigStructure(String moduleName);
 
 }
