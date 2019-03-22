@@ -8,7 +8,8 @@ import com.abc.mapping.entity.Entity;
 import com.abc.rrc.query.queryrecord.criteria.QueryParameter;
 
 import cn.sowell.datacenter.entityResolver.impl.EntityComponent;
-import cn.sowell.datacenter.entityResolver.impl.RelationEntityPropertyParser;
+import cn.sowell.datacenter.entityResolver.impl.RabcModuleEntityPropertyParser;
+import cn.sowell.datacenter.entityResolver.impl.RelSelectionEntityPropertyParser;
 
 public interface FusionContextConfigResolver {
 	/**
@@ -53,7 +54,10 @@ public interface FusionContextConfigResolver {
 	 */
 	ModuleEntityPropertyParser createParser(Entity entity, Object user, Object propertyGetterArgument);
 	
-	RelationEntityPropertyParser createRelationParser(Entity entity, String relationName, Object user);
+	RelSelectionEntityPropertyParser createRelationParser(Entity entity, String relationName, Object user);
+	
+	RabcModuleEntityPropertyParser createRabcEntityParser(Entity entity, Object user,
+			Object propertyGetterArgument);
 	
 	/**
 	 * 
@@ -73,4 +77,5 @@ public interface FusionContextConfigResolver {
 	boolean hasLoadFieldDescription();
 	
 	boolean isEntityWritable();
+	
 }

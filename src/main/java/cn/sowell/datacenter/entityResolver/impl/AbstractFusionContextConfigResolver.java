@@ -172,11 +172,31 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	
 	
 	@Override
-	public RelationEntityPropertyParser createRelationParser(Entity entity, String relationName, Object user) {
+	public RelSelectionEntityPropertyParser createRelationParser(Entity entity, String relationName, Object user) {
 		if(this.fields == null) {
 			throw new RuntimeException("解析器没有初始化字段数据");
 		}else {
-			return new RelationEntityPropertyParser(config, relationName, getFullKeyFieldMap(), user, entity);
+			return new RelSelectionEntityPropertyParser(config, relationName, getFullKeyFieldMap(), user, entity);
+		}
+	}
+	
+	@Override
+	public RabcModuleEntityPropertyParser createRabcEntityParser(Entity entity, Object user,
+			Object propertyGetterArgument) {
+		if(this.fields == null) {
+			throw new RuntimeException("解析器没有初始化字段数据");
+		}else {
+			EntityBindContext rootContext = buildRootContext(entity);
+			RabcModuleEntityPropertyParser parser = new RabcModuleEntityPropertyParser(config, rootContext, getFullKeyFieldMap(), user, propertyGetterArgument);
+			//获得错误信息
+			if(parser.getCode() != null) {
+				parser.setErrors(new ArrayList<ErrorInfomation>());
+				/*BizFusionContext context = config.getCurrentContext(user);
+				Discoverer discoverer = PanelFactory.getDiscoverer(context);
+				List<ErrorInfomation> errors = discoverer.trackErrorInfos(parser.getCode());
+				parser.setErrors(errors);*/
+			}
+			return parser ;
 		}
 	}
 	

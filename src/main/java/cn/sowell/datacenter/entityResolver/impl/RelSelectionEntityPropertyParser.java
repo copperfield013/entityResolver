@@ -14,12 +14,12 @@ import cn.sowell.datacenter.entityResolver.EntityBindContext;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
 import cn.sowell.datacenter.entityResolver.FusionContextConfig;
 
-public class RelationEntityPropertyParser extends EntityPropertyParser{
+public class RelSelectionEntityPropertyParser extends EntityPropertyParser{
 
 	
 	private String relationName;
 
-	RelationEntityPropertyParser(
+	RelSelectionEntityPropertyParser(
 			//config是根配置文件的config
 			FusionContextConfig config,
 			String relationName,
@@ -49,6 +49,5 @@ public class RelationEntityPropertyParser extends EntityPropertyParser{
 		}
 		return null;
 	}
-	
-	
+
 }
