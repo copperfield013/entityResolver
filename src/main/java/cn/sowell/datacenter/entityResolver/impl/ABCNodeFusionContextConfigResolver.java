@@ -17,8 +17,8 @@ import com.abc.mapping.node.ABCNode;
 import com.abc.mapping.node.AttributeNode;
 import com.abc.mapping.node.LabelNode;
 import com.abc.mapping.node.MultiAttributeNode;
-import com.abc.mapping.node.NodeOpsType;
 import com.abc.mapping.node.RelationNode;
+import com.abc.model.enun.NodeOpsType;
 import com.beust.jcommander.internal.Lists;
 
 import cn.sowell.copframe.utils.CollectionUtils;

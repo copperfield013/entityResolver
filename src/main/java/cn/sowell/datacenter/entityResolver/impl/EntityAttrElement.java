@@ -1,6 +1,6 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
-import com.abc.util.ValueType;
+import com.abc.model.enun.ValueType;
 
 import cn.sowell.datacenter.entityResolver.EntityElement;
 

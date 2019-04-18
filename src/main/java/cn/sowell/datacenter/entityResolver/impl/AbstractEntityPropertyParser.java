@@ -3,7 +3,7 @@ package cn.sowell.datacenter.entityResolver.impl;
 import java.util.Map;
 import java.util.Set;
 
-import com.abc.util.ValueType;
+import com.abc.model.enun.ValueType;
 
 import cn.sowell.copframe.utils.Assert;
 import cn.sowell.copframe.utils.FormatUtils;

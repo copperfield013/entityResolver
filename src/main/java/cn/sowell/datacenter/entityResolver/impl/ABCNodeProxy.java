@@ -11,8 +11,8 @@ import com.abc.mapping.node.LabelNode;
 import com.abc.mapping.node.MultiAttributeNode;
 import com.abc.mapping.node.RelationNode;
 import com.abc.mapping.node.impl.AttributeNodeImpl;
-import com.abc.record.constant.AttributeMatedata;
-import com.abc.util.ValueType;
+import com.abc.model.constant.AttributeMatedata;
+import com.abc.model.enun.ValueType;
 
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.datacenter.entityResolver.EntityElement;

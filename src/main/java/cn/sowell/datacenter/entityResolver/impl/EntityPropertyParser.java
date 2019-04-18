@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 
 import com.abc.mapping.entity.Entity;
-import com.abc.util.ValueType;
+import com.abc.model.enun.ValueType;
 
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.datacenter.entityResolver.EntityBindContext;

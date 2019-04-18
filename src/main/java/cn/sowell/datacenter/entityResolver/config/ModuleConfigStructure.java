@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +14,7 @@ import org.springframework.util.Assert;
 import com.abc.mapping.conf.MappingContainer;
 import com.abc.mapping.node.ABCNode;
 import com.abc.mapping.node.AttributeNode;
+import com.abc.mapping.node.LabelNode;
 import com.abc.mapping.node.MultiAttributeNode;
 import com.abc.mapping.node.RABCNode;
 import com.abc.mapping.node.RelationNode;
@@ -95,6 +97,7 @@ public class ModuleConfigStructure {
 			Collection<RelationNode> nRels = nRootNode.getRelation();
 			for (RelationNode nRel : nRels) {
 				if(nRel.getRabcNode() != null) {
+					
 					RABCNode rabcNode = nRel.getRabcNode();
 					ABC rabc = null;
 					Long rabcNodeMappingId = FormatUtils.toLong(rabcNode.getRelABCNodeID());
@@ -105,6 +108,9 @@ public class ModuleConfigStructure {
 					}
 					
 					Rel rel = new Rel(rabcNodeMappingId, rabc);
+					LabelNode label = nRel.getLabelNode();
+					Assert.notNull(label, "label为空");
+					rel.getLabels().addAll(label.getSubdomains());
 					setNormalAttrs(rel, nRel);
 					abc.getRels().add(rel);
 				}
@@ -201,6 +207,7 @@ public class ModuleConfigStructure {
 	}
 	
 	private static class Rel extends Named{
+		private Set<String> labels = new LinkedHashSet<>();
 		private Long rabcNodeMappingId;
 		@JSONField(serialize=false)
 		private ABC rabc;
@@ -217,6 +224,10 @@ public class ModuleConfigStructure {
 
 		public Long getRabcNodeMappingId() {
 			return rabcNodeMappingId;
+		}
+
+		public Set<String> getLabels() {
+			return labels;
 		}
 
 		

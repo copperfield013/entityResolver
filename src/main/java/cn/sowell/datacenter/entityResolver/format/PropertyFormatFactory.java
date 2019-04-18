@@ -2,7 +2,7 @@ package cn.sowell.datacenter.entityResolver.format;
 
 import java.util.Date;
 
-import com.abc.util.ValueType;
+import com.abc.model.enun.ValueType;
 
 import cn.sowell.copframe.spring.file.FileHaunt;
 

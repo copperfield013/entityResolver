@@ -6,8 +6,8 @@ import java.text.NumberFormat;
 
 import org.apache.log4j.Logger;
 
+import com.abc.model.enun.ValueType;
 import com.abc.util.AttributeParter;
-import com.abc.util.ValueType;
 
 import cn.sowell.copframe.spring.file.FileHaunt;
 import cn.sowell.copframe.utils.date.CommonDateFormat;

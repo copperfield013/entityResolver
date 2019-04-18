@@ -5,9 +5,9 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 
 import com.abc.application.BizFusionContext;
+import com.abc.model.enun.ValueType;
 import com.abc.panel.Discoverer;
 import com.abc.panel.PanelFactory;
-import com.abc.util.ValueType;
 import com.abc.vo.AttriCoorinatePJ;
 import com.abc.vo.BytesInfoVO;
 

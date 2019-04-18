@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.abc.dto.ErrorInfomation;
-import com.abc.util.ValueType;
+import com.abc.model.enun.ValueType;
 
 import cn.sowell.datacenter.entityResolver.EntityBindContext;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;

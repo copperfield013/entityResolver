@@ -2,7 +2,7 @@ package cn.sowell.datacenter.entityResolver;
 
 import java.util.Map;
 
-import com.abc.util.ValueType;
+import com.abc.model.enun.ValueType;
 
 public interface CEntityPropertyParser {
 	

@@ -1,7 +1,7 @@
 package cn.sowell.datacenter.entityResolver;
 
 import com.abc.mapping.entity.SimpleEntity;
-import com.abc.util.ValueType;
+import com.abc.model.enun.ValueType;
 
 public interface EntityProxy {
 

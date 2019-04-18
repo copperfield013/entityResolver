@@ -6,8 +6,9 @@ import java.util.regex.Pattern;
 
 import org.springframework.util.Assert;
 
-import com.abc.util.ValueType;
+import com.abc.model.enun.ValueType;
 
+import cn.sowell.datacenter.entityResolver.EntityConstants;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
 
 public class ArrayItemPropertyParser extends AbstractEntityPropertyParser{
@@ -62,8 +63,8 @@ public class ArrayItemPropertyParser extends AbstractEntityPropertyParser{
 			return fieldDesc.getArrayFieldNameFormat(this.itemIndex);
 		}else if(propertyName.endsWith("." + ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL)){
 			return compositeName + "[" + this.itemIndex + "]" + "." + ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL;
-		}else if(propertyName.endsWith("." + RelationEntityProxy.LABEL_KEY)){
-			return compositeName + "[" + this.itemIndex + "]" + "." + RelationEntityProxy.LABEL_KEY;
+		}else if(propertyName.endsWith("." + EntityConstants.LABEL_KEY)){
+			return compositeName + "[" + this.itemIndex + "]" + "." + EntityConstants.LABEL_KEY;
 		}else if(propertyName.endsWith("." + ABCNodeProxy.UPDATETIME_PROPERTY_NAME)){
 			return compositeName + "[" + this.itemIndex + "]" + "." + ABCNodeProxy.UPDATETIME_PROPERTY_NAME;
 		}else {

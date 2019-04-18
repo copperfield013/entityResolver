@@ -8,7 +8,7 @@ import com.abc.application.BizFusionContext;
 import com.abc.mapping.entity.Entity;
 import com.abc.mapping.node.ABCNode;
 import com.abc.mapping.node.RelationNode;
-import com.abc.util.ValueType;
+import com.abc.model.enun.ValueType;
 
 import cn.sowell.datacenter.entityResolver.EntityBindContext;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
