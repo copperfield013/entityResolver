@@ -244,7 +244,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 				return msg.getCode();
 			}else {
 				logger.error("integrate实体失败");
-				logger.info(msg.toString());
+				logger.info(msg.getInfo());
 			}
 		}
 		throw new RuntimeException("无法根据map创建Entity");
