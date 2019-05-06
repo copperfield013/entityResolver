@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.abc.mapping.entity.Entity;
+import com.abc.mapping.entity.RecordEntity;
 import com.abc.model.enun.ValueType;
 
 import cn.sowell.copframe.utils.Assert;
@@ -12,9 +13,9 @@ import cn.sowell.datacenter.entityResolver.EntityProxy;
 
 public class RelationEntityProxy extends EntitiesContainedEntityProxy{
 	private String label;
-	private Entity sourceEntity;
+	private RecordEntity sourceEntity;
 	
-	public RelationEntityProxy(Entity sourceEntity) {
+	public RelationEntityProxy(RecordEntity sourceEntity) {
 		super();
 		Assert.notNull(sourceEntity);
 		this.sourceEntity = sourceEntity;
@@ -26,7 +27,7 @@ public class RelationEntityProxy extends EntitiesContainedEntityProxy{
 	}
 
 	@Override
-	protected Entity getSourceEntity() {
+	protected RecordEntity getSourceEntity() {
 		return sourceEntity;
 	}
 	

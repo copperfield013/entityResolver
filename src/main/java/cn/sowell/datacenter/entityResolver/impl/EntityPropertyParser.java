@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 
 import com.abc.mapping.entity.Entity;
+import com.abc.mapping.entity.RecordEntity;
 import com.abc.model.enun.ValueType;
 
 import cn.sowell.copframe.utils.TextUtils;
@@ -85,7 +86,7 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 		}
 		try {
 			String name = names[names.length - 1];
-			Entity entity = (Entity) thisContext.getEntity().getEntity();
+			RecordEntity entity = (RecordEntity) thisContext.getEntity().getEntity();
 			@SuppressWarnings("rawtypes")
 			List compositeEntities = null;
 			try {
@@ -93,7 +94,7 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 			} catch (Exception e) {
 			}
 			if(compositeEntities == null) {
-				compositeEntities = entity.getRelations(name);
+				compositeEntities = ((Entity) entity).getRelations(name);
 			}
 			if(compositeEntities != null) {
 				for (int i = 0; i < compositeEntities.size(); i++) {

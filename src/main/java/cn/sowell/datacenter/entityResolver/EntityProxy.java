@@ -1,6 +1,6 @@
 package cn.sowell.datacenter.entityResolver;
 
-import com.abc.mapping.entity.SimpleEntity;
+import com.abc.mapping.entity.LeafEntity;
 import com.abc.model.enun.ValueType;
 
 public interface EntityProxy {
@@ -11,7 +11,7 @@ public interface EntityProxy {
 		return getEntity().getTypeValue(propName, abctype);
 	}
 	
-	SimpleEntity getEntity();
+	LeafEntity getEntity();
 
 	EntityProxy createEmptyEntity();
 

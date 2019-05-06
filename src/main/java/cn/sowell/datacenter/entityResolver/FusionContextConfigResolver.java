@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.abc.application.BizFusionContext;
-import com.abc.mapping.entity.Entity;
+import com.abc.mapping.entity.RecordEntity;
 import com.abc.rrc.query.queryrecord.criteria.QueryParameter;
 
 import cn.sowell.datacenter.entityResolver.impl.EntityComponent;
@@ -52,11 +52,11 @@ public interface FusionContextConfigResolver {
 	 * @param entity
 	 * @return
 	 */
-	ModuleEntityPropertyParser createParser(Entity entity, Object user, Object propertyGetterArgument);
+	ModuleEntityPropertyParser createParser(RecordEntity entity, Object user, Object propertyGetterArgument);
 	
-	RelSelectionEntityPropertyParser createRelationParser(Entity entity, String relationName, Object user);
+	RelSelectionEntityPropertyParser createRelationParser(RecordEntity entity, String relationName, Object user);
 	
-	RabcModuleEntityPropertyParser createRabcEntityParser(Entity entity, Object user,
+	RabcModuleEntityPropertyParser createRabcEntityParser(RecordEntity entity, Object user,
 			Object propertyGetterArgument);
 	
 	/**

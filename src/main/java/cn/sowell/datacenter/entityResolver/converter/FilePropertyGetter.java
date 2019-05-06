@@ -45,7 +45,8 @@ public class FilePropertyGetter implements PropertyValueGetter{
 		if(context.getPropertyGetterArgument() instanceof Discoverer) {
 			try {
 				BytesInfoVO fx = context.getCurrentContext().getEntity().getEntity().getBytesInfoVO(context.getCurrentPropertyPath());
-				f = discoverer.trackBytesInfo(fx);
+				f = discoverer.trackBytesInfo(fusionConext.getABCNode().getAbcattr(), fx);
+				//f = discoverer.trackBytesInfo(fx);
 			} catch (Exception e) {
 				logger.error("查询历史记录的文件字段时发生错误[" + context.getFullPropertyPath() + "]", e);
 			}

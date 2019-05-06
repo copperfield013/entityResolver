@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 import org.apache.log4j.Logger;
 
-import com.abc.mapping.entity.Entity;
+import com.abc.mapping.entity.RecordEntity;
 import com.abc.mapping.node.ABCNode;
 import com.abc.mapping.node.AttributeNode;
 import com.abc.mapping.node.LabelNode;
@@ -48,7 +48,7 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 	}
 
 	@Override
-	protected EntityBindContext buildRootContext(Entity entity) {
+	protected EntityBindContext buildRootContext(RecordEntity entity) {
 		return new ABCNodeEntityBindContext(getRootNode(), entity);
 	}
 	

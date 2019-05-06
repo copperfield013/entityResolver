@@ -168,8 +168,7 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 	@Override
 	public void removeEntity(String code, Object userPrinciple) {
 		Assert.hasText(code);
-		RemovedFusionContext appInfo=new RemovedFusionContext(code, userCodeService.getUserCode(userPrinciple), "list-delete" );
-		appInfo.setMappingName(getMappingName());
+		RemovedFusionContext appInfo=new RemovedFusionContext(getMappingName(), code, userCodeService.getUserCode(userPrinciple), "list-delete" );
 		IntegrationMsg msg = PanelFactory.getIntegration().remove(appInfo);
 		if(!msg.success()){
 			throw new RuntimeException("删除失败");

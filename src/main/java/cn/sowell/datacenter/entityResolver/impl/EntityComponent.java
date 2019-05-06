@@ -1,9 +1,9 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
-import com.abc.mapping.entity.Entity;
+import com.abc.mapping.entity.RecordEntity;
 
 public interface EntityComponent {
-	Entity getEntity();
+	RecordEntity getEntity();
 	boolean isToCreate();
 	boolean isToUpdate();
 	boolean isSavedFile();

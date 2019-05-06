@@ -1,15 +1,16 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
 import com.abc.mapping.entity.Entity;
+import com.abc.mapping.entity.RecordEntity;
 import com.abc.model.enun.ValueType;
 
 import cn.sowell.datacenter.entityResolver.EntityProxy;
 
 public class ABCEntityProxy extends EntitiesContainedEntityProxy {
 
-	private Entity entity;
+	private RecordEntity entity;
 	
-	public ABCEntityProxy(Entity entity) {
+	public ABCEntityProxy(RecordEntity entity) {
 		super();
 		this.entity = entity;
 	}
@@ -26,7 +27,7 @@ public class ABCEntityProxy extends EntitiesContainedEntityProxy {
 	}
 
 	@Override
-	protected Entity getSourceEntity() {
+	protected RecordEntity getSourceEntity() {
 		return entity;
 	}
 

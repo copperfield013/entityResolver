@@ -12,7 +12,8 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import com.abc.mapping.entity.Entity;
-import com.abc.mapping.entity.SimpleEntity;
+import com.abc.mapping.entity.LeafEntity;
+import com.abc.mapping.entity.RecordEntity;
 import com.abc.model.enun.ValueType;
 
 import cn.sowell.copframe.utils.FormatUtils;
@@ -201,12 +202,12 @@ public abstract class AbstractEntityBindContext implements EntityBindContext {
 	
 	@Override
 	public void removeAllComposite(String compositeName) {
-		SimpleEntity source = getEntity().getEntity();
-		if(source instanceof Entity) {
+		LeafEntity source = getEntity().getEntity();
+		if(source instanceof RecordEntity) {
 			EntityElement element = getEntityElement(compositeName);
 			if(element instanceof EntityMultiAttributeElement) {
-				((Entity) source).removeAllMultiAttrEntity(compositeName);
-			}else if(element instanceof EntityRelationElement) {
+				((RecordEntity) source).removeAllMultiAttrEntity(compositeName);
+			}else if(element instanceof EntityRelationElement && source instanceof Entity) {
 				((Entity) source).removeAllRelationEntity(compositeName);
 			}
 		}

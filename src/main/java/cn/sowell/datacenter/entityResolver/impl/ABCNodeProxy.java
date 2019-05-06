@@ -3,7 +3,7 @@ package cn.sowell.datacenter.entityResolver.impl;
 import java.util.HashSet;
 
 import com.abc.mapping.entity.Entity;
-import com.abc.mapping.entity.SimpleEntity;
+import com.abc.mapping.entity.LeafEntity;
 import com.abc.mapping.node.ABCNode;
 import com.abc.mapping.node.AttributeNode;
 import com.abc.mapping.node.IAttributeNode;
@@ -182,7 +182,7 @@ public class ABCNodeProxy {
 	static NodeSwitch<Byte> ELEMENT_ENTITY_CREATOR = new NodeSwitch<Byte>() {
 		@Override
 		public Object handlerWithNode(MultiAttributeNode node, Byte arg) {
-			SimpleEntity entity = new SimpleEntity(node.getTitle());
+			LeafEntity entity = new LeafEntity(node.getTitle());
 			MultiAttributeEntityProxy proxy = new MultiAttributeEntityProxy(entity);
 			return proxy;
 		}

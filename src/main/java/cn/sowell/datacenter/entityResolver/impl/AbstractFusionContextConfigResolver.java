@@ -13,6 +13,7 @@ import com.abc.application.BizFusionContext;
 import com.abc.application.FusionContext;
 import com.abc.dto.ErrorInfomation;
 import com.abc.mapping.entity.Entity;
+import com.abc.mapping.entity.RecordEntity;
 import com.abc.panel.Integration;
 import com.abc.panel.IntegrationMsg;
 import com.abc.panel.PanelFactory;
@@ -42,7 +43,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 		this.config = config;
 	}
 	
-	protected abstract EntityBindContext buildRootContext(Entity entity);
+	protected abstract EntityBindContext buildRootContext(RecordEntity entity);
 	
 	public synchronized void setFields(Set<FieldParserDescription> dynamicFieldDescriptionSet) {
 		this.fields = dynamicFieldDescriptionSet;
@@ -152,7 +153,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	}
 	
 	@Override
-	public ModuleEntityPropertyParser createParser(Entity entity, Object user, Object propertyGetterArgument) {
+	public ModuleEntityPropertyParser createParser(RecordEntity entity, Object user, Object propertyGetterArgument) {
 		if(this.fields == null) {
 			throw new RuntimeException("解析器没有初始化字段数据");
 		}else {
@@ -172,7 +173,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	
 	
 	@Override
-	public RelSelectionEntityPropertyParser createRelationParser(Entity entity, String relationName, Object user) {
+	public RelSelectionEntityPropertyParser createRelationParser(RecordEntity entity, String relationName, Object user) {
 		if(this.fields == null) {
 			throw new RuntimeException("解析器没有初始化字段数据");
 		}else {
@@ -181,7 +182,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	}
 	
 	@Override
-	public RabcModuleEntityPropertyParser createRabcEntityParser(Entity entity, Object user,
+	public RabcModuleEntityPropertyParser createRabcEntityParser(RecordEntity entity, Object user,
 			Object propertyGetterArgument) {
 		if(this.fields == null) {
 			throw new RuntimeException("解析器没有初始化字段数据");
@@ -237,7 +238,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 		}
 		if(entity != null) {
 			Integration integration=PanelFactory.getIntegration();
-			IntegrationMsg msg = integration.integrate(context, entity.getEntity());
+			IntegrationMsg msg = integration.integrate(context, (Entity) entity.getEntity());
 			if(msg.success()) {
 				logger.info("integrate实体成功");
 				logger.info(msg.toString());

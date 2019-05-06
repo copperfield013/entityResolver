@@ -6,19 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 import com.abc.mapping.entity.Entity;
+import com.abc.mapping.entity.LeafEntity;
+import com.abc.mapping.entity.RecordEntity;
 import com.abc.mapping.entity.RelationEntity;
-import com.abc.mapping.entity.SimpleEntity;
 
-import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.datacenter.entityResolver.EntityProxy;
 import cn.sowell.datacenter.entityResolver.PropertyNamePartitions;
 
 public abstract class EntitiesContainedEntityProxy implements EntityProxy{
 
 	public void putEntity(PropertyNamePartitions namePartitions, EntityProxy entity) {
-		Entity thisEntity = getSourceEntity();
+		RecordEntity thisEntity = getSourceEntity();
 		if(entity instanceof MultiAttributeEntityProxy) {
-			List<SimpleEntity> multiAttrEntities = thisEntity.getMultiAttrEntity(namePartitions.getMainPartition());
+			List<LeafEntity> multiAttrEntities = thisEntity.getMultiAttrEntity(namePartitions.getMainPartition());
 			int multiattrSize = multiAttrEntities == null? 0: multiAttrEntities.size();
 			if(multiattrSize <= namePartitions.getIndex()) {
 				for(int i = multiattrSize; i < namePartitions.getIndex(); i++) {
@@ -31,15 +31,18 @@ public abstract class EntitiesContainedEntityProxy implements EntityProxy{
 		}
 	}
 	public void commit() {
-		relationMap.forEach((propName, rels)->{
-			rels.forEach(rel->{
-				if(rel.getLabel() != null && !rel.getLabel().trim().isEmpty()) {
-					getSourceEntity().putRelationEntity(propName, rel.getLabel(), rel.getSourceEntity());
-					rel.commit();
-				}
+		if(getSourceEntity() instanceof Entity) {
+			Entity thisEntity = (Entity) getSourceEntity();
+			relationMap.forEach((propName, rels)->{
+				rels.forEach(rel->{
+					if(rel.getLabel() != null && !rel.getLabel().trim().isEmpty()) {
+						thisEntity.putRelationEntity(propName, rel.getLabel(), (Entity) rel.getSourceEntity());
+						rel.commit();
+					}
+				});
 			});
-		});
-		relationMap.clear();
+			relationMap.clear();
+		}
 	}
 	Map<String, List<RelationEntityProxy>> relationMap = new HashMap<>();
 	private void addRelationProxy(PropertyNamePartitions namePartitions, RelationEntityProxy entity) {
@@ -63,26 +66,27 @@ public abstract class EntitiesContainedEntityProxy implements EntityProxy{
 		List<EntityProxy> entities = new ArrayList<>();
 		List<RelationEntityProxy> relProxies = relationMap.get(compositeName);
 		if(relProxies != null) {
-			return CollectionUtils.toList(relProxies, proxy->proxy);
+			return new ArrayList<>(relProxies);
 		}
-		List<RelationEntity> rels = getSourceEntity().getRelations(compositeName);
-		if(rels != null) {
-			rels.forEach(rel->{
-				EntityProxy existEntity = compositeMap.get(rel.getEntity().getId());
-				if(existEntity != null) {
-					entities.add(existEntity);
-				}else {
-					RelationEntityProxy relEntity = new RelationEntityProxy(rel.getEntity());
-					relEntity.setLabel(rel.getRelationTypeName());
-					compositeMap.put(rel.getEntity().getId(), relEntity);
-					entities.add(relEntity);
-				}
-			});
+		RecordEntity thisEntity = getSourceEntity();
+		List<LeafEntity> multiAttrs = getSourceEntity().getMultiAttrEntity(compositeName);
+		if(multiAttrs != null) {
+			multiAttrs.forEach(multiAttr->entities.add(new MultiAttributeEntityProxy(multiAttr)));
 			return entities;
-		}else {
-			List<SimpleEntity> multiAttrs = getSourceEntity().getMultiAttrEntity(compositeName);
-			if(multiAttrs != null) {
-				multiAttrs.forEach(multiAttr->entities.add(new MultiAttributeEntityProxy(multiAttr)));
+		}else if(thisEntity instanceof Entity){
+			List<RelationEntity> rels = ((Entity) thisEntity).getRelations(compositeName);
+			if(rels != null) {
+				rels.forEach(rel->{
+					EntityProxy existEntity = compositeMap.get(rel.getEntity().getId());
+					if(existEntity != null) {
+						entities.add(existEntity);
+					}else {
+						RelationEntityProxy relEntity = new RelationEntityProxy(rel.getEntity());
+						relEntity.setLabel(rel.getRelationTypeName());
+						compositeMap.put(rel.getEntity().getId(), relEntity);
+						entities.add(relEntity);
+					}
+				});
 				return entities;
 			}
 		}
@@ -90,9 +94,9 @@ public abstract class EntitiesContainedEntityProxy implements EntityProxy{
 	}
 	
 	@Override
-	public final SimpleEntity getEntity() {
+	public final LeafEntity getEntity() {
 		return getSourceEntity();
 	}
-	protected abstract Entity getSourceEntity();
+	protected abstract RecordEntity getSourceEntity();
 	
 }

@@ -5,7 +5,7 @@ import java.util.Map;
 import org.springframework.util.Assert;
 
 import com.abc.application.BizFusionContext;
-import com.abc.mapping.entity.Entity;
+import com.abc.mapping.entity.RecordEntity;
 import com.abc.mapping.node.ABCNode;
 import com.abc.mapping.node.RelationNode;
 import com.abc.model.enun.ValueType;
@@ -25,13 +25,13 @@ public class RelSelectionEntityPropertyParser extends EntityPropertyParser{
 			String relationName,
 			//context是Relation节点的上下文，包含的entity是Relation下的ABCNode
 			Map<String, FieldParserDescription> fieldMap, 
-			Object userPrinciple, Entity entity) {
+			Object userPrinciple, RecordEntity entity) {
 		super(config, getContext(config, relationName, entity, userPrinciple), fieldMap, userPrinciple);
 		Assert.hasText(relationName);
 		this.relationName = relationName;
 	}
 	
-	private static EntityBindContext getContext(FusionContextConfig config, String relationName, Entity entity, Object user) {
+	private static EntityBindContext getContext(FusionContextConfig config, String relationName, RecordEntity entity, Object user) {
 		BizFusionContext c = config.getCurrentContext(user);
 		ABCNode rootNode = c.getABCNode();
 		RelationNode relNode = rootNode.getRelation(relationName);

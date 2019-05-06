@@ -2,16 +2,16 @@ package cn.sowell.datacenter.entityResolver.impl;
 
 import org.springframework.util.Assert;
 
-import com.abc.mapping.entity.Entity;
+import com.abc.mapping.entity.RecordEntity;
 
 public class CommonEntityComponent implements EntityComponent {
 
-	private final Entity principle;
+	private final RecordEntity principle;
 	private final boolean toCreate;
 	private boolean savedFile = false;
 	private final boolean hasTitle;
 	
-	public CommonEntityComponent(Entity principle, boolean toCreate, boolean hasTitle) {
+	public CommonEntityComponent(RecordEntity principle, boolean toCreate, boolean hasTitle) {
 		super();
 		Assert.notNull(principle);
 		this.principle = principle;
@@ -21,7 +21,7 @@ public class CommonEntityComponent implements EntityComponent {
 
 	
 	@Override
-	public Entity getEntity() {
+	public RecordEntity getEntity() {
 		return principle;
 	}
 

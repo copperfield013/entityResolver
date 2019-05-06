@@ -1,14 +1,14 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
-import com.abc.mapping.entity.SimpleEntity;
+import com.abc.mapping.entity.LeafEntity;
 
 import cn.sowell.datacenter.entityResolver.EntityProxy;
 
 public class MultiAttributeEntityProxy implements EntityProxy{
 
-	private SimpleEntity entity;
+	private LeafEntity entity;
 	
-	public MultiAttributeEntityProxy(SimpleEntity entity) {
+	public MultiAttributeEntityProxy(LeafEntity entity) {
 		super();
 		this.entity = entity;
 	}
@@ -21,14 +21,14 @@ public class MultiAttributeEntityProxy implements EntityProxy{
 	
 	@Override
 	public EntityProxy createEmptyEntity() {
-		SimpleEntity copy = new SimpleEntity(entity.getName());
+		LeafEntity copy = new LeafEntity(entity.getName());
 		MultiAttributeEntityProxy proxy = new MultiAttributeEntityProxy(copy);
 		return proxy;
 	}
 
 
 	@Override
-	public SimpleEntity getEntity() {
+	public LeafEntity getEntity() {
 		return this.entity;
 	}
 }
