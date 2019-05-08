@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 
 import com.abc.application.BizFusionContext;
+import com.abc.application.BizRemovedFusionContext;
 import com.abc.application.RemovedFusionContext;
 import com.abc.mapping.conf.MappingContainer;
 import com.abc.mapping.exception.ABCNodeLoadException;
@@ -168,8 +169,7 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 	@Override
 	public void removeEntity(String code, Object userPrinciple) {
 		Assert.hasText(code);
-		RemovedFusionContext appInfo=new RemovedFusionContext(getMappingName(), code, userCodeService.getUserCode(userPrinciple), "list-delete" );
-		appInfo.setMappingName(getMappingName());
+		RemovedFusionContext appInfo=new BizRemovedFusionContext(getMappingName(), code, userCodeService.getUserCode(userPrinciple), "list-delete" );
 		IntegrationMsg msg = PanelFactory.getIntegration().remove(appInfo);
 		if(!msg.success()){
 			throw new RuntimeException("删除失败");
