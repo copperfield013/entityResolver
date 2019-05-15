@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.springframework.util.Assert;
 
-import com.abc.application.BizFusionContext;
+import com.abc.hc.HCFusionContext;
 import com.abc.mapping.entity.RecordEntity;
 import com.abc.mapping.node.ABCNode;
 import com.abc.mapping.node.RelationNode;
@@ -32,7 +32,7 @@ public class RelSelectionEntityPropertyParser extends EntityPropertyParser{
 	}
 	
 	private static EntityBindContext getContext(FusionContextConfig config, String relationName, RecordEntity entity, Object user) {
-		BizFusionContext c = config.getCurrentContext(user);
+		HCFusionContext c = config.getCurrentContext(user);
 		ABCNode rootNode = c.getABCNode();
 		RelationNode relNode = rootNode.getRelation(relationName);
 		return new ABCNodeEntityBindContext(relNode.getAbcNode(), entity);

@@ -2,7 +2,7 @@ package cn.sowell.datacenter.entityResolver;
 
 import java.util.Set;
 
-import com.abc.application.BizFusionContext;
+import com.abc.hc.HCFusionContext;
 import com.abc.mapping.node.ABCNode;
 
 public interface FusionContextConfig {
@@ -22,7 +22,7 @@ public interface FusionContextConfig {
 	String getTitleAttributeName();
 
 	
-	BizFusionContext getCurrentContext(Object user);
+	HCFusionContext getCurrentContext(Object user);
 	
 	/**
 	 * 
@@ -30,13 +30,13 @@ public interface FusionContextConfig {
 	 * @return
 	 * @see {@link UserCodeService#getUserCode(Object)}
 	 */
-	BizFusionContext createNewContext(Object userPrinciple);
+	HCFusionContext createNewContext(Object userPrinciple);
 
 	Set<Label> getAllLabels();
 
 	void removeEntity(String code, Object userPrinciple);
 
-	BizFusionContext createRelationContext(String relationName, Object userPrinciple);
+	HCFusionContext createRelationContext(String relationName, Object userPrinciple);
 
 	String getMappingName();
 	

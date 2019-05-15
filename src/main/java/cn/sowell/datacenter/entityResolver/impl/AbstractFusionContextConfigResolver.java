@@ -9,9 +9,9 @@ import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
 
-import com.abc.application.BizFusionContext;
-import com.abc.application.FusionContext;
 import com.abc.dto.ErrorInfomation;
+import com.abc.hc.FusionContext;
+import com.abc.hc.HCFusionContext;
 import com.abc.mapping.entity.Entity;
 import com.abc.mapping.entity.RecordEntity;
 import com.abc.panel.Integration;
@@ -157,6 +157,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 		if(this.fields == null) {
 			throw new RuntimeException("解析器没有初始化字段数据");
 		}else {
+			long start = System.currentTimeMillis();
 			EntityBindContext rootContext = buildRootContext(entity);
 			CommonModuleEntityPropertyParser parser = new CommonModuleEntityPropertyParser(config, rootContext, getFullKeyFieldMap(), user, propertyGetterArgument);
 			//获得错误信息
@@ -167,6 +168,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 				List<ErrorInfomation> errors = discoverer.trackErrorInfos(parser.getCode());
 				parser.setErrors(errors);*/
 			}
+			System.out.println("转换parser[code=" + parser.getCode() + "]所用时间:" + (System.currentTimeMillis() - start) + "ms");
 			return parser ;
 		}
 	}
@@ -207,8 +209,8 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	}
 	
 	@Override
-	public String saveEntity(Map<String, Object> map, Consumer<BizFusionContext> consumer, Object user) {
-		BizFusionContext context = config.getCurrentContext(user);
+	public String saveEntity(Map<String, Object> map, Consumer<HCFusionContext> consumer, Object user) {
+		HCFusionContext context = config.getCurrentContext(user);
 		context.setSource(FusionContext.SOURCE_COMMON);
 		if(consumer != null) {
 			consumer.accept(context);
@@ -217,9 +219,9 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	}
 	
 	@Override
-	public String saveEntity(Map<String, Object> entityMap, Consumer<BizFusionContext> consumer, Object user,
+	public String saveEntity(Map<String, Object> entityMap, Consumer<HCFusionContext> consumer, Object user,
 			Map<String, QueryParameter> criteriasMap) {
-		BizFusionContext context = config.getCurrentContext(user);
+		HCFusionContext context = config.getCurrentContext(user);
 		context.setSource(FusionContext.SOURCE_COMMON);
 		if(consumer != null) {
 			consumer.accept(context);
@@ -228,7 +230,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	}
 	
 	@Override
-	public String saveEntity(BizFusionContext context, Map<String, Object> map, Map<String, QueryParameter> criteriasMap) {
+	public String saveEntity(HCFusionContext context, Map<String, Object> map, Map<String, QueryParameter> criteriasMap) {
 		Assert.notNull(context);
 		EntityComponent entity = createEntity(map);
 		if(criteriasMap != null) {

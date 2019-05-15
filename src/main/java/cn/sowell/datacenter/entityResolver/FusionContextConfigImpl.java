@@ -8,9 +8,9 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 
-import com.abc.application.BizFusionContext;
-import com.abc.application.BizRemovedFusionContext;
-import com.abc.application.RemovedFusionContext;
+import com.abc.hc.HCFusionContext;
+import com.abc.hc.HCRemovedFusionContext;
+import com.abc.hc.RemovedFusionContext;
 import com.abc.mapping.conf.MappingContainer;
 import com.abc.mapping.exception.ABCNodeLoadException;
 import com.abc.mapping.node.ABCNode;
@@ -114,20 +114,20 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 	}
 	
 	
-	private ThreadLocal<Map<Object, BizFusionContext>> userFusionContextLocal = new ThreadLocal<>();
+	private ThreadLocal<Map<Object, HCFusionContext>> userFusionContextLocal = new ThreadLocal<>();
 	
 	@Override
-	public BizFusionContext createNewContext(Object userPrinciple) {
-		BizFusionContext context = new BizFusionContext();
+	public HCFusionContext createNewContext(Object userPrinciple) {
+		HCFusionContext context = new HCFusionContext();
 		context.setMappingName(getMappingName());
 		context.setUserCode(userCodeService.getUserCode(userPrinciple));
 		return context;
 	}
 	
 	@Override
-	public BizFusionContext getCurrentContext(Object user) {
+	public HCFusionContext getCurrentContext(Object user) {
 		Assert.notNull(user);
-		Map<Object, BizFusionContext> map = null;
+		Map<Object, HCFusionContext> map = null;
 		synchronized (userFusionContextLocal) {
 			map = userFusionContextLocal.get();
 			if(userFusionContextLocal.get() == null) {
@@ -145,9 +145,9 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 	}
 	
 	@Override
-	public BizFusionContext createRelationContext(String relationName, Object userPrinciple) {
+	public HCFusionContext createRelationContext(String relationName, Object userPrinciple) {
 		Assert.hasText(relationName);
-		BizFusionContext context = new BizFusionContext();
+		HCFusionContext context = new HCFusionContext();
 		context.setMappingName(getMappingName() + "." + relationName);
 		context.setUserCode(userCodeService.getUserCode(userPrinciple));
 		return context;
@@ -169,7 +169,7 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 	@Override
 	public void removeEntity(String code, Object userPrinciple) {
 		Assert.hasText(code);
-		RemovedFusionContext appInfo=new BizRemovedFusionContext(getMappingName(), code, userCodeService.getUserCode(userPrinciple), "list-delete" );
+		RemovedFusionContext appInfo=new HCRemovedFusionContext(getMappingName(), code, userCodeService.getUserCode(userPrinciple), "list-delete" );
 		IntegrationMsg msg = PanelFactory.getIntegration().remove(appInfo);
 		if(!msg.success()){
 			throw new RuntimeException("删除失败");
