@@ -12,6 +12,7 @@ import com.abc.vo.AttriCoorinatePJ;
 import com.abc.vo.BytesInfoVO;
 
 import cn.sowell.copframe.spring.file.FileHaunt;
+import cn.sowell.copframe.spring.file.FilePublisher;
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.datacenter.entityResolver.EntityElement;
@@ -44,6 +45,37 @@ public class FilePropertyGetter implements PropertyValueGetter{
 		Discoverer discoverer = PanelFactory.getDiscoverer(fusionConext);
 		BytesInfoVO fx = context.getCurrentContext().getEntity().getEntity().getBytesInfoVO(context.getCurrentPropertyPath());
 		if(fx != null) {
+			String fCode = fx.getCode();
+			if(fCode != null && FilePublisher.getContextInstance().containsCode(fCode)) {
+				return new FileHaunt() {
+					
+					@Override
+					public String getCode() {
+						return fCode;
+					}
+					
+					@Override
+					public String getFileName() {
+						return fx.getName();
+					}
+					
+					@Override
+					public boolean isEmpty() {
+						return false;
+					}
+					
+					@Override
+					public long getSize() {
+						return FormatUtils.toLong(fx.getSize_k() * 1000);
+					}
+					
+					@Override
+					public byte[] getBytes() throws IOException {
+						return null;
+					}
+					
+				};
+			}
 			if(context.getPropertyGetterArgument() instanceof Discoverer) {
 				try {
 					f = discoverer.trackBytesInfo(fusionConext.getABCNode().getAbcattr(), fx);
