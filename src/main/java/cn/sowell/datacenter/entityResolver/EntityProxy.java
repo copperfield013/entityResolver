@@ -1,13 +1,13 @@
 package cn.sowell.datacenter.entityResolver;
 
 import com.abc.mapping.entity.LeafEntity;
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 
 public interface EntityProxy {
 
 	void putValue(String propName, Object val);
 
-	default Object getTypeValue(String propName, ValueType abctype) {
+	default Object getTypeValue(String propName, AttributeValueType abctype) {
 		return getEntity().getTypeValue(propName, abctype);
 	}
 	

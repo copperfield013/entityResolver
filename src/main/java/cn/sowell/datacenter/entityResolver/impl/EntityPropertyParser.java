@@ -10,7 +10,7 @@ import org.springframework.util.Assert;
 
 import com.abc.mapping.entity.Entity;
 import com.abc.mapping.entity.RecordEntity;
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.datacenter.entityResolver.EntityBindContext;
@@ -73,7 +73,7 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 
 	@Override
 	public String getCode() {
-		return (String) context.getValue("唯一编码", ValueType.STRING);
+		return (String) context.getValue("唯一编码", AttributeValueType.STRING);
 	}
 	
 	public List<ArrayItemPropertyParser> getCompositeArray(String compositeName) {
@@ -110,7 +110,7 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 	
 	
 	
-	protected Object getProperty(String relationName, String propertyName, FieldParserDescription field, ValueType propType) {
+	protected Object getProperty(String relationName, String propertyName, FieldParserDescription field, AttributeValueType propType) {
 		Assert.hasText(propertyName);
 		String[] names = TextUtils.splitToArray(propertyName, "\\.");
 		EntityBindContext thisContext = this.context,
@@ -146,7 +146,7 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 			}
 		}
 		if(propType == null) {
-			propType = ValueType.STRING;
+			propType = AttributeValueType.STRING;
 		}
 		return thisContext.getValue(propName, propType);
 	}

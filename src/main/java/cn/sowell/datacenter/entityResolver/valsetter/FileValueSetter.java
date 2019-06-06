@@ -6,8 +6,8 @@ import java.text.NumberFormat;
 
 import org.apache.log4j.Logger;
 
-import com.abc.model.enun.ValueType;
-import com.abc.util.AttributeParter;
+import com.abc.model.constant.ModelItemValueParter;
+import com.abc.model.enun.AttributeValueType;
 
 import cn.sowell.copframe.spring.file.FileHaunt;
 import cn.sowell.copframe.utils.date.CommonDateFormat;
@@ -26,8 +26,8 @@ public class FileValueSetter implements PropertyValueSetter{
 		
 	
 	@Override
-	public boolean support(ValueType dataType, Object val) {
-		return ValueType.BYTES.equals(dataType) && (val == null || val instanceof FileHaunt || "".equals(val));
+	public boolean support(AttributeValueType dataType, Object val) {
+		return AttributeValueType.FILE.equals(dataType) && (val == null || val instanceof FileHaunt || "".equals(val));
 	}
 	
 	
@@ -38,9 +38,9 @@ public class FileValueSetter implements PropertyValueSetter{
 		try {
 			report.setValueAsNull(file == null);
 			report.setPropertyType(PropertyType.FILE);
-			String suffixPropName = AttributeParter.getFileSuffixCNName(propName),
-					sizePropName = AttributeParter.getFileKBSizeCNName(propName),
-					fileNamePropName = AttributeParter.getFileNameCNName(propName);
+			String suffixPropName = ModelItemValueParter.getFileSuffixCNName(propName),
+					sizePropName = ModelItemValueParter.getFileKBSizeCNName(propName),
+					fileNamePropName = ModelItemValueParter.getFileNameCNName(propName);
 			entity.putValue(propName, file == null? null: file.getBytes());
 			entity.putValue(fileNamePropName, file == null? null: file.getFileName());
 			entity.putValue(suffixPropName, file == null? null: file.getSuffix());

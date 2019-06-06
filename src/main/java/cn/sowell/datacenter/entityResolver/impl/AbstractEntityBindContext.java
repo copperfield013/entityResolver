@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 import com.abc.mapping.entity.Entity;
 import com.abc.mapping.entity.LeafEntity;
 import com.abc.mapping.entity.RecordEntity;
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.utils.TextUtils;
@@ -41,7 +41,7 @@ public abstract class AbstractEntityBindContext implements EntityBindContext {
 
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Object transfer(Object propValue, ValueType dataType) {
+	private Object transfer(Object propValue, AttributeValueType dataType) {
 		PropertyTranslator translator = getTranslator(propValue, dataType);
 		if(translator != null) {
 			return translator.transfer(propValue);
@@ -55,12 +55,12 @@ public abstract class AbstractEntityBindContext implements EntityBindContext {
 		return entity;
 	}
 	@SuppressWarnings("rawtypes")
-	static Map<PropertyTranslator, ValueType> tranlastorMap = new HashMap<>();
+	static Map<PropertyTranslator, AttributeValueType> tranlastorMap = new HashMap<>();
 	static Set<PropertyValueSetter> pvSetters = new HashSet<>();
 	static {
-		tranlastorMap.put(new StringDateTranslator(), ValueType.DATE);
-		tranlastorMap.put(new StringIntTranslator(), ValueType.INT);
-		tranlastorMap.put(new StringFloatTranslator(), ValueType.FLOAT);
+		tranlastorMap.put(new StringDateTranslator(), AttributeValueType.DATE);
+		tranlastorMap.put(new StringIntTranslator(), AttributeValueType.INT);
+		tranlastorMap.put(new StringFloatTranslator(), AttributeValueType.FLOAT);
 		
 		pvSetters.add(new FileValueSetter());
 		
@@ -74,8 +74,8 @@ public abstract class AbstractEntityBindContext implements EntityBindContext {
 	
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static PropertyTranslator getTranslator(Object propValue, ValueType dataType) {
-		for (Entry<PropertyTranslator, ValueType> entry : tranlastorMap.entrySet()) {
+	private static PropertyTranslator getTranslator(Object propValue, AttributeValueType dataType) {
+		for (Entry<PropertyTranslator, AttributeValueType> entry : tranlastorMap.entrySet()) {
 			if(entry.getValue().equals(dataType)
 				&& entry.getKey().check(propValue)) {
 				return entry.getKey();
@@ -85,7 +85,7 @@ public abstract class AbstractEntityBindContext implements EntityBindContext {
 	}
 	
 	@Override
-	public Object getValue(String propName, ValueType abctype) {
+	public Object getValue(String propName, AttributeValueType abctype) {
 		EntityProxy proxy = getEntity();
 		return proxy.getTypeValue(propName, abctype);
 	}

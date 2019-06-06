@@ -2,7 +2,7 @@ package cn.sowell.datacenter.entityResolver;
 
 import java.util.Map;
 
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 
 import cn.sowell.copframe.utils.FormatUtils;
 
@@ -22,8 +22,8 @@ public class FieldParserDescription {
 		return field.getTitle();
 	}
 	
-	public ValueType getAbcType() {
-		return ValueType.valueOf(field.getAbcType());
+	public AttributeValueType getAbcType() {
+		return AttributeValueType.valueOf(field.getAbcType());
 		//return field.getAbcType();
 	}
 	

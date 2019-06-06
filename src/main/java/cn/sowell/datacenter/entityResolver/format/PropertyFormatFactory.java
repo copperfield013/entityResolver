@@ -2,7 +2,7 @@ package cn.sowell.datacenter.entityResolver.format;
 
 import java.util.Date;
 
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 
 import cn.sowell.copframe.spring.file.FileHaunt;
 
@@ -13,7 +13,7 @@ public class PropertyFormatFactory {
 	private PropertyFormat dateFormat = new DatePropertyFormat("yyyy-MM-dd");
 	@SuppressWarnings("unused")
 	private PropertyFormat yearMonthFormat = new DatePropertyFormat("yyyy-MM");
-	public PropertyFormat getFormat(Object value, ValueType propType, String format) {
+	public PropertyFormat getFormat(Object value, AttributeValueType propType, String format) {
 		if(value instanceof FileHaunt) {
 			return fileHauntPropertyFormat;
 		}
@@ -22,7 +22,7 @@ public class PropertyFormatFactory {
 				if(format != null) {
 					return new DatePropertyFormat(format);
 				}else {
-					if(ValueType.DATETIME.equals(propType)) {
+					if(AttributeValueType.DATETIME.equals(propType)) {
 						return datetimeFormat;
 					}/*else if(){
 						return yearMonthFormat;

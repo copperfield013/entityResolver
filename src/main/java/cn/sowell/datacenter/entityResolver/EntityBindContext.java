@@ -1,6 +1,6 @@
 package cn.sowell.datacenter.entityResolver;
 
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 
 import cn.sowell.datacenter.entityResolver.impl.PropertyValueBindReport;
 
@@ -25,7 +25,7 @@ public interface EntityBindContext {
 	 * @param abcAttr
 	 * @return
 	 */
-	Object getValue(String propName, ValueType abcAttr);
+	Object getValue(String propName, AttributeValueType abcAttr);
 	
 	/**
 	 * 获得直接子节点,如果子节点不存在，那么就创建一个

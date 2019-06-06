@@ -104,7 +104,7 @@ public class ModuleConfigStructure {
 					if(abcNodeMap.containsKey(rabcNodeMappingId)) {
 						rabc = abcNodeMap.get(rabcNodeMappingId);
 					}else {
-						rabc = traverseABC(rabcNodeMappingId, MappingContainer.getABCNode(BigInteger.valueOf(rabcNodeMappingId)), mappingIdModuleMap);
+						rabc = traverseABC(rabcNodeMappingId, MappingContainer.getABCNode(FormatUtils.toInteger(rabcNodeMappingId)), mappingIdModuleMap);
 					}
 					
 					Rel rel = new Rel(rabcNodeMappingId, rabc);

@@ -4,7 +4,7 @@
 
 	<groupId>cn.sowell.datacenter</groupId>
 	<artifactId>entityResolver</artifactId>
-	<version>2.63</version>
+	<version>2.64</version>
 	<packaging>jar</packaging>
 
 	<name>entityResolver</name>
@@ -12,7 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version.abcitem>4.2.55.alphal</version.abcitem>
+		<version.abcitem>4.2.72.alphal</version.abcitem>
 		<version.hibernate>5.0.7.Final</version.hibernate>
 	</properties>
 

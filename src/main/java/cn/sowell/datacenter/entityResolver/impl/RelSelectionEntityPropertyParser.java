@@ -8,7 +8,7 @@ import com.abc.hc.HCFusionContext;
 import com.abc.mapping.entity.RecordEntity;
 import com.abc.mapping.node.ABCNode;
 import com.abc.mapping.node.RelationNode;
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 
 import cn.sowell.datacenter.entityResolver.EntityBindContext;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
@@ -39,7 +39,7 @@ public class RelSelectionEntityPropertyParser extends EntityPropertyParser{
 	}
 
 	@Override
-	public Object getProperty(String propertyName, ValueType propType) {
+	public Object getProperty(String propertyName, AttributeValueType propType) {
 		if(propertyName != null && propertyName.startsWith(relationName + ".")) {
 			String suffix = propertyName.substring(relationName.length() + 1);
 			if(!suffix.isEmpty()) {

@@ -2,7 +2,7 @@ package cn.sowell.datacenter.entityResolver.impl;
 
 import com.abc.mapping.entity.Entity;
 import com.abc.mapping.entity.RecordEntity;
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 
 import cn.sowell.datacenter.entityResolver.EntityProxy;
 
@@ -17,7 +17,7 @@ public class ABCEntityProxy extends EntitiesContainedEntityProxy {
 
 	
 	@Override
-	public Object getTypeValue(String propName, ValueType abctype) {
+	public Object getTypeValue(String propName, AttributeValueType abctype) {
 		return super.getTypeValue(propName, abctype);
 	}
 	

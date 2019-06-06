@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.abc.mapping.entity.Entity;
 import com.abc.mapping.entity.RecordEntity;
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 
 import cn.sowell.copframe.utils.Assert;
 import cn.sowell.datacenter.entityResolver.EntityConstants;
@@ -61,7 +61,7 @@ public class RelationEntityProxy extends EntitiesContainedEntityProxy{
 	}
 	
 	@Override
-	public Object getTypeValue(String propName, ValueType abctype) {
+	public Object getTypeValue(String propName, AttributeValueType abctype) {
 		if(EntityConstants.LABEL_KEY.equals(propName)) {
 			return getLabel();
 		}else {

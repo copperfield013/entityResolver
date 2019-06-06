@@ -11,15 +11,15 @@ import com.abc.mapping.node.LabelNode;
 import com.abc.mapping.node.MultiAttributeNode;
 import com.abc.mapping.node.RelationNode;
 import com.abc.mapping.node.impl.AttributeNodeImpl;
-import com.abc.model.constant.AttributeMatedata;
-import com.abc.model.enun.ValueType;
+import com.abc.model.constant.ModelItemInfo;
+import com.abc.model.enun.AttributeValueType;
 
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.datacenter.entityResolver.EntityElement;
 import cn.sowell.datacenter.entityResolver.EntityProxy;
 
 public class ABCNodeProxy {
-	public static final String CODE_NODE_NAME = AttributeMatedata.PCOL_RECORDCODE;
+	public static final String CODE_NODE_NAME = ModelItemInfo.PCOL_RECORDCODE;
 	public static final String CODE_PROPERTY_NAME_NORMAL = "唯一编码";
 
 	public static final String UPDATETIME_PROPERTY_NAME = "编辑时间";
@@ -46,7 +46,7 @@ public class ABCNodeProxy {
 				IAttributeNode codeNode = new AttributeNodeImpl();
 				codeNode.setName(CODE_PROPERTY_NAME_NORMAL);
 				codeNode.setAbcattr(CODE_NODE_NAME);
-				codeNode.setDatatype(ValueType.STRING);
+				codeNode.setDatatype(AttributeValueType.STRING);
 				return new ABCNodeProxy(codeNode);
 			}
 		}

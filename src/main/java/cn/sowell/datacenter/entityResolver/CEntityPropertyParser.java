@@ -2,7 +2,7 @@ package cn.sowell.datacenter.entityResolver;
 
 import java.util.Map;
 
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 
 public interface CEntityPropertyParser {
 	
@@ -32,7 +32,7 @@ public interface CEntityPropertyParser {
 	 * @param propType
 	 * @return
 	 */
-	Object getProperty(String propertyName, ValueType propType);
+	Object getProperty(String propertyName, AttributeValueType propType);
 
 	/**
 	 * 获得格式化后的字段文本
@@ -41,7 +41,7 @@ public interface CEntityPropertyParser {
 	 * @param format 字段格式
 	 * @return
 	 */
-	String getFormatedProperty(String propertyName, ValueType propType, String format);
+	String getFormatedProperty(String propertyName, AttributeValueType propType, String format);
 	
 	/**
 	 * 获得格式化后的字段文本
@@ -49,7 +49,7 @@ public interface CEntityPropertyParser {
 	 * @param propType
 	 * @return
 	 */
-	String getFormatedProperty(String propertyName, ValueType propType);
+	String getFormatedProperty(String propertyName, AttributeValueType propType);
 	
 	/**
 	 * 获得格式化后的字段文本

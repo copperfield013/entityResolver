@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.abc.dto.ErrorInfomation;
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 
 import cn.sowell.datacenter.entityResolver.EntityBindContext;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
@@ -27,7 +27,7 @@ class CommonModuleEntityPropertyParser extends EntityPropertyParser implements M
 	}
 
 	@Override
-	public Object getProperty(String propertyName, ValueType propType) {
+	public Object getProperty(String propertyName, AttributeValueType propType) {
 		FieldParserDescription field = fieldMap.get(propertyName.replaceAll("\\[\\d+\\]", ""));
 		return getProperty(null, propertyName, field, propType);
 	}

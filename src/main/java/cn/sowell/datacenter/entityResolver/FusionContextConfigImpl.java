@@ -1,6 +1,5 @@
 package cn.sowell.datacenter.entityResolver;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +16,7 @@ import com.abc.mapping.node.ABCNode;
 import com.abc.panel.IntegrationMsg;
 import com.abc.panel.PanelFactory;
 
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.datacenter.entityResolver.config.UnconfiuredFusionException;
 import cn.sowell.datacenter.entityResolver.impl.ABCNodeFusionContextConfigResolver;
 import cn.sowell.datacenter.entityResolver.impl.ABCNodeProxy;
@@ -40,7 +40,7 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 		this.mappingId = mappingId;
 		try {
 			logger.debug("加载配置[mappingId=" + mappingId + "]");
-			this.rootNode = MappingContainer.getABCNode(BigInteger.valueOf(mappingId));
+			this.rootNode = MappingContainer.getABCNode(FormatUtils.toInteger(mappingId));
 		} catch (ABCNodeLoadException e) {
 			logger.error("配置[mappingId=" + mappingId + "]不存在或解析错误");
 			throw new UnconfiuredFusionException("配置[mappingId=" + mappingId + "]不存在或解析错误");

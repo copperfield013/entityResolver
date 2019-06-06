@@ -18,7 +18,7 @@ import com.abc.mapping.node.AttributeNode;
 import com.abc.mapping.node.LabelNode;
 import com.abc.mapping.node.MultiAttributeNode;
 import com.abc.mapping.node.RelationNode;
-import com.abc.model.enun.NodeOpsType;
+import com.abc.model.enun.NodeOptType;
 import com.beust.jcommander.internal.Lists;
 
 import cn.sowell.copframe.utils.CollectionUtils;
@@ -242,14 +242,14 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 		});
 	}
 
-	public NodeOpsType getABCNodeAccess() {
-		return getRootNode().getOpsType();
+	public NodeOptType getABCNodeAccess() {
+		return getRootNode().getOpt();
 	}
 	
 	@Override
 	public boolean isEntityWritable() {
-		NodeOpsType nodeAccess = getABCNodeAccess();
-		if(NodeOpsType.READ.equals(nodeAccess)) {
+		NodeOptType nodeAccess = getABCNodeAccess();
+		if(NodeOptType.READ.equals(nodeAccess)) {
 			return false;
 		}
 		return true;

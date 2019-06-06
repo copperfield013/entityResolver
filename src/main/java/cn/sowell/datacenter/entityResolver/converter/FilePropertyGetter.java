@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 
 import com.abc.hc.HCFusionContext;
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 import com.abc.panel.Discoverer;
 import com.abc.panel.PanelFactory;
 import com.abc.vo.AttriCoorinatePJ;
@@ -29,7 +29,7 @@ public class FilePropertyGetter implements PropertyValueGetter{
 	
 	@Override
 	public boolean support(FieldParserDescription field, Object propertyGetterArgument) {
-		return field != null && ValueType.BYTES.equals(field.getAbcType());
+		return field != null && AttributeValueType.FILE.equals(field.getAbcType());
 	}
 
 	
@@ -85,7 +85,7 @@ public class FilePropertyGetter implements PropertyValueGetter{
 				}
 			}else {
 				
-				String code = FormatUtils.toString(context.getCurrentContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL, ValueType.STRING));
+				String code = FormatUtils.toString(context.getCurrentContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL, AttributeValueType.STRING));
 				AttriCoorinatePJ pj = new AttriCoorinatePJ();
 				
 				pj.setRecordCode(code);
@@ -96,7 +96,7 @@ public class FilePropertyGetter implements PropertyValueGetter{
 					if(entityElement instanceof EntityRelationElement) {
 						pj.setMappingName(((EntityRelationElement) entityElement).getFullTitle());
 					}else if(entityElement instanceof EntityMultiAttributeElement) {
-						String parentCode = FormatUtils.toString(context.getParentEntityContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL, ValueType.STRING));
+						String parentCode = FormatUtils.toString(context.getParentEntityContext().getValue(ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL, AttributeValueType.STRING));
 						pj.setRecordCode(parentCode);
 						pj.setMultiAttrCode(code);
 						pj.setMultiAttrName(entityElement.getName());
