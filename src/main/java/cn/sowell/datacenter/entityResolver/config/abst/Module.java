@@ -29,7 +29,7 @@ public interface Module extends Serializable {
 	 * abcnode配置主键
 	 * @return
 	 */
-	Long getMappingId();
+	Integer getMappingId();
 	
 	/**
 	 * 配置中获得实体编码的字段名

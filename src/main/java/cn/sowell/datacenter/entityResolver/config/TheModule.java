@@ -6,7 +6,7 @@ class TheModule implements Module {
 	private static final long serialVersionUID = 1177752285709607977L;
 	private String name;
 	private String title;
-	private Long mappingId;
+	private Integer mappingId;
 	private String codeName;
 	private String titleName;
 	private boolean disabled;
@@ -22,10 +22,10 @@ class TheModule implements Module {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public Long getMappingId() {
+	public Integer getMappingId() {
 		return mappingId;
 	}
-	public void setMappingId(Long mappingId) {
+	public void setMappingId(Integer mappingId) {
 		this.mappingId = mappingId;
 	}
 	public String getCodeName() {

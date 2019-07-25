@@ -23,7 +23,7 @@ public class CreateModuleParam implements Serializable{
 	/**
 	 * 模块对应配置名，必须指定，而且必须已经在abc中配置
 	 */
-	private Long mappingId;
+	private Integer mappingId;
 	
 	/**
 	 * 模块对应配置的编码字段名，不指定时会用”编码“来获取实体编码值
@@ -35,7 +35,7 @@ public class CreateModuleParam implements Serializable{
 	 */
 	private String titleName;
 	
-	public CreateModuleParam(String moduleTitle, Long mappingId) {
+	public CreateModuleParam(String moduleTitle, Integer mappingId) {
 		Assert.hasText(moduleTitle);
 		Assert.notNull(mappingId);
 		this.moduleTitle = moduleTitle;
@@ -58,11 +58,11 @@ public class CreateModuleParam implements Serializable{
 		this.moduleTitle = moduleTitle;
 	}
 
-	public Long getMappingId() {
+	public Integer getMappingId() {
 		return this.mappingId;
 	}
 
-	public void setMappingId(Long mappingId) {
+	public void setMappingId(Integer mappingId) {
 		this.mappingId = mappingId;
 	}
 

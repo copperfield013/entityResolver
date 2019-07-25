@@ -35,7 +35,7 @@ public interface RemoteModuleConfigureMediator extends Remote{
 	 * @param defMappingName
 	 * @param impTitle
 	 */
-	void createModule(String moduleTitle, Long mappingId) throws RemoteException;
+	void createModule(String moduleTitle, Integer mappingId) throws RemoteException;
 	/**
 	 * 创建模块
 	 * @param param
@@ -76,7 +76,7 @@ public interface RemoteModuleConfigureMediator extends Remote{
 	 * @param entityId
 	 * @param mappingName
 	 */
-	void reassignMappingName(String moduleName, Long mappingId) throws RemoteException;
+	void reassignMappingName(String moduleName, Integer mappingId) throws RemoteException;
 	
 	/**
 	 * 重新指定模块对应的配置，并且修改实体的编码字段和名称字段
@@ -85,6 +85,6 @@ public interface RemoteModuleConfigureMediator extends Remote{
 	 * @param codeName
 	 * @param titleName
 	 */
-	void reassignMappingName(String moduleName, Long mappingId, String codeName, String titleName) throws RemoteException;
+	void reassignMappingName(String moduleName, Integer mappingId, String codeName, String titleName) throws RemoteException;
 
 }

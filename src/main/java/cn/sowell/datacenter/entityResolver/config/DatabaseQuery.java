@@ -90,7 +90,7 @@ class DatabaseQuery {
 				module.setName(mapWrapper.getString(ModuleDatabaseConfig.COLUMN_MODULE_NAME.getValue()));
 				module.setTitle(mapWrapper.getString(ModuleDatabaseConfig.COLUMN_MODULE_TITLE.getValue()));
 				module.setDisabled(Integer.valueOf(1).equals(mapWrapper.getInteger(ModuleDatabaseConfig.COLUMN_MODULE_DISABLED.getValue())));
-				module.setMappingId(mapWrapper.getLong(ModuleDatabaseConfig.COLUMN_MODULE_MAPPING_ID.getValue()));
+				module.setMappingId(mapWrapper.getInteger(ModuleDatabaseConfig.COLUMN_MODULE_MAPPING_ID.getValue()));
 				module.setCodeName(mapWrapper.getString(ModuleDatabaseConfig.COLUMN_MODULE_CODE_NAME.getValue()));
 				module.setTitleName(mapWrapper.getString(ModuleDatabaseConfig.COLUMN_MODULE_TITLE_NAME.getValue()));
 				return module;
@@ -164,7 +164,7 @@ class DatabaseQuery {
 	}
 
 
-	public DeferedParamQuery getReassignModuleMappingIdQuery(String moduleName, Long mappingId, String codeName,
+	public DeferedParamQuery getReassignModuleMappingIdQuery(String moduleName, Integer mappingId, String codeName,
 			String titleName) {
 		String sql = "update " + ModuleDatabaseConfig.TABLE_MODULE
 				+ " set " + ModuleDatabaseConfig.COLUMN_MODULE_MAPPING_ID + " = :mappingId"
@@ -179,7 +179,7 @@ class DatabaseQuery {
 		return dQuery;
 	}
 
-	public DeferedParamQuery getReassignModuleMappingIdQuery(String moduleName, Long mappingId) {
+	public DeferedParamQuery getReassignModuleMappingIdQuery(String moduleName, Integer mappingId) {
 		String sql = "update " + ModuleDatabaseConfig.TABLE_MODULE
 				+ " set " + ModuleDatabaseConfig.COLUMN_MODULE_MAPPING_ID + " = :mappingId"
 				+ "where " + ModuleDatabaseConfig.COLUMN_MODULE_NAME + " = :moduleName";

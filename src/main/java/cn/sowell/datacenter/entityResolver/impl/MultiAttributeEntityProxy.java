@@ -1,7 +1,6 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
-import com.abc.mapping.entity.LeafEntity;
-
+import cho.carbon.entity.entity.LeafEntity;
 import cn.sowell.datacenter.entityResolver.EntityProxy;
 
 public class MultiAttributeEntityProxy implements EntityProxy{

@@ -41,5 +41,5 @@ public interface FieldConfigure {
 	 * 配置主键
 	 * @return
 	 */
-	Long getMappingId();
+	Integer getMappingId();
 }

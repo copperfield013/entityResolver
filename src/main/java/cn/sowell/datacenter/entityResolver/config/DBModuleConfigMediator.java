@@ -162,7 +162,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 
 	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
-	public void createModule(String moduleTitle, Long mappingId) {
+	public void createModule(String moduleTitle, Integer mappingId) {
 		createModule(new CreateModuleParam(moduleTitle, mappingId));
 	}
 
@@ -210,7 +210,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 	
 	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
-	public void reassignMappingName(String moduleName, Long mappingId, String codeName, String titleName) {
+	public void reassignMappingName(String moduleName, Integer mappingId, String codeName, String titleName) {
 		Assert.notNull(mappingId, "传入的mappingName参数为空");
 		DBModule module = getModuleOrThrowException(moduleName);
 		if(!mappingId.equals(module.getMappingId())) {
@@ -221,7 +221,7 @@ public class DBModuleConfigMediator implements ModuleConfigureMediator {
 
 	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
-	public void reassignMappingName(String moduleName, Long mappingId) {
+	public void reassignMappingName(String moduleName, Integer mappingId) {
 		Assert.notNull(mappingId, "传入的mappingName参数为空");
 		DBModule module = getModuleOrThrowException(moduleName);
 		if(!mappingId.equals(module.getMappingId())) {

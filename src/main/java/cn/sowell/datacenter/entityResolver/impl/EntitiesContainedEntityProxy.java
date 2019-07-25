@@ -5,11 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.abc.mapping.entity.Entity;
-import com.abc.mapping.entity.LeafEntity;
-import com.abc.mapping.entity.RecordEntity;
-import com.abc.mapping.entity.RelationEntity;
-
+import cho.carbon.entity.entity.Entity;
+import cho.carbon.entity.entity.LeafEntity;
+import cho.carbon.entity.entity.RecordEntity;
+import cho.carbon.entity.entity.RelationEntity;
 import cn.sowell.datacenter.entityResolver.EntityProxy;
 import cn.sowell.datacenter.entityResolver.PropertyNamePartitions;
 
@@ -18,13 +17,13 @@ public abstract class EntitiesContainedEntityProxy implements EntityProxy{
 	public void putEntity(PropertyNamePartitions namePartitions, EntityProxy entity) {
 		RecordEntity thisEntity = getSourceEntity();
 		if(entity instanceof MultiAttributeEntityProxy) {
-			List<LeafEntity> multiAttrEntities = thisEntity.getMultiAttrEntity(namePartitions.getMainPartition());
+			List<LeafEntity> multiAttrEntities = thisEntity.getGroup2DEntity(namePartitions.getMainPartition());
 			int multiattrSize = multiAttrEntities == null? 0: multiAttrEntities.size();
 			if(multiattrSize <= namePartitions.getIndex()) {
 				for(int i = multiattrSize; i < namePartitions.getIndex(); i++) {
-					thisEntity.putMultiAttrEntity(entity.createEmptyEntity().getEntity());
+					thisEntity.putGroup2DEntity(entity.createEmptyEntity().getEntity());
 				}
-				thisEntity.putMultiAttrEntity(entity.getEntity());
+				thisEntity.putGroup2DEntity(entity.getEntity());
 			}
 		}else if(entity instanceof RelationEntityProxy) {
 			addRelationProxy(namePartitions, (RelationEntityProxy) entity);
@@ -69,7 +68,7 @@ public abstract class EntitiesContainedEntityProxy implements EntityProxy{
 			return new ArrayList<>(relProxies);
 		}
 		RecordEntity thisEntity = getSourceEntity();
-		List<LeafEntity> multiAttrs = getSourceEntity().getMultiAttrEntity(compositeName);
+		List<LeafEntity> multiAttrs = getSourceEntity().getGroup2DEntity(compositeName);
 		if(multiAttrs != null) {
 			multiAttrs.forEach(multiAttr->entities.add(new MultiAttributeEntityProxy(multiAttr)));
 			return entities;

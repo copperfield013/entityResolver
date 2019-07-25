@@ -2,7 +2,7 @@ package cn.sowell.datacenter.entityResolver.impl;
 
 import org.springframework.util.Assert;
 
-import com.abc.mapping.entity.RecordEntity;
+import cho.carbon.entity.entity.RecordEntity;
 
 public class CommonEntityComponent implements EntityComponent {
 

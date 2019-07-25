@@ -1,12 +1,9 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
 
-import java.util.List;
 import java.util.Map;
 
-import com.abc.dto.ErrorInfomation;
-import com.abc.model.enun.AttributeValueType;
-
+import cho.carbon.meta.enun.AttributeValueType;
 import cn.sowell.datacenter.entityResolver.EntityBindContext;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
 import cn.sowell.datacenter.entityResolver.FusionContextConfig;
@@ -14,7 +11,7 @@ import cn.sowell.datacenter.entityResolver.ModuleEntityPropertyParser;
 
 class CommonModuleEntityPropertyParser extends EntityPropertyParser implements ModuleEntityPropertyParser{
 
-	private List<ErrorInfomation> errors;
+	//private List<ErrorInfomation> errors;
 	
 	
 	CommonModuleEntityPropertyParser(FusionContextConfig config, EntityBindContext context, Map<String, FieldParserDescription> fieldMap, Object userPrinciple) {
@@ -47,15 +44,15 @@ class CommonModuleEntityPropertyParser extends EntityPropertyParser implements M
 		return (String) getProperty(config.getTitleAttributeName());
 	}
 
-	@Override
-	public List<ErrorInfomation> getErrors() {
-		return errors;
-	}
-	
-	@Override
-	public void setErrors(List<ErrorInfomation> errors) {
-		this.errors = errors;
-	}
+//	@Override
+//	public List<ErrorInfomation> getErrors() {
+//		return errors;
+//	}
+//	
+//	@Override
+//	public void setErrors(List<ErrorInfomation> errors) {
+//		this.errors = errors;
+//	}
 
 	
 }

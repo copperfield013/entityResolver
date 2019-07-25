@@ -8,10 +8,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 
-import com.abc.mapping.entity.Entity;
-import com.abc.mapping.entity.RecordEntity;
-import com.abc.model.enun.AttributeValueType;
-
+import cho.carbon.entity.entity.Entity;
+import cho.carbon.entity.entity.RecordEntity;
+import cho.carbon.meta.enun.AttributeValueType;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.datacenter.entityResolver.EntityBindContext;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
@@ -90,7 +89,7 @@ public abstract class EntityPropertyParser extends AbstractEntityPropertyParser 
 			@SuppressWarnings("rawtypes")
 			List compositeEntities = null;
 			try {
-				compositeEntities = entity.getMultiAttrEntity(name);
+				compositeEntities = entity.getGroup2DEntity(compositeName);
 			} catch (Exception e) {
 			}
 			if(compositeEntities == null) {

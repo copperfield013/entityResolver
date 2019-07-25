@@ -2,12 +2,12 @@ package cn.sowell.datacenter.entityResolver;
 
 import java.util.Set;
 
-import com.abc.hc.HCFusionContext;
-import com.abc.mapping.node.ABCNode;
+import cho.carbon.hc.HCFusionContext;
+import cho.carbon.meta.struc.er.Struc;
 
 public interface FusionContextConfig {
 
-	Long getMappingId();
+	Integer getMappingId();
 
 	FusionContextConfigResolver getConfigResolver();
 
@@ -40,7 +40,7 @@ public interface FusionContextConfig {
 
 	String getMappingName();
 	
-	ABCNode getRootNode();
+	Struc getRootNode();
 
 	boolean isStatistic();
 

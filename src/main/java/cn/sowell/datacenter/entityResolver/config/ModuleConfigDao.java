@@ -19,9 +19,9 @@ public interface ModuleConfigDao {
 
 	void removeModule(Long moduleId);
 
-	void reassignMappingId(String entityId, Long mappingId);
+	void reassignMappingId(String entityId, Integer mappingId);
 
-	void reassignMappingId(String entityId, Long mappingId, String codeName, String titleName);
+	void reassignMappingId(String entityId, Integer mappingId, String codeName, String titleName);
 
 	void updateModulePropertyName(String moduleName, String codeName, String titleName);
 

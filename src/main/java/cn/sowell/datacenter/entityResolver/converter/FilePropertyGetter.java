@@ -4,13 +4,12 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
-import com.abc.hc.HCFusionContext;
-import com.abc.model.enun.AttributeValueType;
-import com.abc.panel.Discoverer;
-import com.abc.panel.PanelFactory;
-import com.abc.vo.AttriCoorinatePJ;
-import com.abc.vo.BytesInfoVO;
-
+import cho.carbon.hc.HCFusionContext;
+import cho.carbon.meta.enun.AttributeValueType;
+import cho.carbon.panel.Discoverer;
+import cho.carbon.panel.PanelFactory;
+import cho.carbon.vo.AttriCoorinatePJ;
+import cho.carbon.vo.BytesInfoVO;
 import cn.sowell.copframe.spring.file.FileHaunt;
 import cn.sowell.copframe.spring.file.FilePublisher;
 import cn.sowell.copframe.utils.FormatUtils;
@@ -78,7 +77,7 @@ public class FilePropertyGetter implements PropertyValueGetter{
 			}
 			if(context.getPropertyGetterArgument() instanceof Discoverer) {
 				try {
-					f = discoverer.trackBytesInfo(fusionConext.getABCNode().getAbcattr(), fx);
+					f = discoverer.trackBytesInfo(fusionConext.getStruc().getItemCode(), fx);
 					//f = discoverer.trackBytesInfo(fx);
 				} catch (Exception e) {
 					logger.error("查询历史记录的文件字段时发生错误[" + context.getFullPropertyPath() + "]", e);

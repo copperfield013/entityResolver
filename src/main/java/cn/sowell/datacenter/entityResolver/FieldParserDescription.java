@@ -1,20 +1,22 @@
 package cn.sowell.datacenter.entityResolver;
 
 import java.util.Map;
+import java.util.Set;
 
-import com.abc.model.enun.AttributeValueType;
-
+import cho.carbon.meta.enun.AttributeValueType;
 import cn.sowell.copframe.utils.FormatUtils;
 
 public class FieldParserDescription {
 	private Field field;
+	
+	private Set<String> labels;
 	
 	public FieldParserDescription(Field field) {
 		super();
 		this.field = field;
 	}
 
-	public Long getFieldId() {
+	public Integer getFieldId() {
 		return field.getId();
 	}
 	
@@ -67,6 +69,14 @@ public class FieldParserDescription {
 	
 	public Map<String, String> getArrayFieldNameMap() {
 		return arrayFieldNameMap;
+	}
+
+	public Set<String> getLabels() {
+		return labels;
+	}
+
+	public void setLabels(Set<String> labels) {
+		this.labels = labels;
 	}
 	
 	

@@ -3,8 +3,7 @@ package cn.sowell.datacenter.entityResolver.impl;
 import java.util.Map;
 import java.util.Set;
 
-import com.abc.model.enun.AttributeValueType;
-
+import cho.carbon.meta.enun.AttributeValueType;
 import cn.sowell.copframe.utils.Assert;
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.datacenter.entityResolver.CEntityPropertyParser;

@@ -2,6 +2,7 @@ package cn.sowell.datacenter.entityResolver.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,21 +10,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
-import com.abc.mapping.entity.RecordEntity;
-import com.abc.mapping.node.ABCNode;
-import com.abc.mapping.node.AttributeNode;
-import com.abc.mapping.node.LabelNode;
-import com.abc.mapping.node.MultiAttributeNode;
-import com.abc.mapping.node.RelationNode;
-import com.abc.model.enun.NodeOptType;
 import com.beust.jcommander.internal.Lists;
 
+import cho.carbon.entity.entity.RecordEntity;
+import cho.carbon.meta.enun.StrucOptType;
+import cho.carbon.meta.struc.er.Field;
+import cho.carbon.meta.struc.er.Group2D;
+import cho.carbon.meta.struc.er.RStruc;
+import cho.carbon.meta.struc.er.Struc;
 import cn.sowell.copframe.utils.CollectionUtils;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.datacenter.entityResolver.EntityBindContext;
 import cn.sowell.datacenter.entityResolver.FieldConfigure;
+import cn.sowell.datacenter.entityResolver.FieldParserDescription;
 import cn.sowell.datacenter.entityResolver.FusionContextConfig;
 import cn.sowell.datacenter.entityResolver.ImportCompositeField;
 import cn.sowell.datacenter.entityResolver.Label;
@@ -43,7 +46,7 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 		}
 	}
 	
-	ABCNode getRootNode(){
+	Struc getRootNode(){
 		return this.config.getRootNode();
 	}
 
@@ -65,7 +68,7 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 		if(fieldProxy != null) {
 			return (FieldConfigure) fieldProxy.doByNodeSwitch(new NodeSwitch<Object>() {
 				@Override
-				public Object handlerWithNode(RelationNode node, Object arg) {
+				public Object handlerWithNode(RStruc node, Object arg) {
 					return new RelationFieldConfigure(config.getMappingId(), absolutePath.toString(), node);
 				}
 			}, null);
@@ -76,17 +79,16 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 
 	public Set<Label> getAllLabels() {
 		HashSet<Label> labels = new HashSet<Label>();
-		Map<String, LabelNode> nodeMap = getElements(getRootNode(), "", 
-				node->node.getLabels(), 
-				null,
-				(itemMap, param)->itemMap.put(param.getPrefix() + param.getRelationNode().getTitle(), param.getRelationNode().getLabelNode()), 
-				null);
+		Map<String, Field> nodeMap = getElements(getRootNode(), "", node->node.getAllField().stream().filter(field->field.getEnumId() != null && field.getEnumId() > 0).collect(Collectors.toList()), null, null, null);
+		Set<String> emptySet = Collections.unmodifiableSet(new HashSet<String>());
 		CollectionUtils.appendTo(nodeMap.entrySet(), labels, node->{
+			FieldParserDescription fieldDesc = getFieldParserDescription(node.getValue().getId());
 			return new Label() {
 				
 				@Override
 				public Set<String> getSubdomain() {
-					return node.getValue().getSubdomains();
+					return FormatUtils.coalesce(fieldDesc.getLabels(), emptySet);
+					//return node.getValue();
 				}
 				
 				@Override
@@ -104,14 +106,14 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 	}
 
 	private static class RelationHandlerParam{
-		final private RelationNode relationNode;
+		final private RStruc relationNode;
 		final private String prefix;
-		public RelationHandlerParam(RelationNode relationNode, String prefix) {
+		public RelationHandlerParam(RStruc relationNode, String prefix) {
 			super();
 			this.relationNode = relationNode;
 			this.prefix = prefix;
 		}
-		public RelationNode getRelationNode() {
+		public RStruc getRelationNode() {
 			return relationNode;
 		}
 		public String getPrefix() {
@@ -122,27 +124,27 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 	
 	@SuppressWarnings("unused")
 	private static class MultiAttributeHandlerParam{
-		final private MultiAttributeNode multiAttributeNode;
+		final private Group2D multiAttributeNode;
 		final private String prefix;
-		public MultiAttributeNode getMultiAttributeNode() {
+		public Group2D getMultiAttributeNode() {
 			return multiAttributeNode;
 		}
 		public String getPrefix() {
 			return prefix;
 		}
-		public MultiAttributeHandlerParam(MultiAttributeNode multiAttributeNode, String prefix) {
+		public MultiAttributeHandlerParam(Group2D multiAttributeNode, String prefix) {
 			super();
 			this.multiAttributeNode = multiAttributeNode;
 			this.prefix = prefix;
 		}
 	}
 	
-	private <T extends AttributeNode> Map<String, AttributeNode> getElements(MultiAttributeNode node, String prefix, Function<MultiAttributeNode, List<T>> multipleChildrenGetter){
-		Map<String, AttributeNode> itemMap = new LinkedHashMap<>();
+	private <T extends Field> Map<String, Field> getElements(Group2D node, String prefix, Function<Group2D, List<T>> multipleChildrenGetter){
+		Map<String, Field> itemMap = new LinkedHashMap<>();
 		if(multipleChildrenGetter != null) {
 			Collection<T> items = multipleChildrenGetter.apply(node);
 			if(items != null) {
-				for (AttributeNode item : items) {
+				for (Field item : items) {
 					itemMap.put(prefix + item.getTitle(), item);
 				}
 			}
@@ -151,9 +153,9 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 	}
 	
 	@SuppressWarnings("unchecked")
-	private <T extends AttributeNode> Map<String, T> getElements(ABCNode node, String prefix, 
-			Function<ABCNode, List<T>> itemGetter, 
-			Function<MultiAttributeNode, List<T>> multipleChildrenGetter, 
+	private <T extends Field> Map<String, T> getElements(Struc node, String prefix, 
+			Function<Struc, List<T>> itemGetter, 
+			Function<Group2D, List<T>> multipleChildrenGetter, 
 			BiConsumer<Map<String, T>, RelationHandlerParam> relationHandler, 
 			BiConsumer<Map<String, T>, MultiAttributeHandlerParam> multipleHandler) {
 		Map<String, T> itemMap = new LinkedHashMap<>();
@@ -165,18 +167,18 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 				}
 			}
 		}
-		Collection<RelationNode> relations = ((ABCNode) node).getRelation();
+		Collection<RStruc> relations = ((Struc) node).getRStrucs();
 		if(relations != null) {
-			for (RelationNode relation : relations) {
+			for (RStruc relation : relations) {
 				if(relationHandler != null) {
 					relationHandler.accept(itemMap, new RelationHandlerParam(relation, prefix));
 				}
-				itemMap.putAll(getElements(relation.getAbcNode(), relation.getTitle() + ".", itemGetter, multipleChildrenGetter, relationHandler, multipleHandler));
+				itemMap.putAll(getElements(relation.getPointStruc(), relation.getTitle() + ".", itemGetter, multipleChildrenGetter, relationHandler, multipleHandler));
 			}
 		}
-		Collection<MultiAttributeNode> multiples = ((ABCNode) node).getMultiAttributes();
+		Collection<Group2D> multiples = ((Struc) node).getGroup2Ds();
 		if(multiples != null && multipleChildrenGetter != null) {
-			for (MultiAttributeNode multiple : multiples) {
+			for (Group2D multiple : multiples) {
 				if(multipleHandler != null) {
 					multipleHandler.accept(itemMap, new MultiAttributeHandlerParam(multiple, prefix));
 				}
@@ -196,12 +198,11 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 	
 	public Set<ImportCompositeField> getAllImportFields() {
 		Set<String> relationNames = new HashSet<String>();
-		Map<String, AttributeNode> map = getElements(getRootNode(), "", node->{
-			List<AttributeNode> nodes = new ArrayList<>();
-			nodes.addAll(node.getAttributes());
-			nodes.addAll(node.getLabels());
+		Map<String, Field> map = getElements(getRootNode(), "", node->{
+			List<Field> nodes = new ArrayList<>();
+			nodes.addAll(node.getAllField());
 			return nodes;
-		}, mnode->Lists.newArrayList(mnode.getAttributes()), 
+		}, mnode->Lists.newArrayList(mnode.getAllField()), 
 			(itemMap, param)->relationNames.add(param.getPrefix() + param.getRelationNode().getTitle()), 
 			null);
 		
@@ -242,14 +243,14 @@ public class ABCNodeFusionContextConfigResolver extends AbstractFusionContextCon
 		});
 	}
 
-	public NodeOptType getABCNodeAccess() {
+	public StrucOptType getABCNodeAccess() {
 		return getRootNode().getOpt();
 	}
 	
 	@Override
 	public boolean isEntityWritable() {
-		NodeOptType nodeAccess = getABCNodeAccess();
-		if(NodeOptType.READ.equals(nodeAccess)) {
+		StrucOptType nodeAccess = getABCNodeAccess();
+		if(StrucOptType.READ.equals(nodeAccess)) {
 			return false;
 		}
 		return true;

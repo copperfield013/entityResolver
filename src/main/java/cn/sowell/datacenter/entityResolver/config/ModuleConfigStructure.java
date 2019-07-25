@@ -1,6 +1,5 @@
 package cn.sowell.datacenter.entityResolver.config;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,26 +10,24 @@ import java.util.Set;
 
 import org.springframework.util.Assert;
 
-import com.abc.mapping.conf.MappingContainer;
-import com.abc.mapping.node.ABCNode;
-import com.abc.mapping.node.AttributeNode;
-import com.abc.mapping.node.LabelNode;
-import com.abc.mapping.node.MultiAttributeNode;
-import com.abc.mapping.node.RABCNode;
-import com.abc.mapping.node.RelationNode;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 
+import cho.carbon.meta.struc.er.Field;
+import cho.carbon.meta.struc.er.Group2D;
+import cho.carbon.meta.struc.er.ItemElement;
+import cho.carbon.meta.struc.er.RStruc;
+import cho.carbon.meta.struc.er.Struc;
+import cho.carbon.meta.struc.er.StrucContainer;
 import cn.sowell.copframe.utils.CollectionUtils;
-import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.datacenter.entityResolver.FusionContextConfig;
 import cn.sowell.datacenter.entityResolver.FusionContextConfigFactory;
 import cn.sowell.datacenter.entityResolver.config.abst.Module;
 @SuppressWarnings("unused")
 public class ModuleConfigStructure {
 	
-	private Long rootNodeMappingId;
-	private Map<Long, ABC> abcNodeMap = new HashMap<>();
+	private Integer rootNodeMappingId;
+	private Map<Integer, ABC> abcNodeMap = new HashMap<>();
 	FusionContextConfigFactory fFactory;
 	
 	
@@ -38,7 +35,7 @@ public class ModuleConfigStructure {
 	private ModuleConfigStructure(FusionContextConfig fusionContextConfig, Set<Module> allModules){
 		Assert.notNull(fusionContextConfig);
 		this.rootNodeMappingId = fusionContextConfig.getMappingId();
-		Map<Long, Module> mappingIdModuleMap = CollectionUtils.toMap(allModules, Module::getMappingId);
+		Map<Integer, Module> mappingIdModuleMap = CollectionUtils.toMap(allModules, Module::getMappingId);
 		traverseABC(fusionContextConfig.getMappingId(), fusionContextConfig.getRootNode(), mappingIdModuleMap);
 	}
 	
@@ -75,42 +72,43 @@ public class ModuleConfigStructure {
 		return structure;
 	}
 	
-	private ABC traverseABC(Long mappingId, ABCNode nRootNode, Map<Long, Module> mappingIdModuleMap) {
+	private ABC traverseABC(Integer mappingId, Struc nRootNode, Map<Integer, Module> mappingIdModuleMap) {
 		Module module = mappingIdModuleMap.get(mappingId);
 		if(module != null) {
 			ABC abc = new ABC(module.getMappingId(), module.getName(), module.getTitle());
-			Collection<AttributeNode> nAttrs = nRootNode.getAttributes();
+			Collection<Field> nAttrs = nRootNode.getAllField();
 			abcNodeMap.put(mappingId, abc);
-			for (AttributeNode nAttr : nAttrs) {
+			for (Field nAttr : nAttrs) {
 				Attr attr = new Attr();
 				setNormalAttrs(attr, nAttr);
 				abc.getAttrs().add(attr);
 			}
 			
-			Collection<MultiAttributeNode> nMattrs = nRootNode.getMultiAttributes();
-			for (MultiAttributeNode nMattr : nMattrs) {
+			Collection<Group2D> nMattrs = nRootNode.getGroup2Ds();
+			for (Group2D nMattr : nMattrs) {
 				Mattr mattr = new Mattr();
 				setNormalAttrs(mattr, nMattr);
 				abc.getMattrs().add(mattr);
 			}
 			
-			Collection<RelationNode> nRels = nRootNode.getRelation();
-			for (RelationNode nRel : nRels) {
-				if(nRel.getRabcNode() != null) {
+			Collection<RStruc> nRels = nRootNode.getRStrucs();
+			for (RStruc nRel : nRels) {
+				if(nRel.getPointStruc() != null) {
 					
-					RABCNode rabcNode = nRel.getRabcNode();
+					Struc rabcNode = nRel.getPointStruc();
 					ABC rabc = null;
-					Long rabcNodeMappingId = FormatUtils.toLong(rabcNode.getRelABCNodeID());
+					Integer rabcNodeMappingId = rabcNode.getId();
 					if(abcNodeMap.containsKey(rabcNodeMappingId)) {
 						rabc = abcNodeMap.get(rabcNodeMappingId);
 					}else {
-						rabc = traverseABC(rabcNodeMappingId, MappingContainer.getABCNode(FormatUtils.toInteger(rabcNodeMappingId)), mappingIdModuleMap);
+						;
+						rabc = traverseABC(rabcNodeMappingId, StrucContainer.findStruc(rabcNodeMappingId), mappingIdModuleMap);
 					}
 					
 					Rel rel = new Rel(rabcNodeMappingId, rabc);
-					LabelNode label = nRel.getLabelNode();
-					Assert.notNull(label, "label为空");
-					rel.getLabels().addAll(label.getSubdomains());
+					Collection<String> relLabels = nRel.getRelationTypeNames();
+					Assert.notNull(relLabels, "label为空");
+					rel.getLabels().addAll(relLabels);
 					setNormalAttrs(rel, nRel);
 					abc.getRels().add(rel);
 				}
@@ -121,17 +119,17 @@ public class ModuleConfigStructure {
 	}
 
 
-	private void setNormalAttrs(Named attr, AttributeNode nAttr) {
+	private void setNormalAttrs(Named attr, ItemElement nAttr) {
 		attr.setName(nAttr.getTitle());
-		attr.setAbcattr(nAttr.getAbcattr());
-		attr.setFullName(nAttr.getFullTitle());
+		attr.setAbcattr(nAttr.getItemCode());
+		//attr.setFullName(nAttr.getFullTitle());
 	}
 
 
 	private static class ABC{
-		private Long mappingId;
+		private Integer mappingId;
 		private String moduleName;
-		public ABC(Long mappingId, String moduleName, String moduleTitle) {
+		public ABC(Integer mappingId, String moduleName, String moduleTitle) {
 			super();
 			this.mappingId = mappingId;
 			this.moduleName = moduleName;
@@ -150,7 +148,7 @@ public class ModuleConfigStructure {
 		public List<Rel> getRels() {
 			return rels;
 		}
-		public Long getMappingId() {
+		public Integer getMappingId() {
 			return mappingId;
 		}
 		public String getModuleName() {
@@ -164,7 +162,7 @@ public class ModuleConfigStructure {
 	private static abstract class Named{
 		private String name;
 		private String abcattr;
-		private String fullName;
+		//private String fullName;
 
 		public String getName() {
 			return name;
@@ -182,13 +180,11 @@ public class ModuleConfigStructure {
 			this.abcattr = abcattr;
 		}
 
-		public String getFullName() {
-			return fullName;
-		}
-
-		public void setFullName(String fullName) {
-			this.fullName = fullName;
-		}
+		/*
+		 * public String getFullName() { return fullName; }
+		 * 
+		 * public void setFullName(String fullName) { this.fullName = fullName; }
+		 */
 	}
 	
 	private static class Attr extends Named{
@@ -208,11 +204,11 @@ public class ModuleConfigStructure {
 	
 	private static class Rel extends Named{
 		private Set<String> labels = new LinkedHashSet<>();
-		private Long rabcNodeMappingId;
+		private Integer rabcNodeMappingId;
 		@JSONField(serialize=false)
 		private ABC rabc;
 
-		public Rel(Long rabcNodeMappingId, ABC rabc) {
+		public Rel(Integer rabcNodeMappingId, ABC rabc) {
 			super();
 			this.rabcNodeMappingId = rabcNodeMappingId;
 			this.rabc = rabc;
@@ -222,7 +218,7 @@ public class ModuleConfigStructure {
 			return rabc;
 		}
 
-		public Long getRabcNodeMappingId() {
+		public Integer getRabcNodeMappingId() {
 			return rabcNodeMappingId;
 		}
 
@@ -233,12 +229,12 @@ public class ModuleConfigStructure {
 		
 	}
 
-	public Map<Long, ABC> getAbcNodeMap() {
+	public Map<Integer, ABC> getAbcNodeMap() {
 		return abcNodeMap;
 	}
 
 
-	public Long getRootNodeMappingId() {
+	public Integer getRootNodeMappingId() {
 		return rootNodeMappingId;
 	}
 

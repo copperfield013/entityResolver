@@ -7,50 +7,49 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 
-import com.abc.hc.HCFusionContext;
-import com.abc.hc.HCRemovedFusionContext;
-import com.abc.hc.RemovedFusionContext;
-import com.abc.mapping.conf.MappingContainer;
-import com.abc.mapping.exception.ABCNodeLoadException;
-import com.abc.mapping.node.ABCNode;
-import com.abc.panel.IntegrationMsg;
-import com.abc.panel.PanelFactory;
-
-import cn.sowell.copframe.utils.FormatUtils;
+import cho.carbon.hc.HCFusionContext;
+import cho.carbon.hc.HCRemovedFusionContext;
+import cho.carbon.hc.RemovedFusionContext;
+import cho.carbon.meta.struc.er.Struc;
+import cho.carbon.meta.struc.er.StrucContainer;
+import cho.carbon.panel.IntegrationMsg;
+import cho.carbon.panel.PanelFactory;
 import cn.sowell.datacenter.entityResolver.config.UnconfiuredFusionException;
 import cn.sowell.datacenter.entityResolver.impl.ABCNodeFusionContextConfigResolver;
 import cn.sowell.datacenter.entityResolver.impl.ABCNodeProxy;
 
 public class FusionContextConfigImpl implements FusionContextConfig{
-	private final Long mappingId;
+	private final Integer mappingId;
 	private String module;
 	private String codeAttributeName = ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL;
 	private String titleAttributeName = "姓名";
 	private FusionContextConfigResolver configResolver;
 	private boolean loadResolverFieldsFlag = false;
 	private UserCodeService userCodeService;
-	private ABCNode rootNode;
+	private Struc rootNode;
 	
 	static Logger logger = Logger.getLogger(FusionContextConfigImpl.class);
 	/* (non-Javadoc)
 	 * @see cn.sowell.datacenter.entityResolver.FusionContextConfig#getMappingName()
 	 */
 	
-	public FusionContextConfigImpl(Long mappingId) {
+	public FusionContextConfigImpl(Integer mappingId) {
 		this.mappingId = mappingId;
 		try {
 			logger.debug("加载配置[mappingId=" + mappingId + "]");
-			this.rootNode = MappingContainer.getABCNode(FormatUtils.toInteger(mappingId));
-		} catch (ABCNodeLoadException e) {
-			logger.error("配置[mappingId=" + mappingId + "]不存在或解析错误");
-			throw new UnconfiuredFusionException("配置[mappingId=" + mappingId + "]不存在或解析错误");
+			this.rootNode = StrucContainer.findStruc(mappingId);
+			if(this.rootNode == null) {
+				logger.error("配置[mappingId=" + mappingId + "]不存在或解析错误");
+				throw new UnconfiuredFusionException("配置[mappingId=" + mappingId + "]不存在或解析错误");
+			}
 		} catch (Exception e) {
 			throw new RuntimeException("初始化ABC配置时发生错误[mappingId=" + mappingId + "]", e);
 		}
+			
 	}
 	
 	@Override
-	public Long getMappingId() {
+	public Integer getMappingId() {
 		return mappingId;
 	}
 	/* (non-Javadoc)
@@ -119,7 +118,7 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 	@Override
 	public HCFusionContext createNewContext(Object userPrinciple) {
 		HCFusionContext context = new HCFusionContext();
-		context.setMappingName(getMappingName());
+		context.setStrucTitle(getMappingName());
 		context.setUserCode(userCodeService.getUserCode(userPrinciple));
 		return context;
 	}
@@ -148,7 +147,7 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 	public HCFusionContext createRelationContext(String relationName, Object userPrinciple) {
 		Assert.hasText(relationName);
 		HCFusionContext context = new HCFusionContext();
-		context.setMappingName(getMappingName() + "." + relationName);
+		context.setStrucTitle(getMappingName() + "." + relationName);
 		context.setUserCode(userCodeService.getUserCode(userPrinciple));
 		return context;
 	}
@@ -183,12 +182,12 @@ public class FusionContextConfigImpl implements FusionContextConfig{
 	
 	
 	@Override
-	public ABCNode getRootNode() {
+	public Struc getRootNode() {
 		return rootNode;
 	}
 	
 	@Override
 	public boolean isStatistic() {
-		return PanelFactory.getStatGenerator().isStatEntity(rootNode.getAbcattr());
+		return PanelFactory.getStatGenerator().isStatEntity(rootNode.getItemCode());
 	}
 }

@@ -81,14 +81,14 @@ public class ModuleConfigDaoImpl implements ModuleConfigDao{
 
 
 	@Override
-	public void reassignMappingId(String moduleName, Long mappingId) {
+	public void reassignMappingId(String moduleName, Integer mappingId) {
 		DeferedParamQuery dQuery = dbQuery.getReassignModuleMappingIdQuery(moduleName, mappingId);
 		dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
 				.executeUpdate();
 	}
 	
 	@Override
-	public void reassignMappingId(String entityId, Long mappingId, String codeName, String titleName) {
+	public void reassignMappingId(String entityId, Integer mappingId, String codeName, String titleName) {
 		DeferedParamQuery dQuery = dbQuery.getReassignModuleMappingIdQuery(entityId, mappingId, codeName, titleName);
 		dQuery.createSQLQuery(sessionFactory.getCurrentSession(), false, null)
 				.executeUpdate();

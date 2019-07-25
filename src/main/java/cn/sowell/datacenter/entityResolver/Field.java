@@ -2,7 +2,7 @@ package cn.sowell.datacenter.entityResolver;
 
 public interface Field {
 
-	Long getId();
+	Integer getId();
 
 	String getTitle();
 

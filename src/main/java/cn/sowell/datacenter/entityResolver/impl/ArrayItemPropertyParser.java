@@ -6,8 +6,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.util.Assert;
 
-import com.abc.model.enun.AttributeValueType;
-
+import cho.carbon.meta.enun.AttributeValueType;
 import cn.sowell.datacenter.entityResolver.EntityConstants;
 import cn.sowell.datacenter.entityResolver.FieldParserDescription;
 

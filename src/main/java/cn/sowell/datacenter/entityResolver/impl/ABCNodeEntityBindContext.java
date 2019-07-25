@@ -6,9 +6,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 
-import com.abc.mapping.entity.RecordEntity;
-import com.abc.mapping.node.ABCNode;
-
+import cho.carbon.entity.entity.RecordEntity;
+import cho.carbon.meta.struc.er.Struc;
 import cn.sowell.datacenter.entityResolver.EntityBindContext;
 import cn.sowell.datacenter.entityResolver.EntityElement;
 import cn.sowell.datacenter.entityResolver.EntityProxy;
@@ -24,7 +23,7 @@ public class ABCNodeEntityBindContext extends AbstractEntityBindContext {
 	
 	Logger logger = Logger.getLogger(ABCNodeEntityBindContext.class);
 	
-	public ABCNodeEntityBindContext(ABCNode rootNode, RecordEntity entity) {
+	public ABCNodeEntityBindContext(Struc rootNode, RecordEntity entity) {
 		this(new ABCNodeProxy(rootNode), new ABCEntityProxy(entity));
 	}
 

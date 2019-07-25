@@ -1,7 +1,6 @@
 package cn.sowell.datacenter.entityResolver;
 
-import com.abc.model.enun.AttributeValueType;
-
+import cho.carbon.meta.enun.AttributeValueType;
 import cn.sowell.datacenter.entityResolver.impl.PropertyValueBindReport;
 
 /**

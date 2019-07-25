@@ -14,7 +14,7 @@ public class FieldDescCacheMap extends GetonlyMap<Long, FieldParserDescription>{
 	@Override
 	public FieldParserDescription get(Object fieldId) {
 		if(!cache.containsKey(fieldId)) {
-			cache.put((Long) fieldId, resolver.getFieldParserDescription((Long) fieldId));
+			cache.put((Long) fieldId, resolver.getFieldParserDescription((Integer) fieldId));
 		}
 		return cache.get(fieldId);
 	}

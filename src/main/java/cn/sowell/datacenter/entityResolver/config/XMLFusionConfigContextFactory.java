@@ -38,7 +38,7 @@ public class XMLFusionConfigContextFactory extends AbstractFusionConfigContextFa
 			TheModule module = new TheModule();
 			module.setName(eleModule.getAttribute("name"));
 			module.setTitle(eleModule.getAttribute("title"));
-			module.setMappingId(Long.valueOf(eleModule.getAttribute("mapping-id")));
+			module.setMappingId(Integer.valueOf(eleModule.getAttribute("mapping-id")));
 			XmlNode codeEle = eleModule.getFirstElement("code"),
 					titleEle = eleModule.getFirstElement("title");
 			if(codeEle != null) {

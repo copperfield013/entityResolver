@@ -1,25 +1,25 @@
 package cn.sowell.datacenter.entityResolver;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.abc.mapping.node.RelationNode;
-
+import cho.carbon.meta.struc.er.RStruc;
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.datacenter.entityResolver.config.UnconfiuredFusionException;
 
-public class RelationFieldConfigure extends AbstractFieldConfigure<RelationNode>{
+public class RelationFieldConfigure extends AbstractFieldConfigure<RStruc>{
 
-	public RelationFieldConfigure(Long mappingId, String absoluteName, RelationNode relationNode) {
+	public RelationFieldConfigure(Integer mappingId, String absoluteName, RStruc relationNode) {
 		super(mappingId, absoluteName, relationNode);
 	}
 
 	public Set<String> getLabelDomain() throws UnconfiuredFusionException{
-		return getNode().getLabelNode().getSubdomains();
+		return new LinkedHashSet<String>(getNode().getRelationTypeNames());
 	}
 	
 	public String getAbcNodeAbcAttr() {
-		RelationNode n = getNode();
-		return n.getAbcNode().getAbcattr();
+		RStruc n = getNode();
+		return n.getItemCode();
 	}
 
 	@Override
@@ -28,9 +28,9 @@ public class RelationFieldConfigure extends AbstractFieldConfigure<RelationNode>
 	}
 	
 	public Long getRabcMappingId() {
-		RelationNode n = getNode();
-		if(n.getRabcNode() != null) {
-			return FormatUtils.toLong(n.getRabcNode().getRelABCNodeID());
+		RStruc n = getNode();
+		if(n.getPointStruc() != null) {
+			return FormatUtils.toLong(n.getPointStruc().getId());
 		}
 		return null;
 	}

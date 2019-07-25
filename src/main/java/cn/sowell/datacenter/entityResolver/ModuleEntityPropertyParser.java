@@ -3,8 +3,6 @@ package cn.sowell.datacenter.entityResolver;
 import java.util.List;
 import java.util.Map;
 
-import com.abc.dto.ErrorInfomation;
-
 import cn.sowell.datacenter.entityResolver.impl.ArrayItemPropertyParser;
 
 public interface ModuleEntityPropertyParser extends CEntityPropertyParser{
@@ -16,9 +14,9 @@ public interface ModuleEntityPropertyParser extends CEntityPropertyParser{
 	Map<String, List<ArrayItemPropertyParser>> getArrayMap();
 
 	
-	List<ErrorInfomation> getErrors();
-
-	void setErrors(List<ErrorInfomation> errors);
+//	List<ErrorInfomation> getErrors();
+//
+//	void setErrors(List<ErrorInfomation> errors);
 
 
 	List<ArrayItemPropertyParser> getCompositeArray(String compositeName);

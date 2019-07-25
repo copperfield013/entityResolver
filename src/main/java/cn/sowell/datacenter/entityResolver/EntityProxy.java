@@ -1,7 +1,7 @@
 package cn.sowell.datacenter.entityResolver;
 
-import com.abc.mapping.entity.LeafEntity;
-import com.abc.model.enun.AttributeValueType;
+import cho.carbon.entity.entity.LeafEntity;
+import cho.carbon.meta.enun.AttributeValueType;
 
 public interface EntityProxy {
 

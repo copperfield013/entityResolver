@@ -1,14 +1,14 @@
 package cn.sowell.datacenter.entityResolver;
 
-import com.abc.mapping.node.AttributeNode;
+import cho.carbon.meta.struc.er.ItemElement;
 
-public abstract class AbstractFieldConfigure<T extends AttributeNode> implements FieldConfigure{
+public abstract class AbstractFieldConfigure<T extends ItemElement> implements FieldConfigure{
 	
 	private final T node;
 	private final String absoluteName;
-	private final Long mappingId;
+	private final Integer mappingId;
 
-	public AbstractFieldConfigure(Long mappingId, String absoluteName, T relationNode) {
+	public AbstractFieldConfigure(Integer mappingId, String absoluteName, T relationNode) {
 		this.absoluteName = absoluteName;
 		this.node = relationNode;
 		this.mappingId = mappingId;
@@ -40,11 +40,11 @@ public abstract class AbstractFieldConfigure<T extends AttributeNode> implements
 
 	@Override
 	public String getAbcAttr() {
-		return node.getAbcattr();
+		return node.getItemCode();
 	}
 
 	@Override
-	public Long getMappingId() {
+	public Integer getMappingId() {
 		return this.mappingId;
 	}
 	

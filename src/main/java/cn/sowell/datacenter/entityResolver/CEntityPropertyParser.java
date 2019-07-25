@@ -2,7 +2,7 @@ package cn.sowell.datacenter.entityResolver;
 
 import java.util.Map;
 
-import com.abc.model.enun.AttributeValueType;
+import cho.carbon.meta.enun.AttributeValueType;
 
 public interface CEntityPropertyParser {
 	

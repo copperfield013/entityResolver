@@ -2,18 +2,13 @@ package cn.sowell.datacenter.entityResolver.impl;
 
 import java.util.HashSet;
 
-import com.abc.mapping.entity.Entity;
-import com.abc.mapping.entity.LeafEntity;
-import com.abc.mapping.node.ABCNode;
-import com.abc.mapping.node.AttributeNode;
-import com.abc.mapping.node.IAttributeNode;
-import com.abc.mapping.node.LabelNode;
-import com.abc.mapping.node.MultiAttributeNode;
-import com.abc.mapping.node.RelationNode;
-import com.abc.mapping.node.impl.AttributeNodeImpl;
-import com.abc.model.constant.ModelItemInfo;
-import com.abc.model.enun.AttributeValueType;
-
+import cho.carbon.entity.entity.Entity;
+import cho.carbon.entity.entity.LeafEntity;
+import cho.carbon.meta.constant.ModelItemInfo;
+import cho.carbon.meta.struc.er.Field;
+import cho.carbon.meta.struc.er.Group2D;
+import cho.carbon.meta.struc.er.RStruc;
+import cho.carbon.meta.struc.er.Struc;
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.datacenter.entityResolver.EntityElement;
 import cn.sowell.datacenter.entityResolver.EntityProxy;
@@ -42,13 +37,15 @@ public class ABCNodeProxy {
 		}else if(ele != null) {
 			return new ABCNodeProxy(ele);
 		}else if(ABCNodeProxy.CODE_PROPERTY_NAME_NORMAL.equals(propertyName)){
-			if(node instanceof ABCNode || node instanceof MultiAttributeNode || node instanceof RelationNode) {
-				IAttributeNode codeNode = new AttributeNodeImpl();
-				codeNode.setName(CODE_PROPERTY_NAME_NORMAL);
-				codeNode.setAbcattr(CODE_NODE_NAME);
-				codeNode.setDatatype(AttributeValueType.STRING);
-				return new ABCNodeProxy(codeNode);
-			}
+			throw new RuntimeException("没有唯一编码字段");
+			/*
+			 * if(node instanceof ABCNode || node instanceof MultiAttributeNode || node
+			 * instanceof RelationNode) { IAttributeNode codeNode = new AttributeNodeImpl();
+			 * codeNode.setName(CODE_PROPERTY_NAME_NORMAL);
+			 * codeNode.setAbcattr(CODE_NODE_NAME);
+			 * codeNode.setDatatype(AttributeValueType.STRING); return new
+			 * ABCNodeProxy(codeNode); }
+			 */
 		}
 		return null;
 	}
@@ -78,16 +75,14 @@ public class ABCNodeProxy {
 		
 		public default Object handler(Object node, T arg) {
 			Object result = null;
-			if(node instanceof ABCNode) {
-				result = handlerWithNode((ABCNode)node, arg);
-			}else if(node instanceof MultiAttributeNode) {
-				result = handlerWithNode((MultiAttributeNode)node, arg);
-			}else if(node instanceof RelationNode) {
-				result = handlerWithNode((RelationNode)node, arg);
-			}else if(node instanceof LabelNode) {
-				result = handlerWithNode((LabelNode)node, arg);
-			}else if(node instanceof AttributeNode) {
-				result = handlerWithNode((AttributeNode)node, arg);
+			if(node instanceof RStruc) {
+				result = handlerWithNode((RStruc)node, arg);
+			}else if(node instanceof Struc) {
+				result = handlerWithNode((Struc)node, arg);
+			}else if(node instanceof Group2D) {
+				result = handlerWithNode((Group2D)node, arg);
+			}else if(node instanceof Field) {
+				result = handlerWithNode((Field)node, arg);
 			}else {
 				result = handlerWithOther(node, arg);
 			}
@@ -96,11 +91,10 @@ public class ABCNodeProxy {
 		}
 		public default Object handlerWithOther(Object node, T arg) { throw new RuntimeException("无法识别的标签对象");}
 		public default Object handlerGlobal(Object node, T arg) {return null;}
-		public default Object handlerWithNode(ABCNode node, T arg) {return null;};
-		public default Object handlerWithNode(MultiAttributeNode node, T arg) {return null;};
-		public default Object handlerWithNode(RelationNode node, T arg) {return null;};
-		public default Object handlerWithNode(AttributeNode node, T arg) {return null;};
-		public default Object handlerWithNode(LabelNode node, T arg) {return null;};
+		public default Object handlerWithNode(Struc node, T arg) {return null;};
+		public default Object handlerWithNode(Group2D node, T arg) {return null;};
+		public default Object handlerWithNode(RStruc node, T arg) {return null;};
+		public default Object handlerWithNode(Field node, T arg) {return null;};
 	}
 
 	/**
@@ -117,19 +111,18 @@ public class ABCNodeProxy {
 	 * 子节点获得的方式
 	 */
 	static NodeSwitch<String> ELEMENT_GETTER = new NodeSwitch<String>() {
-		public Object handlerWithNode(ABCNode node, String propertyName) {
+		public Object handlerWithNode(Struc node, String propertyName) {
 			return FormatUtils.coalesce(
-					node.getAttribute(propertyName),
-					node.getLabel(propertyName),
-					node.getMultiAttribute(propertyName),
-					node.getRelation(propertyName)
+					node.findField(propertyName),
+					node.findGroup2D(propertyName),
+					node.findRStruc(propertyName)
 					);
 		}
-		public Object handlerWithNode(MultiAttributeNode node, String propertyName) {
-			return node.getAttribute(propertyName);
+		public Object handlerWithNode(Group2D node, String propertyName) {
+			return node.findField(propertyName);
 		}
-		public Object handlerWithNode(RelationNode node, String propertyName) {
-			ABCNode abcNode = node.getAbcNode();
+		public Object handlerWithNode(RStruc node, String propertyName) {
+			Struc abcNode = node.getPointStruc();
 			return new ABCNodeProxy(abcNode).getElement(propertyName);
 		};
 		
@@ -139,56 +132,46 @@ public class ABCNodeProxy {
 	 * 获得当前节点的信息对象
 	 */
 	static NodeSwitch<Byte> ENTITY_ELEMENT_GETTER = new NodeSwitch<Byte>() {
-		public Object handlerWithNode(AttributeNode node, Byte b) {
+		public Object handlerWithNode(Field node, Byte b) {
 			EntityAttrElement eElement = new EntityAttrElement();
 			eElement.setName(node.getTitle());
-			eElement.setAbcattr(node.getAbcattr());
-			eElement.setDataType(node.getDatatype());
+			eElement.setAbcattr(node.getItemCode());
+			eElement.setDataType(node.getValueType());
 			eElement.setTagName("attribute");
 			return eElement;
 		};
 		
 		@Override
-		public Object handlerWithNode(LabelNode node, Byte b) {
-			EntityLabelElement eElement = new EntityLabelElement();
-			eElement.setName(node.getTitle());
-			eElement.setAbcattr(node.getAbcattr());
-			eElement.setSubdomain(new HashSet<>(node.getSubdomains()));
-			eElement.setTagName("label");
-			return eElement;
-		}
-		
-		@Override
-		public Object handlerWithNode(MultiAttributeNode node, Byte b) {
+		public Object handlerWithNode(Group2D node, Byte b) {
 			EntityMultiAttributeElement eElement = new EntityMultiAttributeElement();
 			eElement.setName(node.getTitle());
-			eElement.setAbcattr(node.getAbcattr());
+			eElement.setAbcattr(node.getItemCode());
 			eElement.setTagName("multiattribute");
 			return eElement;
 		}
 		
-		public Object handlerWithNode(RelationNode node, Byte arg) {
+		public Object handlerWithNode(RStruc node, Byte arg) {
 			EntityRelationElement eElement = new EntityRelationElement();
 			eElement.setName(node.getTitle());
-			eElement.setAbcattr(node.getAbcNode().getAbcattr());
+			eElement.setAbcattr(node.getItemCode());
 			eElement.setTagName("relation");
-			eElement.setEntityName(node.getAbcNode().getTitle());
-			eElement.setFullTitle(node.getFullTitle());
-			eElement.setSubdomain(new HashSet<>(node.getLabelNode().getSubdomains()));
+			eElement.setEntityName(node.getTitle());
+			eElement.setFullTitle(node.getTitlePath());
+			eElement.setSubdomain(new HashSet<>(node.getRelationTypeNames()));
 			return eElement;
 		};
 	};
 
 	static NodeSwitch<Byte> ELEMENT_ENTITY_CREATOR = new NodeSwitch<Byte>() {
 		@Override
-		public Object handlerWithNode(MultiAttributeNode node, Byte arg) {
+		public Object handlerWithNode(Group2D node, Byte arg) {
 			LeafEntity entity = new LeafEntity(node.getTitle());
 			MultiAttributeEntityProxy proxy = new MultiAttributeEntityProxy(entity);
 			return proxy;
 		}
 		
 		@Override
-		public Object handlerWithNode(RelationNode node, Byte arg) {
+		public Object handlerWithNode(RStruc node, Byte arg) {
 			Entity entity = new Entity(node.getTitle());
 			return new RelationEntityProxy(entity);
 		}

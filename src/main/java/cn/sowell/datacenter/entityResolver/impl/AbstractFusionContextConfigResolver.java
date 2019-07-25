@@ -1,6 +1,5 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,16 +8,14 @@ import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
 
-import com.abc.dto.ErrorInfomation;
-import com.abc.hc.FusionContext;
-import com.abc.hc.HCFusionContext;
-import com.abc.mapping.entity.Entity;
-import com.abc.mapping.entity.RecordEntity;
-import com.abc.panel.Integration;
-import com.abc.panel.IntegrationMsg;
-import com.abc.panel.PanelFactory;
-import com.abc.rrc.query.queryrecord.criteria.QueryParameter;
-
+import cho.carbon.entity.entity.Entity;
+import cho.carbon.entity.entity.RecordEntity;
+import cho.carbon.hc.FusionContext;
+import cho.carbon.hc.HCFusionContext;
+import cho.carbon.meta.criteria.model.ModelConJunction;
+import cho.carbon.panel.Integration;
+import cho.carbon.panel.IntegrationMsg;
+import cho.carbon.panel.PanelFactory;
 import cn.sowell.copframe.utils.Assert;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.TextUtils;
@@ -51,7 +48,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	}
 	
 	@Override
-	public FieldParserDescription getFieldParserDescription(Long fieldId) {
+	public FieldParserDescription getFieldParserDescription(Integer fieldId) {
 		if(this.fields != null) {
 			return fields.stream().filter(field->fieldId.equals(field.getFieldId())).findFirst().orElse(null);
 		}
@@ -162,7 +159,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 			CommonModuleEntityPropertyParser parser = new CommonModuleEntityPropertyParser(config, rootContext, getFullKeyFieldMap(), user, propertyGetterArgument);
 			//获得错误信息
 			if(parser.getCode() != null) {
-				parser.setErrors(new ArrayList<ErrorInfomation>());
+				//parser.setErrors(new ArrayList<ErrorInfomation>());
 				/*BizFusionContext context = config.getCurrentContext(user);
 				Discoverer discoverer = PanelFactory.getDiscoverer(context);
 				List<ErrorInfomation> errors = discoverer.trackErrorInfos(parser.getCode());
@@ -193,7 +190,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 			RabcModuleEntityPropertyParser parser = new RabcModuleEntityPropertyParser(config, rootContext, getFullKeyFieldMap(), user, propertyGetterArgument);
 			//获得错误信息
 			if(parser.getCode() != null) {
-				parser.setErrors(new ArrayList<ErrorInfomation>());
+				//parser.setErrors(new ArrayList<ErrorInfomation>());
 				/*BizFusionContext context = config.getCurrentContext(user);
 				Discoverer discoverer = PanelFactory.getDiscoverer(context);
 				List<ErrorInfomation> errors = discoverer.trackErrorInfos(parser.getCode());
@@ -220,7 +217,7 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	
 	@Override
 	public String saveEntity(Map<String, Object> entityMap, Consumer<HCFusionContext> consumer, Object user,
-			Map<String, QueryParameter> criteriasMap) {
+			Map<Integer, ModelConJunction> criteriasMap) {
 		HCFusionContext context = config.getCurrentContext(user);
 		context.setSource(FusionContext.SOURCE_COMMON);
 		if(consumer != null) {
@@ -230,12 +227,12 @@ public abstract class AbstractFusionContextConfigResolver implements FusionConte
 	}
 	
 	@Override
-	public String saveEntity(HCFusionContext context, Map<String, Object> map, Map<String, QueryParameter> criteriasMap) {
+	public String saveEntity(HCFusionContext context, Map<String, Object> map, Map<Integer, ModelConJunction> criteriasMap) {
 		Assert.notNull(context);
 		EntityComponent entity = createEntity(map);
 		if(criteriasMap != null) {
-			criteriasMap.forEach((key, qp)->{
-				entity.getEntity().putQueryParameter(key, qp);
+			criteriasMap.forEach((key, conj)->{
+				entity.getEntity().putConJunction(key, conj);
 			});
 		}
 		if(entity != null) {

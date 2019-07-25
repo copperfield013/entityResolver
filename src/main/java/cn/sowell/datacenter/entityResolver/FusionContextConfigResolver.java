@@ -3,10 +3,9 @@ package cn.sowell.datacenter.entityResolver;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import com.abc.hc.HCFusionContext;
-import com.abc.mapping.entity.RecordEntity;
-import com.abc.rrc.query.queryrecord.criteria.QueryParameter;
-
+import cho.carbon.entity.entity.RecordEntity;
+import cho.carbon.hc.HCFusionContext;
+import cho.carbon.meta.criteria.model.ModelConJunction;
 import cn.sowell.datacenter.entityResolver.impl.EntityComponent;
 import cn.sowell.datacenter.entityResolver.impl.RabcModuleEntityPropertyParser;
 import cn.sowell.datacenter.entityResolver.impl.RelSelectionEntityPropertyParser;
@@ -34,7 +33,7 @@ public interface FusionContextConfigResolver {
 	String saveEntity(Map<String, Object> map, Consumer<HCFusionContext> consumer, Object user);
 	
 	String saveEntity(Map<String, Object> entityMap, Consumer<HCFusionContext> consumer, Object user,
-			Map<String, QueryParameter> criteriasMap);
+			Map<Integer, ModelConJunction> criteriasMap);
 	
 	/**
 	 * 根据当前配置，解析生成Entity，并使用传入自定义的context， 保存Entity
@@ -43,7 +42,7 @@ public interface FusionContextConfigResolver {
 	 * @return
 	 */
 	String saveEntity(HCFusionContext context, Map<String, Object> map,
-			Map<String, QueryParameter> criteriasMap);
+			Map<Integer, ModelConJunction> criteriasMap);
 	
 	
 	
@@ -64,7 +63,7 @@ public interface FusionContextConfigResolver {
 	 * @param fieldId
 	 * @return
 	 */
-	FieldParserDescription getFieldParserDescription(Long fieldId);
+	FieldParserDescription getFieldParserDescription(Integer fieldId);
 	
 	/**
 	 * 根据字段的路径，获得对应的字段配置信息。

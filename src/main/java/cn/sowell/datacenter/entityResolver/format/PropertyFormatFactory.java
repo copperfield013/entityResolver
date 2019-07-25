@@ -2,8 +2,7 @@ package cn.sowell.datacenter.entityResolver.format;
 
 import java.util.Date;
 
-import com.abc.model.enun.AttributeValueType;
-
+import cho.carbon.meta.enun.AttributeValueType;
 import cn.sowell.copframe.spring.file.FileHaunt;
 
 public class PropertyFormatFactory {

@@ -1,6 +1,6 @@
 package cn.sowell.datacenter.entityResolver.impl;
 
-import com.abc.mapping.entity.RecordEntity;
+import cho.carbon.entity.entity.RecordEntity;
 
 public interface EntityComponent {
 	RecordEntity getEntity();

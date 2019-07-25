@@ -3,10 +3,9 @@ package cn.sowell.datacenter.entityResolver.impl;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.abc.mapping.entity.Entity;
-import com.abc.mapping.entity.RecordEntity;
-import com.abc.model.enun.AttributeValueType;
-
+import cho.carbon.entity.entity.Entity;
+import cho.carbon.entity.entity.RecordEntity;
+import cho.carbon.meta.enun.AttributeValueType;
 import cn.sowell.copframe.utils.Assert;
 import cn.sowell.datacenter.entityResolver.EntityConstants;
 import cn.sowell.datacenter.entityResolver.EntityProxy;
