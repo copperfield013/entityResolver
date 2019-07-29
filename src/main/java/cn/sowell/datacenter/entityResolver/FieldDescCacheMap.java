@@ -3,9 +3,11 @@ package cn.sowell.datacenter.entityResolver;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.sowell.copframe.utils.FormatUtils;
+
 public class FieldDescCacheMap extends GetonlyMap<Long, FieldParserDescription>{
 
-	Map<Long, FieldParserDescription> cache = new HashMap<>();
+	Map<Integer, FieldParserDescription> cache = new HashMap<>();
 	private FusionContextConfigResolver resolver;
 	public FieldDescCacheMap(FusionContextConfigResolver resolver) {
 		super();
@@ -13,8 +15,9 @@ public class FieldDescCacheMap extends GetonlyMap<Long, FieldParserDescription>{
 	}
 	@Override
 	public FieldParserDescription get(Object fieldId) {
-		if(!cache.containsKey(fieldId)) {
-			cache.put((Long) fieldId, resolver.getFieldParserDescription((Integer) fieldId));
+		Integer intFieldId = FormatUtils.toInteger(fieldId);
+		if(!cache.containsKey(intFieldId)) {
+			cache.put(intFieldId, resolver.getFieldParserDescription(intFieldId));
 		}
 		return cache.get(fieldId);
 	}
